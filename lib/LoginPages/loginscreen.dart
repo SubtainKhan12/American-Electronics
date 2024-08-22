@@ -1,4 +1,15 @@
+import 'dart:convert';
+
+import 'package:american_electronics/InstallerPanel/DashboardScreens/Dashboard/dashboard.dart';
+import 'package:american_electronics/Models/LoginModel/LoginModel.dart';
+import 'package:american_electronics/Utilities/Colors/colors.dart';
+import 'package:american_electronics/Utilities/Loader/loader.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import '../APIs/apis.dart';
+import '../Utilities/Snackbar/snackbar.dart';
 
 class LoginUI extends StatefulWidget {
   const LoginUI({super.key});
@@ -8,6 +19,9 @@ class LoginUI extends StatefulWidget {
 }
 
 class _LoginUIState extends State<LoginUI> {
+  LoginModel? loginModelList;
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true;
 
   void _toggleObscureText() {
@@ -84,14 +98,17 @@ class _LoginUIState extends State<LoginUI> {
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Column(
                     children: [
-                      const TextField(
-                        decoration: InputDecoration(
+                      TextField(
+                        controller: _usernameController,
+                        decoration: const InputDecoration(
                           hintText: 'UserName',
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white54, width: 2),
+                            borderSide:
+                                BorderSide(color: Colors.white54, width: 2),
                           ),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white, width: 2),
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2),
                           ),
                         ),
                       ),
@@ -99,6 +116,7 @@ class _LoginUIState extends State<LoginUI> {
                         height: 10,
                       ),
                       TextField(
+                        controller: _passwordController,
                         obscureText: _obscureText,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
@@ -109,10 +127,12 @@ class _LoginUIState extends State<LoginUI> {
                           ),
                           hintText: 'Password',
                           enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white54, width: 2),
+                            borderSide:
+                                BorderSide(color: Colors.white54, width: 2),
                           ),
                           focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white, width: 2),
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2),
                           ),
                         ),
                       ),
@@ -132,9 +152,12 @@ class _LoginUIState extends State<LoginUI> {
                                         borderRadius: BorderRadius.circular(5),
                                         side: const BorderSide(
                                             color: Colors.white70, width: 2)),
-                                    backgroundColor: const Color(0xff1010),
+                                    backgroundColor:  ColorsUtils.appcolor,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    post_login();
+                                    CircularIndicator.showLoader(context);
+                                  },
                                   child: const Text(
                                     'Login',
                                     style: TextStyle(color: Colors.white70),
@@ -148,9 +171,11 @@ class _LoginUIState extends State<LoginUI> {
                                         borderRadius: BorderRadius.circular(5),
                                         side: const BorderSide(
                                             color: Colors.white70, width: 2)),
-                                    backgroundColor: const Color(0xff1010),
+                                    backgroundColor: ColorsUtils.appcolor,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+
+                                  },
                                   child: const Text(
                                     'Register',
                                     style: TextStyle(color: Colors.white70),
@@ -162,20 +187,13 @@ class _LoginUIState extends State<LoginUI> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Want to install AC?',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                          TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                'Register',
-                                style: TextStyle(color: Colors.red),
-                              ))
-                        ],
+                      Center(
+                        child: TextButton(
+                            onPressed: () {},
+                            child: const Text(
+                              'Want to install AC?',
+                              style: TextStyle(color: Colors.red, fontSize: 20),
+                            )),
                       )
                     ],
                   ),
@@ -187,4 +205,38 @@ class _LoginUIState extends State<LoginUI> {
       ),
     );
   }
+
+  Future<void> post_login() async {
+    FocusScope.of(context).unfocus();
+    var response = await http.post(Uri.parse(login), body: {
+      'userid': _usernameController.text,
+      'password': _passwordController.text,
+    });
+
+    var result = jsonDecode(response.body);
+
+
+    print('Response: $result');
+
+    if (result['error'] == 200) {
+      Navigator.pop(context);
+      loginModelList = LoginModel.fromJson(result);
+
+      if (loginModelList?.user?.tusrtyp == 'Installar' &&
+          loginModelList?.user?.tusrid == _usernameController.text &&
+          loginModelList?.user?.tusrpwd == _passwordController.text) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const DashboardUI()));
+        Snackbar.showSnackBar(context, 'Login Successful', Colors.teal);
+      }
+    } else {
+      _usernameController.clear();
+      _passwordController.clear();
+      Snackbar.showSnackBar(context, 'Wrong Credentials', Colors.red);
+      Navigator.pop(context);
+
+    }
+  }
+
+
 }
