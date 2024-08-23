@@ -7,8 +7,10 @@ import 'package:american_electronics/Utilities/Loader/loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../APIs/apis.dart';
+import '../SharedPreferences/sharedPreferences.dart';
 import '../Utilities/Snackbar/snackbar.dart';
 
 class LoginUI extends StatefulWidget {
@@ -152,7 +154,7 @@ class _LoginUIState extends State<LoginUI> {
                                         borderRadius: BorderRadius.circular(5),
                                         side: const BorderSide(
                                             color: Colors.white70, width: 2)),
-                                    backgroundColor:  ColorsUtils.appcolor,
+                                    backgroundColor: ColorsUtils.appcolor,
                                   ),
                                   onPressed: () {
                                     post_login();
@@ -173,9 +175,7 @@ class _LoginUIState extends State<LoginUI> {
                                             color: Colors.white70, width: 2)),
                                     backgroundColor: ColorsUtils.appcolor,
                                   ),
-                                  onPressed: () {
-
-                                  },
+                                  onPressed: () {},
                                   child: const Text(
                                     'Register',
                                     style: TextStyle(color: Colors.white70),
@@ -215,7 +215,6 @@ class _LoginUIState extends State<LoginUI> {
 
     var result = jsonDecode(response.body);
 
-
     print('Response: $result');
 
     if (result['error'] == 200) {
@@ -223,8 +222,11 @@ class _LoginUIState extends State<LoginUI> {
       loginModelList = LoginModel.fromJson(result);
 
       if (loginModelList?.user?.tusrtyp == 'Installar' &&
-          loginModelList?.user?.tusrid == _usernameController.text &&
+          loginModelList?.user?.tusrid == _usernameController.text.trim() &&
           loginModelList?.user?.tusrpwd == _passwordController.text) {
+        Shared_pref.saveuser(loginModelList!.user!);
+        // var sharedPref = await SharedPreferences.getInstance();
+        // sharedPref.setBool(SplashScreenState.KEYLOGIN, true);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const DashboardUI()));
         Snackbar.showSnackBar(context, 'Login Successful', Colors.teal);
@@ -234,9 +236,6 @@ class _LoginUIState extends State<LoginUI> {
       _passwordController.clear();
       Snackbar.showSnackBar(context, 'Wrong Credentials', Colors.red);
       Navigator.pop(context);
-
     }
   }
-
-
 }

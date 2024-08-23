@@ -6,5 +6,6 @@ class ColorsUtils {
   static var blackColor = Colors.black;
   static var cyanColor = Colors.cyanAccent;
   static var redColor = Colors.red;
+  static var greyColor = Colors.grey;
   static var lightblueColor = Color(0xff5B99C2);
 }
