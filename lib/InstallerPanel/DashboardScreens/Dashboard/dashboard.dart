@@ -108,9 +108,10 @@ class _DashboardUIState extends State<DashboardUI> {
                                 child: Text(
                                   installerStatusList?.assigned.toString() ??
                                       '0',
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                       fontSize: 53,
-                                      fontWeight: FontWeight.w500),
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade400),
                                 )),
                           )
                         ],
@@ -164,9 +165,10 @@ class _DashboardUIState extends State<DashboardUI> {
                                 child: Text(
                                   installerStatusList?.installed.toString() ??
                                       '0',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 53,
-                                      fontWeight: FontWeight.w500),
+                                      fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade400),
                                 )),
                           )
                         ],
@@ -217,8 +219,7 @@ class _DashboardUIState extends State<DashboardUI> {
                             child: Center(
                                 child: Text(
                                   installerStatusList?.pending.toString() ?? '0',
-                                  style: const TextStyle(
-                                      fontSize: 53, fontWeight: FontWeight.w500),
+                                  style: TextStyle(fontSize: 53, fontWeight: FontWeight.w500,color:Colors.grey.shade400),
                                 )),
                           )
                         ],

@@ -1,12 +1,12 @@
 import 'dart:convert';
-
-import 'package:american_electronics/InstallerPanel/DashboardScreens/Assigned/CustomerProfile/customerProfile.dart';
+import 'package:american_electronics/InstallerPanel/DashboardScreens/Assigned/AssignedVisitScreen/assignedVisitScreen.dart';
 import 'package:american_electronics/Utilities/Colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../APIs/apis.dart';
 import '../../../Models/Assigned/AssignedModel.dart';
+import 'AssignedCustomerProfile/customerProfile.dart';
 
 class AssignedUI extends StatefulWidget {
   const AssignedUI({super.key});
@@ -17,6 +17,7 @@ class AssignedUI extends StatefulWidget {
 
 class _AssignedUIState extends State<AssignedUI> {
   List<AssignedModel> assignedList = [];
+  List<AssignedModel> searchAssignedList = [];
   String? colCode;
   bool loading = true;
 
@@ -32,7 +33,7 @@ class _AssignedUIState extends State<AssignedUI> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Assinged Applications',
+          'Assigned Applications',
           style: TextStyle(color: ColorsUtils.whiteColor),
         ),
         backgroundColor: ColorsUtils.appcolor,
@@ -43,6 +44,9 @@ class _AssignedUIState extends State<AssignedUI> {
         child: Column(
           children: [
             TextField(
+              onChanged: (value) {
+                search(value);
+              },
               decoration: InputDecoration(
                 hintText: "Search...",
                 suffixIcon: const Icon(Icons.search),
@@ -55,69 +59,203 @@ class _AssignedUIState extends State<AssignedUI> {
               ),
             ),
             Expanded(
-              child: loading  // Show loader if loading is true
-                  ? Center(child: CircularProgressIndicator())
-                  : assignedList.isEmpty  // Show message if no data is available
-                  ? Center(child: Text("No applications are pending"))
-                  : ListView.builder(
-                  itemCount: assignedList.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CustomerProfileUI()));
-                      },
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    assignedList[index].cmp.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
+              child: loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : searchAssignedList.isEmpty
+                      ? const Center(child: Text("No applications is Assigned"))
+                      : ListView.builder(
+                          itemCount: searchAssignedList.length,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) => _buildBottomSheet(
+                                      context, searchAssignedList[index]),
+                                );
+                              },
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 5),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor:
+                                            searchAssignedList[index]
+                                                        .status
+                                                        .toString() ==
+                                                    'Pending'
+                                                ? Colors.red
+                                                : Colors.green,
+                                        child: Text(
+                                          '1',
+                                          style: TextStyle(
+                                              color: searchAssignedList[index]
+                                                          .status
+                                                          .toString() ==
+                                                      'Pending'
+                                                  ? Colors.greenAccent
+                                                  : Colors.white),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                searchAssignedList[index]
+                                                    .cmp
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              const Text(
+                                                '  -  ',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                searchAssignedList[index]
+                                                    .date
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            searchAssignedList[index]
+                                                .customer
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Text(
+                                            searchAssignedList[index]
+                                                .mobile
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  const Text(
-                                    '  -  ',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Text(
-                                    assignedList[index].date.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                assignedList[index].customer.toString(),
-                                style: const TextStyle(
-                                  fontSize: 12,
                                 ),
                               ),
-                              Text(
-                                assignedList[index].mobile.toString(),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
+                            );
+                          }),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomSheet(BuildContext context, AssignedModel model) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pop(),
+      child: Container(
+        color: Colors.transparent,
+        child: GestureDetector(
+          onTap: () {},
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.35,
+            maxChildSize: 0.9,
+            minChildSize: 0.3,
+            builder: (_, controller) {
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: ListView(
+                      controller: controller,
+                      children: [
+                        const SizedBox(height: 16),
+                        Center(
+                          child: Text(
+                            model.customer.toString().trim(),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          model.mobile.toString(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Customer CMP: ${model.cmp}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const Divider(),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        AssignedCustomerProfileUI(assignedModel: model,)));
+                          },
+                          child: const ListTile(
+                            leading: Icon(Icons.info),
+                            title: Text("Complain Detail"),
+                            // subtitle: Text("Customer CMP: ${model.cmp}"),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        AssignedVisitScreen()));
+                          },
+                          child: const ListTile(
+                            leading: Icon(Icons.location_on),
+                            title: Text("Technician Visit"),
+                            // subtitle: Text("Visit Date: ${model.date}"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -134,11 +272,12 @@ class _AssignedUIState extends State<AssignedUI> {
         assignedList.add(AssignedModel.fromJson(i));
       }
       setState(() {
-        loading = false;  // Update loading state once data is fetched
+        loading = false;
+        searchAssignedList = List.from(assignedList);
       });
     } else {
       setState(() {
-        loading = false;  // Update loading state in case of an error
+        loading = false;
       });
     }
   }
@@ -149,5 +288,19 @@ class _AssignedUIState extends State<AssignedUI> {
     print(colCode);
     setState(() {});
     Post_Assigned();
+  }
+
+  void search(String query) {
+    setState(() {
+      searchAssignedList = assignedList.where((category) {
+        final customerNameMatches =
+            category.customer?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+        final mobileNumberMatches =
+            category.mobile?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+        return customerNameMatches || mobileNumberMatches;
+      }).toList();
+    });
   }
 }

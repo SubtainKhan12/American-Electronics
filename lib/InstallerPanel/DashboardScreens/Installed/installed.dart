@@ -1,8 +1,6 @@
 import 'dart:convert';
-
-import 'package:american_electronics/InstallerPanel/DashboardScreens/Assigned/CustomerProfile/customerProfile.dart';
+import 'package:american_electronics/InstallerPanel/DashboardScreens/Installed/InstalledCustomerProfiles/installedCustomerProfile.dart';
 import 'package:american_electronics/Models/Installed/InstalledModel.dart';
-import 'package:american_electronics/Models/Pending/PendingModel.dart';
 import 'package:american_electronics/Utilities/Colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -18,8 +16,9 @@ class InstalledUI extends StatefulWidget {
 
 class _InstalledUIState extends State<InstalledUI> {
   List<InstalledModel> installedList = [];
+  List<InstalledModel> searchInstalledList = [];
   String? colCode;
-  bool loading = true;  // State variable to control the loading state
+  bool loading = true; // State variable to control the loading state
 
   @override
   void initState() {
@@ -43,6 +42,9 @@ class _InstalledUIState extends State<InstalledUI> {
         child: Column(
           children: [
             TextField(
+              onChanged: (value) {
+                search(value);
+              },
               decoration: InputDecoration(
                 hintText: "Search...",
                 suffixIcon: const Icon(Icons.search),
@@ -55,19 +57,25 @@ class _InstalledUIState extends State<InstalledUI> {
               ),
             ),
             Expanded(
-              child: loading  // Show loader if loading is true
+              child: loading // Show loader if loading is true
                   ? Center(child: CircularProgressIndicator())
-                  : installedList.isEmpty  // Show message if no data is available
-                  ? Center(child: Text("No applications are pending"))
+                  : searchInstalledList
+                  .isEmpty // Show message if no data is available
+                  ? Center(child: Text("No Application is Installed"))
                   : ListView.builder(
-                  itemCount: installedList.length,
+                  itemCount: searchInstalledList.length,
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CustomerProfileUI()));
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) =>
+                              _buildBottomSheet(
+                                  context, searchInstalledList[index]),
+                        );
+
                       },
                       child: Card(
                         child: Padding(
@@ -79,7 +87,7 @@ class _InstalledUIState extends State<InstalledUI> {
                               Row(
                                 children: [
                                   Text(
-                                    installedList[index].cmp.toString(),
+                                    searchInstalledList[index].cmp.toString(),
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500),
@@ -91,7 +99,7 @@ class _InstalledUIState extends State<InstalledUI> {
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
-                                    installedList[index].date.toString(),
+                                    searchInstalledList[index].date.toString(),
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500),
@@ -99,13 +107,13 @@ class _InstalledUIState extends State<InstalledUI> {
                                 ],
                               ),
                               Text(
-                                installedList[index].customer.toString(),
+                                searchInstalledList[index].customer.toString(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                 ),
                               ),
                               Text(
-                                installedList[index].mobile.toString(),
+                                searchInstalledList[index].mobile.toString(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                 ),
@@ -123,6 +131,90 @@ class _InstalledUIState extends State<InstalledUI> {
     );
   }
 
+  Widget _buildBottomSheet(BuildContext context, InstalledModel model) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pop(),
+      child: Container(
+        color: Colors.transparent,
+        child: GestureDetector(
+          onTap: () {},
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.35,
+            maxChildSize: 0.9,
+            minChildSize: 0.3,
+            builder: (_, controller) {
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: ListView(
+                      controller: controller,
+                      children: [
+                        const SizedBox(height: 16),
+                        Text(
+                          model.customer.toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          model.mobile.toString(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Customer CMP: ${model.cmp}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const Divider(),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        InstalledCustomerProfileUI(
+                                            installedModelList: model)));
+                          },
+                          child: const ListTile(
+                            leading: Icon(Icons.info),
+                            title: Text("Information"),
+                            // subtitle: Text("Customer CMP: ${model.cmp}"),
+                          ),
+                        ),
+                        const ListTile(
+                          leading: Icon(Icons.location_on),
+                          title: Text("Visit"),
+                          // subtitle: Text("Visit Date: ${model.date}"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+
   Future Post_Installed() async {
     var response = await http.post(Uri.parse(Installed), body: {
       'FIntCod': colCode.toString(),
@@ -134,11 +226,12 @@ class _InstalledUIState extends State<InstalledUI> {
         installedList.add(InstalledModel.fromJson(i));
       }
       setState(() {
-        loading = false;  // Update loading state once data is fetched
+        loading = false; // Update loading state once data is fetched
+        searchInstalledList = List.from(installedList);
       });
     } else {
       setState(() {
-        loading = false;  // Update loading state in case of an error
+        loading = false; // Update loading state in case of an error
       });
     }
   }
@@ -149,5 +242,18 @@ class _InstalledUIState extends State<InstalledUI> {
     setState(() {});
     Post_Installed();
   }
+
+  void search(String query) {
+    setState(() {
+      searchInstalledList = installedList.where((category) {
+        final customerNameMatches =
+            category.customer?.toLowerCase().contains(query.toLowerCase()) ?? false;
+        final mobileNumberMatches =
+            category.mobile?.toLowerCase().contains(query.toLowerCase()) ?? false;
+        return customerNameMatches || mobileNumberMatches;
+      }).toList();
+    });
+  }
+
 }
 

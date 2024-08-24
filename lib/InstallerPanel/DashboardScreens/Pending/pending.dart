@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:american_electronics/InstallerPanel/DashboardScreens/Assigned/CustomerProfile/customerProfile.dart';
+import 'package:american_electronics/InstallerPanel/DashboardScreens/Pending/PendingCustomerProfile/pendingCustomerProfile.dart';
 import 'package:american_electronics/Models/Pending/PendingModel.dart';
 import 'package:american_electronics/Utilities/Colors/colors.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +16,9 @@ class PendingUI extends StatefulWidget {
 
 class _PendingUIState extends State<PendingUI> {
   List<PendingModel> pendingList = [];
+  List<PendingModel> searchPendingList = [];
   String? colCode;
-  bool loading = true;  // State variable to control the loading state
+  bool loading = true; // State variable to control the loading state
 
   @override
   void initState() {
@@ -42,6 +42,9 @@ class _PendingUIState extends State<PendingUI> {
         child: Column(
           children: [
             TextField(
+              onChanged: (value) {
+                search(value);
+              },
               decoration: InputDecoration(
                 hintText: "Search...",
                 suffixIcon: const Icon(Icons.search),
@@ -54,69 +57,166 @@ class _PendingUIState extends State<PendingUI> {
               ),
             ),
             Expanded(
-              child: loading  // Show loader if loading is true
+              child: loading // Show loader if loading is true
                   ? Center(child: CircularProgressIndicator())
-                  : pendingList.isEmpty  // Show message if no data is available
-                  ? Center(child: Text("No applications are pending"))
-                  : ListView.builder(
-                  itemCount: pendingList.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CustomerProfileUI()));
-                      },
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    pendingList[index].cmp.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
+                  : searchPendingList
+                          .isEmpty // Show message if no data is available
+                      ? Center(child: Text("No applications are pending"))
+                      : ListView.builder(
+                          itemCount: searchPendingList.length,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) =>
+                                      _buildBottomSheet(
+                                          context, searchPendingList[index]),
+                                );
+                              },
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            searchPendingList[index]
+                                                .cmp
+                                                .toString(),
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          const Text(
+                                            '  -  ',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          Text(
+                                            searchPendingList[index]
+                                                .date
+                                                .toString(),
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        searchPendingList[index]
+                                            .customer
+                                            .toString(),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      Text(
+                                        searchPendingList[index]
+                                            .mobile
+                                            .toString(),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const Text(
-                                    '  -  ',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Text(
-                                    pendingList[index].date.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                pendingList[index].customer.toString(),
-                                style: const TextStyle(
-                                  fontSize: 12,
                                 ),
                               ),
-                              Text(
-                                pendingList[index].mobile.toString(),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
+                            );
+                          }),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomSheet(BuildContext context, PendingModel model) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pop(),
+      child: Container(
+        color: Colors.transparent,
+        child: GestureDetector(
+          onTap: () {},
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.35,
+            maxChildSize: 0.9,
+            minChildSize: 0.3,
+            builder: (_, controller) {
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: ListView(
+                      controller: controller,
+                      children: [
+                        const SizedBox(height: 16),
+                        Text(
+                          model.customer.toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          model.mobile.toString(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Customer CMP: ${model.cmp}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const Divider(),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PendingCustomerProfileUI(
+                                            pendingModelList: model)));
+                          },
+                          child: const ListTile(
+                            leading: Icon(Icons.info),
+                            title: Text("Information"),
+                            // subtitle: Text("Customer CMP: ${model.cmp}"),
+                          ),
+                        ),
+                        const ListTile(
+                          leading: Icon(Icons.location_on),
+                          title: Text("Visit"),
+                          // subtitle: Text("Visit Date: ${model.date}"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -133,11 +233,12 @@ class _PendingUIState extends State<PendingUI> {
         pendingList.add(PendingModel.fromJson(i));
       }
       setState(() {
-        loading = false;  // Update loading state once data is fetched
+        loading = false; // Update loading state once data is fetched
+        searchPendingList = List.from(pendingList);
       });
     } else {
       setState(() {
-        loading = false;  // Update loading state in case of an error
+        loading = false; // Update loading state in case of an error
       });
     }
   }
@@ -148,5 +249,18 @@ class _PendingUIState extends State<PendingUI> {
     setState(() {});
     Post_Pending();
   }
-}
 
+  void search(String query) {
+    setState(() {
+      searchPendingList = pendingList.where((category) {
+        final customerNameMatches =
+            category.customer?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+        final mobileNumberMatches =
+            category.mobile?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+        return customerNameMatches || mobileNumberMatches;
+      }).toList();
+    });
+  }
+}
