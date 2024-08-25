@@ -5,18 +5,19 @@ import 'package:http/http.dart'as http;
 import '../../../../APIs/apis.dart';
 import '../../../../Models/Assigned/AssignedModel.dart';
 import '../../../../Models/GetComplain/GetComplainModel.dart';
+import '../../../../Models/Pending/PendingModel.dart';
 import '../../../../Utilities/Colors/colors.dart';
-import 'VisitForm/visitFormUi.dart';
+import 'VisitForm/pendingVisitFormUi.dart';
 
-class AssignedVisitScreen extends StatefulWidget {
-  AssignedModel assignedModel;
-   AssignedVisitScreen({super.key, required this.assignedModel});
+class PendingVisitScreen extends StatefulWidget {
+  PendingModel pendingModel;
+   PendingVisitScreen({super.key, required this.pendingModel});
 
   @override
-  State<AssignedVisitScreen> createState() => _AssignedVisitScreenState();
+  State<PendingVisitScreen> createState() => _PendingVisitScreenState();
 }
 
-class _AssignedVisitScreenState extends State<AssignedVisitScreen> {
+class _PendingVisitScreenState extends State<PendingVisitScreen> {
   List<GetComplainModel> getComplainList = [];
   bool isLoading = true;
   bool isDataEmpty = false;
@@ -40,7 +41,7 @@ class _AssignedVisitScreenState extends State<AssignedVisitScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: isDataEmpty ? null : () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => VisitFormUI(getComplainModel: getComplainList[0],)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => PendingVisitFormUI(getComplainModel: getComplainList[0],)));
         },
         child: Icon(Icons.add),
       ),
@@ -156,7 +157,7 @@ class _AssignedVisitScreenState extends State<AssignedVisitScreen> {
 
   Future Post_Complain() async {
     var response = await http.post(Uri.parse(GetComplain), body: {
-      'FCmpNum': widget.assignedModel.cmp.toString(),
+      'FCmpNum': widget.pendingModel.cmp.toString(),
     });
     var result = jsonDecode(response.body);
     if (response.statusCode == 200) {

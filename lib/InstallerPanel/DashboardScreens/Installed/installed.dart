@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:american_electronics/InstallerPanel/DashboardScreens/Installed/InstalledCustomerProfiles/installedCustomerProfile.dart';
+import 'package:american_electronics/InstallerPanel/DashboardScreens/Installed/InstalledVisitScreen/VisitForm/installedVisitFormUi.dart';
 import 'package:american_electronics/Models/Installed/InstalledModel.dart';
 import 'package:american_electronics/Utilities/Colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../APIs/apis.dart';
+import 'InstalledVisitScreen/installedVisitScreen.dart';
 
 class InstalledUI extends StatefulWidget {
   const InstalledUI({super.key});
@@ -61,7 +63,8 @@ class _InstalledUIState extends State<InstalledUI> {
                   ? Center(child: CircularProgressIndicator())
                   : searchInstalledList
                   .isEmpty // Show message if no data is available
-                  ? Center(child: Text("No Application is Installed"))
+                  ? Center(child: Text("No Application is Installed",style: TextStyle(fontSize: 16,fontWeight:
+              FontWeight.bold,color: Colors.grey),))
                   : ListView.builder(
                   itemCount: searchInstalledList.length,
                   itemBuilder: (context, index) {
@@ -188,8 +191,8 @@ class _InstalledUIState extends State<InstalledUI> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        InstalledCustomerProfileUI(
-                                            installedModelList: model)));
+                                        InstalledCustomerDetail(
+                                            installedModel: model)));
                           },
                           child: const ListTile(
                             leading: Icon(Icons.info),
@@ -197,11 +200,21 @@ class _InstalledUIState extends State<InstalledUI> {
                             // subtitle: Text("Customer CMP: ${model.cmp}"),
                           ),
                         ),
-                        const ListTile(
-                          leading: Icon(Icons.location_on),
-                          title: Text("Visit"),
-                          // subtitle: Text("Visit Date: ${model.date}"),
-                        ),
+                        // InkWell(
+                        //   onTap: (){
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) =>
+                        //                 InstalledVisitScreen(
+                        //                     installedModel: model)));
+                        //   },
+                        //   child: const ListTile(
+                        //     leading: Icon(Icons.location_on),
+                        //     title: Text("Visit"),
+                        //     // subtitle: Text("Visit Date: ${model.date}"),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -221,12 +234,15 @@ class _InstalledUIState extends State<InstalledUI> {
     });
     var result = jsonDecode(response.body);
     if (response.statusCode == 200) {
+      setState(() {
+        loading = false;
+      });
       installedList.clear();
       for (Map i in result) {
         installedList.add(InstalledModel.fromJson(i));
       }
       setState(() {
-        loading = false; // Update loading state once data is fetched
+
         searchInstalledList = List.from(installedList);
       });
     } else {

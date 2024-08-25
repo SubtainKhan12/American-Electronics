@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:american_electronics/InstallerPanel/DashboardScreens/Pending/PendingCustomerProfile/pendingCustomerProfile.dart';
+import 'package:american_electronics/InstallerPanel/DashboardScreens/Pending/PendingVisitScreen/pendingVisitScreen.dart';
 import 'package:american_electronics/Models/Pending/PendingModel.dart';
 import 'package:american_electronics/Utilities/Colors/colors.dart';
 import 'package:flutter/material.dart';
@@ -57,11 +58,12 @@ class _PendingUIState extends State<PendingUI> {
               ),
             ),
             Expanded(
-              child: loading // Show loader if loading is true
+              child: loading// Show loader if loading is true
                   ? Center(child: CircularProgressIndicator())
                   : searchPendingList
                           .isEmpty // Show message if no data is available
-                      ? Center(child: Text("No applications are pending"))
+                      ? Center(child: Text("No applications are pending",style: TextStyle(fontSize: 16,fontWeight:
+              FontWeight.bold,color: Colors.grey),))
                       : ListView.builder(
                           itemCount: searchPendingList.length,
                           itemBuilder: (context, index) {
@@ -196,19 +198,28 @@ class _PendingUIState extends State<PendingUI> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        PendingCustomerProfileUI(
-                                            pendingModelList: model)));
+                                        PendingCustomerDetail(
+                                            pendingModel: model)));
                           },
                           child: const ListTile(
                             leading: Icon(Icons.info),
-                            title: Text("Information"),
+                            title: Text("Complain Detail"),
                             // subtitle: Text("Customer CMP: ${model.cmp}"),
                           ),
                         ),
-                        const ListTile(
-                          leading: Icon(Icons.location_on),
-                          title: Text("Visit"),
-                          // subtitle: Text("Visit Date: ${model.date}"),
+                        InkWell(
+                          onTap: (){
+                            Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                PendingVisitScreen(pendingModel: model,)));
+                          },
+                          child: const ListTile(
+                            leading: Icon(Icons.location_on),
+                            title: Text("Technician Visit"),
+                            // subtitle: Text("Visit Date: ${model.date}"),
+                          ),
                         ),
                       ],
                     ),
@@ -223,17 +234,22 @@ class _PendingUIState extends State<PendingUI> {
   }
 
   Future Post_Pending() async {
+
     var response = await http.post(Uri.parse(Pending), body: {
       'FIntCod': colCode.toString(),
     });
     var result = jsonDecode(response.body);
     if (response.statusCode == 200) {
+      setState(() {
+        loading = false;
+      });
       pendingList.clear();
       for (Map i in result) {
         pendingList.add(PendingModel.fromJson(i));
+
       }
       setState(() {
-        loading = false; // Update loading state once data is fetched
+         // Update loading state once data is fetched
         searchPendingList = List.from(pendingList);
       });
     } else {

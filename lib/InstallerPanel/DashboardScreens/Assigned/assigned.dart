@@ -62,7 +62,8 @@ class _AssignedUIState extends State<AssignedUI> {
               child: loading
                   ? const Center(child: CircularProgressIndicator())
                   : searchAssignedList.isEmpty
-                      ? const Center(child: Text("No applications is Assigned"))
+                      ? const Center(child: Text("No applications is Assigned",style: TextStyle(fontSize: 16,fontWeight:
+              FontWeight.bold,color: Colors.grey),))
                       : ListView.builder(
                           itemCount: searchAssignedList.length,
                           itemBuilder: (context, index) {
@@ -227,7 +228,7 @@ class _AssignedUIState extends State<AssignedUI> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        AssignedCustomerProfileUI(assignedModel: model,)));
+                                        AssignedCustomerDetail(assignedModel: model,)));
                           },
                           child: const ListTile(
                             leading: Icon(Icons.info),
@@ -235,20 +236,20 @@ class _AssignedUIState extends State<AssignedUI> {
                             // subtitle: Text("Customer CMP: ${model.cmp}"),
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        AssignedVisitScreen()));
-                          },
-                          child: const ListTile(
-                            leading: Icon(Icons.location_on),
-                            title: Text("Technician Visit"),
-                            // subtitle: Text("Visit Date: ${model.date}"),
-                          ),
-                        ),
+                        // InkWell(
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) =>
+                        //                 AssignedVisitScreen(assignedModel: model,)));
+                        //   },
+                        //   child: const ListTile(
+                        //     leading: Icon(Icons.location_on),
+                        //     title: Text("Technician Visit"),
+                        //     // subtitle: Text("Visit Date: ${model.date}"),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -267,12 +268,15 @@ class _AssignedUIState extends State<AssignedUI> {
     });
     var result = jsonDecode(response.body);
     if (response.statusCode == 200) {
+      setState(() {
+        loading = false;
+      });
       assignedList.clear();
       for (Map i in result) {
         assignedList.add(AssignedModel.fromJson(i));
       }
       setState(() {
-        loading = false;
+
         searchAssignedList = List.from(assignedList);
       });
     } else {

@@ -3,23 +3,21 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:american_electronics/Utilities/Colors/colors.dart';
 import '../../../../APIs/apis.dart';
-
 import '../../../../Models/Assigned/AssignedModel.dart';
 import '../../../../Models/GetComplain/GetComplainModel.dart';
 
-class AssignedCustomerProfileUI extends StatefulWidget {
+class AssignedCustomerDetail extends StatefulWidget {
   AssignedModel assignedModel;
 
-  AssignedCustomerProfileUI({super.key, required this.assignedModel});
+  AssignedCustomerDetail({super.key, required this.assignedModel});
 
   @override
-  State<AssignedCustomerProfileUI> createState() =>
-      _AssignedCustomerProfileUIState();
+  State<AssignedCustomerDetail> createState() =>
+      _AssignedCustomerDetailState();
 }
 
-class _AssignedCustomerProfileUIState extends State<AssignedCustomerProfileUI> {
+class _AssignedCustomerDetailState extends State<AssignedCustomerDetail> {
   List<GetComplainModel> getComplainList = [];
-  String? colCode;
 
   @override
   void initState() {

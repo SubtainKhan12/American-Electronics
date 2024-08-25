@@ -8,15 +8,15 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../../Utilities/Colors/colors.dart';
 
-class VisitFormUI extends StatefulWidget {
+class InstalledVisitFormUI extends StatefulWidget {
   GetComplainModel getComplainModel;
-  VisitFormUI({super.key, required this.getComplainModel});
+  InstalledVisitFormUI({super.key, required this.getComplainModel});
 
   @override
-  State<VisitFormUI> createState() => _VisitFormUIState();
+  State<InstalledVisitFormUI> createState() => _InstalledVisitFormUIState();
 }
 
-class _VisitFormUIState extends State<VisitFormUI> {
+class _InstalledVisitFormUIState extends State<InstalledVisitFormUI> {
   TextEditingController _serialController = TextEditingController();
   DateTime selectedInitialDate = DateTime.now();
   String? status;
@@ -67,20 +67,23 @@ class _VisitFormUIState extends State<VisitFormUI> {
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  const SizedBox(width: 8),
-                  const Text('From: ',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(
-                    DateFormat('dd-MM-yyyy').format(selectedInitialDate),
-                    style: const TextStyle(
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 16,
+              InkWell(
+                onTap: (){_intSelectDate(context,setState);},
+                child: Row(
+                  children: [
+                    const SizedBox(width: 8),
+                    const Text('Date: ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      DateFormat('dd-MM-yyyy').format(selectedInitialDate),
+                      style: const TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  const Icon(Icons.calendar_today, color: Colors.green),
-                ],
+                    const Icon(Icons.calendar_today, color: Colors.green),
+                  ],
+                ),
               ),
             ],
           ),

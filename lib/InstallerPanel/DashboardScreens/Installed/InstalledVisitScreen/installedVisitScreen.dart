@@ -1,22 +1,25 @@
 import 'dart:convert';
 
+import 'package:american_electronics/Models/Installed/InstalledModel.dart';
+import 'package:american_electronics/Models/Pending/PendingModel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'as http;
 import '../../../../APIs/apis.dart';
 import '../../../../Models/Assigned/AssignedModel.dart';
 import '../../../../Models/GetComplain/GetComplainModel.dart';
 import '../../../../Utilities/Colors/colors.dart';
-import 'VisitForm/visitFormUi.dart';
+import 'VisitForm/installedVisitFormUi.dart';
 
-class AssignedVisitScreen extends StatefulWidget {
-  AssignedModel assignedModel;
-   AssignedVisitScreen({super.key, required this.assignedModel});
+
+class InstalledVisitScreen extends StatefulWidget {
+  InstalledModel installedModel;
+   InstalledVisitScreen({super.key, required this.installedModel});
 
   @override
-  State<AssignedVisitScreen> createState() => _AssignedVisitScreenState();
+  State<InstalledVisitScreen> createState() => _InstalledVisitScreenState();
 }
 
-class _AssignedVisitScreenState extends State<AssignedVisitScreen> {
+class _InstalledVisitScreenState extends State<InstalledVisitScreen> {
   List<GetComplainModel> getComplainList = [];
   bool isLoading = true;
   bool isDataEmpty = false;
@@ -40,7 +43,7 @@ class _AssignedVisitScreenState extends State<AssignedVisitScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: isDataEmpty ? null : () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => VisitFormUI(getComplainModel: getComplainList[0],)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => InstalledVisitFormUI(getComplainModel: getComplainList[0],)));
         },
         child: Icon(Icons.add),
       ),
@@ -156,7 +159,7 @@ class _AssignedVisitScreenState extends State<AssignedVisitScreen> {
 
   Future Post_Complain() async {
     var response = await http.post(Uri.parse(GetComplain), body: {
-      'FCmpNum': widget.assignedModel.cmp.toString(),
+      'FCmpNum': widget.installedModel.cmp.toString(),
     });
     var result = jsonDecode(response.body);
     if (response.statusCode == 200) {
