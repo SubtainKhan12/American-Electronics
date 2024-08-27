@@ -83,28 +83,28 @@ class _AssignedUIState extends State<AssignedUI> {
                                       horizontal: 10.0, vertical: 5),
                                   child: Row(
                                     children: [
-                                      CircleAvatar(
-                                        backgroundColor:
-                                            searchAssignedList[index]
-                                                        .status
-                                                        .toString() ==
-                                                    'Pending'
-                                                ? Colors.red
-                                                : Colors.green,
-                                        child: Text(
-                                          '1',
-                                          style: TextStyle(
-                                              color: searchAssignedList[index]
-                                                          .status
-                                                          .toString() ==
-                                                      'Pending'
-                                                  ? Colors.greenAccent
-                                                  : Colors.white),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
+                                      // CircleAvatar(
+                                      //   backgroundColor:
+                                      //       searchAssignedList[index]
+                                      //                   .status
+                                      //                   .toString() ==
+                                      //               'Pending'
+                                      //           ? Colors.red
+                                      //           : Colors.green,
+                                      //   child: Text(
+                                      //     '1',
+                                      //     style: TextStyle(
+                                      //         color: searchAssignedList[index]
+                                      //                     .status
+                                      //                     .toString() ==
+                                      //                 'Pending'
+                                      //             ? Colors.greenAccent
+                                      //             : Colors.white),
+                                      //   ),
+                                      // ),
+                                      // const SizedBox(
+                                      //   width: 10,
+                                      // ),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -146,13 +146,27 @@ class _AssignedUIState extends State<AssignedUI> {
                                               fontSize: 12,
                                             ),
                                           ),
-                                          Text(
-                                            searchAssignedList[index]
-                                                .mobile
-                                                .toString(),
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                searchAssignedList[index]
+                                                    .mobile
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              SizedBox(width: 10,),
+                                              Text(
+                                                '(${searchAssignedList[index]
+                                                    .status
+                                                    .toString()})',
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.red
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
