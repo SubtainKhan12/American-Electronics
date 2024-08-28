@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../APIs/apis.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PendingUI extends StatefulWidget {
   const PendingUI({super.key});
@@ -94,6 +95,7 @@ class _PendingUIState extends State<PendingUI> {
                                                 .toString(),
                                             style: const TextStyle(
                                                 fontSize: 14,
+                                                color: Color(0xffF58634),
                                                 fontWeight: FontWeight.w500),
                                           ),
                                           const Text(
@@ -176,11 +178,21 @@ class _PendingUIState extends State<PendingUI> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          model.mobile.toString(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
+                        InkWell(
+                          onTap: (){
+                            _showPhoneDialog(
+                                model.mobile.toString());
+                          },
+                          child: Text(
+                            model.mobile.toString(),
+
+                            style:  TextStyle(
+                              decoration: TextDecoration.underline,
+                              decorationColor: ColorsUtils.appcolor,
+                              decorationThickness: 2,
+                              fontSize: 16,
+                              color: ColorsUtils.appcolor,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -275,8 +287,74 @@ class _PendingUIState extends State<PendingUI> {
         final mobileNumberMatches =
             category.mobile?.toLowerCase().contains(query.toLowerCase()) ??
                 false;
-        return customerNameMatches || mobileNumberMatches;
+        final complainNumberMatches =
+            category.cmp?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+        return customerNameMatches || mobileNumberMatches || complainNumberMatches;
       }).toList();
     });
   }
+
+  Future<void> _showPhoneDialog(String phoneNumber) async {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choose an option'),
+          content: Text('Would you like to call or message on WhatsApp?'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.phone,
+                  size: _height * 0.04,
+                  color: Color(0xff06D001)),
+              onPressed: () {
+                _makePhoneCall(phoneNumber);
+                Navigator.of(context).pop();
+              },
+            ),
+            SizedBox(width: 10,),
+            InkWell(
+              onTap: (){
+                _openWhatsApp(phoneNumber);
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: _height * 0.04,
+                child: Image.asset('assets/whatsapp.png'),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  ///-----------------------> Function to Navigate to phone dail <-----------------///
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
+
+  ///-------------------> Function to Navigate to whatsapp <------------------///
+  Future<void> _openWhatsApp(String phoneNumber) async {
+    final launchUri = Uri(
+      scheme: 'https',
+      path: 'wa.me/$phoneNumber',
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Could not launch WhatsApp for $phoneNumber';
+    }
+  }
 }
+

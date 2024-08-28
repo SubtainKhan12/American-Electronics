@@ -266,7 +266,10 @@ class _InstalledUIState extends State<InstalledUI> {
             category.customer?.toLowerCase().contains(query.toLowerCase()) ?? false;
         final mobileNumberMatches =
             category.mobile?.toLowerCase().contains(query.toLowerCase()) ?? false;
-        return customerNameMatches || mobileNumberMatches;
+        final complainNumberMatches =
+            category.cmp?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+        return customerNameMatches || mobileNumberMatches || complainNumberMatches;
       }).toList();
     });
   }

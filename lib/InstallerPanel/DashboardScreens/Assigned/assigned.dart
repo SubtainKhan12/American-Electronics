@@ -117,8 +117,9 @@ class _AssignedUIState extends State<AssignedUI> {
                                                     .toString(),
                                                 style: const TextStyle(
                                                     fontSize: 14,
+                                                    color: Color(0xffF58634),
                                                     fontWeight:
-                                                        FontWeight.bold),
+                                                        FontWeight.bold,),
                                               ),
                                               const Text(
                                                 '  -  ',
@@ -317,7 +318,10 @@ class _AssignedUIState extends State<AssignedUI> {
         final mobileNumberMatches =
             category.mobile?.toLowerCase().contains(query.toLowerCase()) ??
                 false;
-        return customerNameMatches || mobileNumberMatches;
+        final complainNumberMatches =
+            category.cmp?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+        return customerNameMatches || mobileNumberMatches || complainNumberMatches;
       }).toList();
     });
   }

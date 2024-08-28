@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:american_electronics/Utilities/Colors/colors.dart';
+import 'package:translator/translator.dart';
 import '../../../../APIs/apis.dart';
 
 import '../../../../Models/GetComplain/GetComplainModel.dart';
@@ -19,6 +20,10 @@ class InstalledCustomerDetail extends StatefulWidget {
 
 class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
   List<GetComplainModel> getComplainList = [];
+  final translator = GoogleTranslator();
+  bool _translatetext = false;
+
+
 
   @override
   void initState() {
@@ -33,12 +38,22 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Detail',
-          style: TextStyle(color: ColorsUtils.whiteColor),
-        ),
-        backgroundColor: ColorsUtils.appcolor,
-        iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
+          title: Text(
+            'Detail',
+            style: TextStyle(color: ColorsUtils.whiteColor),
+          ),
+          backgroundColor: ColorsUtils.appcolor,
+          iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
+          actions: [
+            Switch(
+              value: _translatetext,
+              onChanged: (value) {
+                setState(() {
+                  _translatetext = value;
+                });
+              },
+            ),
+          ]
       ),
       body: getComplainList.isEmpty
           ? const Center(
@@ -159,10 +174,44 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
                                     Container(
                                       // width: _width * 0.25,
                                         child: Flexible(
-                                          child: Text(getComplainList[index]
+                                          child: _translatetext == false
+                                              ? Text(getComplainList[index]
                                               .customer
                                               .toString()
-                                              .trim()),
+                                              .trim())
+                                              : FutureBuilder<String>(
+                                            future: translateTextToUrdu(
+                                                getComplainList[index]
+                                                    .customer
+                                                    .toString()
+                                                    .trim()),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                return Text('isLoading....'); // Show a spinner while translating
+                                              } else if (snapshot.hasError) {
+                                                return Text(
+                                                  getComplainList[index]
+                                                      .customer
+                                                      .toString()
+                                                      .trim(),
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.bold),
+                                                );
+                                              } else {
+                                                return Text(
+                                                  snapshot.data ??
+                                                      getComplainList[index]
+                                                          .customer
+                                                          .toString()
+                                                          .trim(),
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.bold),
+                                                );
+                                              }
+                                            },
+                                          ),
                                         ))
                                   ],
                                 ),
@@ -190,10 +239,26 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
                                     Container(
                                       // width: _width * 0.25,
                                         child: Flexible(
-                                          child: Text(getComplainList[index]
+                                          child:  _translatetext == false ? Text( getComplainList[index]
                                               .address1
                                               .toString()
-                                              .trim()),
+                                              .trim()):Container(
+                                            child: FutureBuilder<String>(
+                                              future: translateText(getComplainList[index].address1.toString().trim(), 'en'),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                  return Text('Loading...');
+                                                } else if (snapshot.hasError) {
+                                                  return Text('Error: ${snapshot.error}');
+                                                } else {
+                                                  return Flexible(
+                                                    child: Text(snapshot.data ?? 'No translation available', textDirection: TextDirection.rtl,),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
+
                                         ))
                                   ],
                                 ),
@@ -221,10 +286,25 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
                                     Container(
                                       // width: _width * 0.25,
                                         child: Flexible(
-                                          child: Text(getComplainList[index]
+                                          child: _translatetext == false ? Text( getComplainList[index]
                                               .address2
                                               .toString()
-                                              .trim()),
+                                              .trim()): Container(
+                                            child: FutureBuilder<String>(
+                                              future: translateText(getComplainList[index].address2.toString().trim(), 'en'),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                  return Text('Loading...');
+                                                } else if (snapshot.hasError) {
+                                                  return Text('Error: ${snapshot.error}');
+                                                } else {
+                                                  return Flexible(
+                                                    child: Text(snapshot.data ?? 'No translation available', textDirection: TextDirection.rtl,),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
                                         ))
                                   ],
                                 ),
@@ -445,11 +525,12 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
                                     ),
                                     Container(
                                       // width: _width * 0.25,
-                                        child:
-                                        Flexible(child: Text(getComplainList[index]
-                                            .installarMobile
-                                            .toString()
-                                            .trim()))),
+                                        child: Flexible(
+                                            child: Text(
+                                                getComplainList[index]
+                                                    .installarMobile
+                                                    .toString()
+                                                    .trim()))),
                                   ],
                                 ),
                               ),
@@ -505,17 +586,33 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
                         ),
                         child: Column(
                           children: [
-                            if (getComplainList[index].date1.toString().trim() != 'null' ||
-                                getComplainList[index].remarks1.toString().trim() != 'null')
+                            if (getComplainList[index]
+                                .date1
+                                .toString()
+                                .trim() !=
+                                'null' ||
+                                getComplainList[index]
+                                    .remarks1
+                                    .toString()
+                                    .trim() !=
+                                    'null')
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                     width: _width * 0.22,
                                     child: Text(
-                                      getComplainList[index].date1.toString().trim() == 'null'
+                                      getComplainList[index]
+                                          .date1
+                                          .toString()
+                                          .trim() ==
+                                          'null'
                                           ? ''
-                                          : getComplainList[index].date1.toString().trim(),
+                                          : getComplainList[index]
+                                          .date1
+                                          .toString()
+                                          .trim(),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -525,104 +622,187 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
                                     width: _width * 0.02,
                                     child: const Text(
                                       ':',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Flexible(
                                     child: Text(
-                                      getComplainList[index].remarks1.toString().trim() == 'null'
+                                      getComplainList[index]
+                                          .remarks1
+                                          .toString()
+                                          .trim() ==
+                                          'null'
                                           ? ''
-                                          : getComplainList[index].remarks1.toString().trim(),
+                                          : getComplainList[index]
+                                          .remarks1
+                                          .toString()
+                                          .trim(),
                                     ),
                                   ),
                                 ],
                               ),
-                            if (getComplainList[index].date2.toString().trim() != 'null' ||
-                                getComplainList[index].remarks2.toString().trim() != 'null')
+                            if (getComplainList[index]
+                                .date2
+                                .toString()
+                                .trim() !=
+                                'null' ||
+                                getComplainList[index]
+                                    .remarks2
+                                    .toString()
+                                    .trim() !=
+                                    'null')
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                     width: _width * 0.22,
                                     child: Text(
-                                      getComplainList[index].date2.toString().trim() == 'null'
+                                      getComplainList[index]
+                                          .date2
+                                          .toString()
+                                          .trim() ==
+                                          'null'
                                           ? ''
-                                          : getComplainList[index].date2.toString().trim(),
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                          : getComplainList[index]
+                                          .date2
+                                          .toString()
+                                          .trim(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Container(
                                     width: _width * 0.02,
                                     child: const Text(
                                       ':',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Flexible(
                                     child: Text(
-                                      getComplainList[index].remarks2.toString().trim() == 'null'
+                                      getComplainList[index]
+                                          .remarks2
+                                          .toString()
+                                          .trim() ==
+                                          'null'
                                           ? ''
-                                          : getComplainList[index].remarks2.toString().trim(),
+                                          : getComplainList[index]
+                                          .remarks2
+                                          .toString()
+                                          .trim(),
                                     ),
                                   ),
                                 ],
                               ),
-                            if (getComplainList[index].date3.toString().trim() != 'null' ||
-                                getComplainList[index].remarks3.toString().trim() != 'null')
+                            if (getComplainList[index]
+                                .date3
+                                .toString()
+                                .trim() !=
+                                'null' ||
+                                getComplainList[index]
+                                    .remarks3
+                                    .toString()
+                                    .trim() !=
+                                    'null')
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                     width: _width * 0.22,
                                     child: Text(
-                                      getComplainList[index].date3.toString().trim() == 'null'
+                                      getComplainList[index]
+                                          .date3
+                                          .toString()
+                                          .trim() ==
+                                          'null'
                                           ? ''
-                                          : getComplainList[index].date3.toString().trim(),
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                          : getComplainList[index]
+                                          .date3
+                                          .toString()
+                                          .trim(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Container(
                                     width: _width * 0.02,
                                     child: const Text(
                                       ':',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Flexible(
                                     child: Text(
-                                      getComplainList[index].remarks3.toString().trim() == 'null'
+                                      getComplainList[index]
+                                          .remarks3
+                                          .toString()
+                                          .trim() ==
+                                          'null'
                                           ? ''
-                                          : getComplainList[index].remarks3.toString().trim(),
+                                          : getComplainList[index]
+                                          .remarks3
+                                          .toString()
+                                          .trim(),
                                     ),
                                   ),
                                 ],
                               ),
-                            if (getComplainList[index].date4.toString().trim() != 'null' ||
-                                getComplainList[index].remarks4.toString().trim() != 'null')
+                            if (getComplainList[index]
+                                .date4
+                                .toString()
+                                .trim() !=
+                                'null' ||
+                                getComplainList[index]
+                                    .remarks4
+                                    .toString()
+                                    .trim() !=
+                                    'null')
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                     width: _width * 0.22,
                                     child: Text(
-                                      getComplainList[index].date4.toString().trim() == 'null'
+                                      getComplainList[index]
+                                          .date4
+                                          .toString()
+                                          .trim() ==
+                                          'null'
                                           ? ''
-                                          : getComplainList[index].date4.toString().trim(),
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                          : getComplainList[index]
+                                          .date4
+                                          .toString()
+                                          .trim(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Container(
                                     width: _width * 0.02,
                                     child: const Text(
                                       ':',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Flexible(
                                     child: Text(
-                                      getComplainList[index].remarks4.toString().trim() == 'null'
+                                      getComplainList[index]
+                                          .remarks4
+                                          .toString()
+                                          .trim() ==
+                                          'null'
                                           ? ''
-                                          : getComplainList[index].remarks4.toString().trim(),
+                                          : getComplainList[index]
+                                          .remarks4
+                                          .toString()
+                                          .trim(),
                                     ),
                                   ),
                                 ],
@@ -712,6 +892,12 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
                                           child: Text(getComplainList[index]
                                               .remarks
                                               .toString()
+                                              .trim() ==
+                                              'null'
+                                              ? ''
+                                              : getComplainList[index]
+                                              .remarks
+                                              .toString()
                                               .trim()),
                                         )),
                                   ],
@@ -783,6 +969,26 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
       // setState(() {
       //   // loading = false;
       // });
+    }
+  }
+  Future<String> translateTextToUrdu(String text) async {
+    try {
+      final translation = await translator.translate(text, to: 'ur');
+      return translation.text ?? text;
+    } catch (e) {
+      print('Translation error: $e');
+      return text; // Fallback to original text if translation fails
+    }
+  }
+  Future<String> translateText(String text, String targetLanguage) async {
+    final apiUrl = 'https://api.mymemory.translated.net/get';
+    final response = await http.get(Uri.parse('$apiUrl?q=${Uri.encodeComponent(text)}&langpair=en|ur'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['responseData']['translatedText'];
+    } else {
+      throw Exception('Failed to load translation');
     }
   }
 }
