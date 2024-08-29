@@ -5,10 +5,10 @@ class CircularIndicator {
   static void showLoader(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: false, // Prevents dismissing by tapping outside
       builder: (BuildContext context) {
         return WillPopScope(
-          onWillPop: () async => false,
+          onWillPop: () async => true, // Allows back button to close the dialog
           child: Stack(
             children: [
               // The blurred background
@@ -29,7 +29,7 @@ class CircularIndicator {
     );
   }
 
-  // static void hideLoader(BuildContext context) {
-  //   Navigator.of(context).pop(); // Closes the dialog
-  // }
+  static void hideLoader(BuildContext context) {
+    Navigator.of(context).pop(); // Closes the dialog
+  }
 }

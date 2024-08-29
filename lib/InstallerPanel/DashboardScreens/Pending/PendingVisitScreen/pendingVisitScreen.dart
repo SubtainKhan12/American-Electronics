@@ -30,126 +30,129 @@ class _PendingVisitScreenState extends State<PendingVisitScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Visit',
-          style: TextStyle(color: ColorsUtils.whiteColor),
+    return RefreshIndicator(
+      onRefresh: Post_Complain,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Visit',
+            style: TextStyle(color: ColorsUtils.whiteColor),
+          ),
+          backgroundColor: ColorsUtils.appcolor,
+          iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
         ),
-        backgroundColor: ColorsUtils.appcolor,
-        iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: isDataEmpty ? null : () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => PendingVisitFormUI(getComplainModel: getComplainList[0],)));
-        },
-        child: Icon(Icons.add),
-      ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : isDataEmpty
-          ? Center(child: Text("No data available"))
-          : Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-        child: ListView.builder(
-          itemCount: getComplainList.length,
-          itemBuilder: (context, index) {
-            return Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (getComplainList[index].date1 != null && getComplainList[index].remarks1 != null)
-                    SizedBox(
-                      width: double.infinity,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                getComplainList[index].date1.toString().trim(),
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                              ),
-                              Text(
-                                getComplainList[index].remarks1.toString().trim(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (getComplainList[index].date2 != null && getComplainList[index].remarks2 != null)
-                    SizedBox(
-                      width: double.infinity,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                getComplainList[index].date2.toString().trim(),
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                              ),
-                              Text(
-                                getComplainList[index].remarks2.toString().trim(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (getComplainList[index].date3 != null && getComplainList[index].remarks3 != null)
-                    SizedBox(
-                      width: double.infinity,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                getComplainList[index].date3.toString().trim(),
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                              ),
-                              Text(
-                                getComplainList[index].remarks3.toString().trim(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (getComplainList[index].date4 != null && getComplainList[index].remarks4 != null)
-                    SizedBox(
-                      width: double.infinity,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                getComplainList[index].date4.toString().trim(),
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                              ),
-                              Text(
-                                getComplainList[index].remarks4.toString().trim(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            );
+        floatingActionButton: FloatingActionButton(
+          onPressed: isDataEmpty ? null : () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PendingVisitFormUI(getComplainModel: getComplainList[0],)));
           },
+          child: Icon(Icons.add),
+        ),
+        body: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : isDataEmpty
+            ? Center(child: Text("No data available"))
+            : Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+          child: ListView.builder(
+            itemCount: getComplainList.length,
+            itemBuilder: (context, index) {
+              return Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (getComplainList[index].date1 != null && getComplainList[index].remarks1 != null)
+                      SizedBox(
+                        width: double.infinity,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  getComplainList[index].date1.toString().trim(),
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                ),
+                                Text(
+                                  getComplainList[index].remarks1.toString().trim(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (getComplainList[index].date2 != null && getComplainList[index].remarks2 != null)
+                      SizedBox(
+                        width: double.infinity,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  getComplainList[index].date2.toString().trim(),
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                ),
+                                Text(
+                                  getComplainList[index].remarks2.toString().trim(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (getComplainList[index].date3 != null && getComplainList[index].remarks3 != null)
+                      SizedBox(
+                        width: double.infinity,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  getComplainList[index].date3.toString().trim(),
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                ),
+                                Text(
+                                  getComplainList[index].remarks3.toString().trim(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (getComplainList[index].date4 != null && getComplainList[index].remarks4 != null)
+                      SizedBox(
+                        width: double.infinity,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  getComplainList[index].date4.toString().trim(),
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                ),
+                                Text(
+                                  getComplainList[index].remarks4.toString().trim(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

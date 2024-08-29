@@ -238,26 +238,42 @@ class _AssignedCustomerDetailState extends State<AssignedCustomerDetail> {
                                     Container(
                                       // width: _width * 0.25,
                                         child: Flexible(
-                                          child:  _translatetext == false ? Text( getComplainList[index]
+                                          child: _translatetext == false
+                                              ? Text(getComplainList[index]
                                               .address1
                                               .toString()
-                                              .trim()):Container(
-                                            child: FutureBuilder<String>(
-                                              future: translateText(getComplainList[index].address1.toString().trim(),),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                                  return Text('Loading...');
-                                                } else if (snapshot.hasError) {
-                                                  return Text('Error: ${snapshot.error}');
-                                                } else {
-                                                  return Flexible(
-                                                    child: Text(snapshot.data ?? 'No translation available', textDirection: TextDirection.rtl,),
-                                                  );
-                                                }
-                                              },
-                                            ),
+                                              .trim())
+                                              : FutureBuilder<String>(
+                                            future: translateTextToUrdu(
+                                                getComplainList[index]
+                                                    .address1
+                                                    .toString()
+                                                    .trim()),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                return Text('isLoading....'); // Show a spinner while translating
+                                              } else if (snapshot.hasError) {
+                                                return Text(
+                                                  getComplainList[index]
+                                                      .address1
+                                                      .toString()
+                                                      .trim(),
+                                                  style: TextStyle(
+                                                    fontSize: 15,),
+                                                );
+                                              } else {
+                                                return Text(
+                                                  snapshot.data ??
+                                                      getComplainList[index]
+                                                          .address1
+                                                          .toString()
+                                                          .trim(),
+                                                  style: TextStyle(
+                                                    fontSize: 15,),
+                                                );
+                                              }
+                                            },
                                           ),
-
                                         ))
                                   ],
                                 ),
@@ -285,24 +301,41 @@ class _AssignedCustomerDetailState extends State<AssignedCustomerDetail> {
                                     Container(
                                       // width: _width * 0.25,
                                         child: Flexible(
-                                          child: _translatetext == false ? Text( getComplainList[index]
-                                              .address2
+                                          child: _translatetext == false
+                                              ? Text(getComplainList[index]
+                                              .address1
                                               .toString()
-                                              .trim()): Container(
-                                            child: FutureBuilder<String>(
-                                              future: translateText(getComplainList[index].address2.toString().trim(),),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                                  return Text('Loading...');
-                                                } else if (snapshot.hasError) {
-                                                  return Text('Error: ${snapshot.error}');
-                                                } else {
-                                                  return Flexible(
-                                                    child: Text(snapshot.data ?? 'No translation available', textDirection: TextDirection.rtl,),
-                                                  );
-                                                }
-                                              },
-                                            ),
+                                              .trim())
+                                              : FutureBuilder<String>(
+                                            future: translateTextToUrdu(
+                                                getComplainList[index]
+                                                    .address2
+                                                    .toString()
+                                                    .trim()),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                return Text('isLoading....'); // Show a spinner while translating
+                                              } else if (snapshot.hasError) {
+                                                return Text(
+                                                  getComplainList[index]
+                                                      .address2
+                                                      .toString()
+                                                      .trim(),
+                                                  style: TextStyle(
+                                                    fontSize: 15,),
+                                                );
+                                              } else {
+                                                return Text(
+                                                  snapshot.data ??
+                                                      getComplainList[index]
+                                                          .address2
+                                                          .toString()
+                                                          .trim(),
+                                                  style: TextStyle(
+                                                    fontSize: 15,),
+                                                );
+                                              }
+                                            },
                                           ),
                                         ))
                                   ],
@@ -979,17 +1012,5 @@ class _AssignedCustomerDetailState extends State<AssignedCustomerDetail> {
       return text; // Fallback to original text if translation fails
     }
   }
-  Future<String> translateText(String text) async {
-    final url =
-        'https://api.mymemory.translated.net/get?q=${Uri.encodeComponent(text)}&langpair=en|ur';
 
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      return jsonResponse['responseData']['translatedText'];
-    } else {
-      throw Exception('Failed to translate');
-    }
-  }
 }

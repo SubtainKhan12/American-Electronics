@@ -1,12 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart'as http;
 import 'package:american_electronics/Models/GetComplain/GetComplainModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../../APIs/apis.dart';
 import '../../../../../Utilities/Colors/colors.dart';
+import '../../../../../Utilities/Loader/loader.dart';
+import '../../../../../Utilities/Snackbar/snackbar.dart';
 
 class PendingVisitFormUI extends StatefulWidget {
   GetComplainModel getComplainModel;
@@ -19,7 +23,10 @@ class PendingVisitFormUI extends StatefulWidget {
 class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
   TextEditingController _serialController = TextEditingController();
   TextEditingController _itemController = TextEditingController();
-  DateTime selectedInitialDate = DateTime.now();
+  TextEditingController _remarkController = TextEditingController();
+  DateTime? _dateTime;
+  var cdate=DateFormat("dd-MM-yyyy").format(DateTime.now());
+  // DateTime selectedInitialDate = DateTime.now();
   String? status;
   File? _image;
   @override
@@ -86,7 +93,8 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                       const Text('Date: ',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       Text(
-                        DateFormat('dd-MM-yyyy').format(selectedInitialDate),
+                        cdate.toString(),
+                        // DateFormat('dd-MM-yyyy').format(selectedInitialDate),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -239,6 +247,7 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
               width: MediaQuery.of(context).size.width / 0.3,
               height: MediaQuery.of(context).size.height / 16,
               child: TextField(
+                readOnly: true,
                 controller: _itemController,
                 decoration: InputDecoration(
                   labelText: "Item",
@@ -257,6 +266,7 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
               width: MediaQuery.of(context).size.width / 0.3,
               height: MediaQuery.of(context).size.height / 16,
               child: TextField(
+                controller: _serialController,
                 decoration: InputDecoration(
                   labelText: "Serial No",
                   border: OutlineInputBorder(
@@ -280,8 +290,8 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                   });
                 },
                 items: <String>[
-                  'Pending',
-                  'Installed',
+                  'P',
+                  'I',
                 ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -307,6 +317,7 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
               // height: MediaQuery.of(context).size.height / 16,
               child: TextField(
                 maxLines: 3,
+                controller: _remarkController,
                 decoration: InputDecoration(
                   labelText: "Remarks",
                   alignLabelWithHint: true,
@@ -368,7 +379,10 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
               width: _width / 0.3, // Set the height
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
-                onPressed: () {},
+                onPressed: () {
+                  post_SaveVisit();
+                  CircularIndicator.showLoader(context);
+                },
                 child: const Text(
                   'Submit',
                   style: TextStyle(fontSize: 25),
@@ -395,19 +409,40 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
     }
   }
 
-  Future<void> _intSelectDate(
-      BuildContext context, StateSetter setState) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      helpText: 'From Date',
-      initialDate: selectedInitialDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedInitialDate) {
-      setState(() {
-        selectedInitialDate = picked;
-      });
+  // Future<void> _intSelectDate(
+  //     BuildContext context, StateSetter setState) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     helpText: 'From Date',
+  //     initialDate: cdate,
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //   );
+  //   if (picked != null && picked != cdate) {
+  //     setState(() {
+  //       // cdate = picked;
+  //     });
+  //   }
+  // }
+  Future<void> post_SaveVisit() async {
+    print(cdate);
+    var response = await http.post(Uri.parse(SaveVisit),
+        body: {
+          "FTrnNum": widget.getComplainModel.comp.toString(),
+          "FCmpSts": status.toString(),
+          "FItmSer": _serialController.text,
+          "FVstRem": _remarkController.text,
+          "FVstDat": cdate.toString(),
+        });
+    var result = jsonDecode(response.body);
+    print(response.body);
+    if(result['error'] == 200) {
+      Snackbar.showSnackBar(context, result['message'], Colors.teal);
+      Navigator.pop(context);
+      Navigator.pop(context);
+    } else {
+      Snackbar.showSnackBar(context, result['message'], Colors.teal);
+      Navigator.pop(context);
     }
   }
 }

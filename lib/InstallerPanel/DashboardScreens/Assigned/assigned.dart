@@ -4,6 +4,7 @@ import 'package:american_electronics/Utilities/Colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../APIs/apis.dart';
 import '../../../Models/Assigned/AssignedModel.dart';
 import 'AssignedCustomerProfile/customerProfile.dart';
@@ -62,8 +63,14 @@ class _AssignedUIState extends State<AssignedUI> {
               child: loading
                   ? const Center(child: CircularProgressIndicator())
                   : searchAssignedList.isEmpty
-                      ? const Center(child: Text("No applications is Assigned",style: TextStyle(fontSize: 16,fontWeight:
-              FontWeight.bold,color: Colors.grey),))
+                      ? const Center(
+                          child: Text(
+                          "No applications is Assigned",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ))
                       : ListView.builder(
                           itemCount: searchAssignedList.length,
                           itemBuilder: (context, index) {
@@ -116,10 +123,10 @@ class _AssignedUIState extends State<AssignedUI> {
                                                     .cmp
                                                     .toString(),
                                                 style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Color(0xffF58634),
-                                                    fontWeight:
-                                                        FontWeight.bold,),
+                                                  fontSize: 14,
+                                                  color: Color(0xffF58634),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                               const Text(
                                                 '  -  ',
@@ -157,14 +164,20 @@ class _AssignedUIState extends State<AssignedUI> {
                                                   fontSize: 12,
                                                 ),
                                               ),
-                                              SizedBox(width: 10,),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
                                               Text(
-                                                '(${searchAssignedList[index]
-                                                    .status
-                                                    .toString()})',
-                                                style: const TextStyle(
+                                                '(${searchAssignedList[index].status.toString()})',
+                                                style: TextStyle(
                                                   fontSize: 12,
-                                                  color: Colors.red
+                                                  color:
+                                                      searchAssignedList[index]
+                                                                  .status
+                                                                  .toString() ==
+                                                              'Installed'
+                                                          ? Colors.green
+                                                          : Colors.red,
                                                 ),
                                               ),
                                             ],
@@ -221,11 +234,19 @@ class _AssignedUIState extends State<AssignedUI> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          model.mobile.toString(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
+                        InkWell(
+                          onTap: () {
+                            _showPhoneDialog(model.mobile.toString());
+                          },
+                          child: Text(
+                            model.mobile.toString(),
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              decorationColor: ColorsUtils.appcolor,
+                              decorationThickness: 2,
+                              fontSize: 16,
+                              color: ColorsUtils.appcolor,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -243,7 +264,9 @@ class _AssignedUIState extends State<AssignedUI> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        AssignedCustomerDetail(assignedModel: model,)));
+                                        AssignedCustomerDetail(
+                                          assignedModel: model,
+                                        )));
                           },
                           child: const ListTile(
                             leading: Icon(Icons.info),
@@ -291,7 +314,6 @@ class _AssignedUIState extends State<AssignedUI> {
         assignedList.add(AssignedModel.fromJson(i));
       }
       setState(() {
-
         searchAssignedList = List.from(assignedList);
       });
     } else {
@@ -319,10 +341,74 @@ class _AssignedUIState extends State<AssignedUI> {
             category.mobile?.toLowerCase().contains(query.toLowerCase()) ??
                 false;
         final complainNumberMatches =
-            category.cmp?.toLowerCase().contains(query.toLowerCase()) ??
-                false;
-        return customerNameMatches || mobileNumberMatches || complainNumberMatches;
+            category.cmp?.toLowerCase().contains(query.toLowerCase()) ?? false;
+        return customerNameMatches ||
+            mobileNumberMatches ||
+            complainNumberMatches;
       }).toList();
     });
+  }
+
+  Future<void> _showPhoneDialog(String phoneNumber) async {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choose an option'),
+          content: Text('Would you like to call or message on WhatsApp?'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.phone,
+                  size: _height * 0.04, color: Color(0xff06D001)),
+              onPressed: () {
+                _makePhoneCall(phoneNumber);
+                Navigator.of(context).pop();
+              },
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            InkWell(
+              onTap: () {
+                _openWhatsApp(phoneNumber);
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: _height * 0.04,
+                child: Image.asset('assets/whatsapp.png'),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  ///-----------------------> Function to Navigate to phone dail <-----------------///
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
+
+  ///-------------------> Function to Navigate to whatsapp <------------------///
+  Future<void> _openWhatsApp(String phoneNumber) async {
+    final launchUri = Uri(
+      scheme: 'https',
+      path: 'wa.me/$phoneNumber',
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Could not launch WhatsApp for $phoneNumber';
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:american_electronics/Utilities/Colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../APIs/apis.dart';
 import 'InstalledVisitScreen/installedVisitScreen.dart';
 
@@ -62,71 +63,85 @@ class _InstalledUIState extends State<InstalledUI> {
               child: loading // Show loader if loading is true
                   ? Center(child: CircularProgressIndicator())
                   : searchInstalledList
-                  .isEmpty // Show message if no data is available
-                  ? Center(child: Text("No Application is Installed",style: TextStyle(fontSize: 16,fontWeight:
-              FontWeight.bold,color: Colors.grey),))
-                  : ListView.builder(
-                  itemCount: searchInstalledList.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) =>
-                              _buildBottomSheet(
-                                  context, searchInstalledList[index]),
-                        );
-
-                      },
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    searchInstalledList[index].cmp.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
+                          .isEmpty // Show message if no data is available
+                      ? Center(
+                          child: Text(
+                          "No Application is Installed",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ))
+                      : ListView.builder(
+                          itemCount: searchInstalledList.length,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) => _buildBottomSheet(
+                                      context, searchInstalledList[index]),
+                                );
+                              },
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            searchInstalledList[index]
+                                                .cmp
+                                                .toString(),
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Color(0xffF58634),
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          const Text(
+                                            '  -  ',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          Text(
+                                            searchInstalledList[index]
+                                                .date
+                                                .toString(),
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        searchInstalledList[index]
+                                            .customer
+                                            .toString(),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      Text(
+                                        searchInstalledList[index]
+                                            .mobile
+                                            .toString(),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const Text(
-                                    '  -  ',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Text(
-                                    searchInstalledList[index].date.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                searchInstalledList[index].customer.toString(),
-                                style: const TextStyle(
-                                  fontSize: 12,
                                 ),
                               ),
-                              Text(
-                                searchInstalledList[index].mobile.toString(),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
+                            );
+                          }),
             ),
           ],
         ),
@@ -169,11 +184,19 @@ class _InstalledUIState extends State<InstalledUI> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          model.mobile.toString(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
+                        InkWell(
+                          onTap: () {
+                            _showPhoneDialog(model.mobile.toString());
+                          },
+                          child: Text(
+                            model.mobile.toString(),
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              decorationColor: ColorsUtils.appcolor,
+                              decorationThickness: 2,
+                              fontSize: 16,
+                              color: ColorsUtils.appcolor,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -227,7 +250,6 @@ class _InstalledUIState extends State<InstalledUI> {
     );
   }
 
-
   Future Post_Installed() async {
     var response = await http.post(Uri.parse(Installed), body: {
       'FIntCod': colCode.toString(),
@@ -242,7 +264,6 @@ class _InstalledUIState extends State<InstalledUI> {
         installedList.add(InstalledModel.fromJson(i));
       }
       setState(() {
-
         searchInstalledList = List.from(installedList);
       });
     } else {
@@ -263,16 +284,80 @@ class _InstalledUIState extends State<InstalledUI> {
     setState(() {
       searchInstalledList = installedList.where((category) {
         final customerNameMatches =
-            category.customer?.toLowerCase().contains(query.toLowerCase()) ?? false;
-        final mobileNumberMatches =
-            category.mobile?.toLowerCase().contains(query.toLowerCase()) ?? false;
-        final complainNumberMatches =
-            category.cmp?.toLowerCase().contains(query.toLowerCase()) ??
+            category.customer?.toLowerCase().contains(query.toLowerCase()) ??
                 false;
-        return customerNameMatches || mobileNumberMatches || complainNumberMatches;
+        final mobileNumberMatches =
+            category.mobile?.toLowerCase().contains(query.toLowerCase()) ??
+                false;
+        final complainNumberMatches =
+            category.cmp?.toLowerCase().contains(query.toLowerCase()) ?? false;
+        return customerNameMatches ||
+            mobileNumberMatches ||
+            complainNumberMatches;
       }).toList();
     });
   }
 
-}
+  Future<void> _showPhoneDialog(String phoneNumber) async {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choose an option'),
+          content: Text('Would you like to call or message on WhatsApp?'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.phone,
+                  size: _height * 0.04, color: Color(0xff06D001)),
+              onPressed: () {
+                _makePhoneCall(phoneNumber);
+                Navigator.of(context).pop();
+              },
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            InkWell(
+              onTap: () {
+                _openWhatsApp(phoneNumber);
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: _height * 0.04,
+                child: Image.asset('assets/whatsapp.png'),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
 
+  ///-----------------------> Function to Navigate to phone dail <-----------------///
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
+
+  ///-------------------> Function to Navigate to whatsapp <------------------///
+  Future<void> _openWhatsApp(String phoneNumber) async {
+    final launchUri = Uri(
+      scheme: 'https',
+      path: 'wa.me/$phoneNumber',
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Could not launch WhatsApp for $phoneNumber';
+    }
+  }
+}
