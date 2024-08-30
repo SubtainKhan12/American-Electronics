@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 import 'package:american_electronics/Models/GetComplain/GetComplainModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,7 @@ import '../../../../../Utilities/Snackbar/snackbar.dart';
 
 class PendingVisitFormUI extends StatefulWidget {
   GetComplainModel getComplainModel;
+
   PendingVisitFormUI({super.key, required this.getComplainModel});
 
   @override
@@ -25,10 +26,12 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
   TextEditingController _itemController = TextEditingController();
   TextEditingController _remarkController = TextEditingController();
   DateTime? _dateTime;
-  var cdate=DateFormat("dd-MM-yyyy").format(DateTime.now());
+  var cdate = DateFormat("dd-MM-yyyy").format(DateTime.now());
+
   // DateTime selectedInitialDate = DateTime.now();
-  String? status;
+  String? status = 'Pending';
   File? _image;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -38,8 +41,14 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
 
   @override
   Widget build(BuildContext context) {
-    var _height = MediaQuery.of(context).size.height;
-    var _width = MediaQuery.of(context).size.width;
+    var _height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    var _width = MediaQuery
+        .of(context)
+        .size
+        .width;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -81,7 +90,8 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                           child: Text(widget.getComplainModel
                               .comp
                               .toString()
-                              .trim(),style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,),))
+                              .trim(), style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold,),))
                     ],
                   ),
                 ),
@@ -244,8 +254,14 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
               height: 10,
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 0.3,
-              height: MediaQuery.of(context).size.height / 16,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 0.3,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 16,
               child: TextField(
                 readOnly: true,
                 controller: _itemController,
@@ -255,7 +271,6 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(3),
                   ),
-                  // floatingLabelBehavior: FloatingLabelBehavior.always, // Keeps label at the top
                 ),
               ),
             ),
@@ -263,16 +278,22 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
               height: 10,
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 0.3,
-              height: MediaQuery.of(context).size.height / 16,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 0.3,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 16,
               child: TextField(
                 controller: _serialController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: "Serial No",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(3),
                   ),
-                  // floatingLabelBehavior: FloatingLabelBehavior.always, // Keeps label at the top
                 ),
               ),
             ),
@@ -280,8 +301,14 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
               height: 10,
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 0.3,
-              height: MediaQuery.of(context).size.height / 16,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 0.3,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 16,
               child: DropdownButtonFormField<String>(
                 value: status,
                 onChanged: (newValue) {
@@ -290,8 +317,8 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                   });
                 },
                 items: <String>[
-                  'P',
-                  'I',
+                  'Pending',
+                  'Installed',
                 ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -299,7 +326,7 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                   );
                 }).toList(),
                 decoration: InputDecoration(
-                  labelText: "Type",
+                  labelText: "Status",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(3),
                     borderSide: const BorderSide(
@@ -331,45 +358,27 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
             SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: _height * 0.15,
-                  width: _width * 0.4,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: _image == null
-                      ? const Center(child: Icon(Icons.image_outlined,size: 50,))
-                      : ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                            _image!,
-                            fit: BoxFit.cover,
-                          ),
-                      ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: _takePicture,
-                  child: Container(
-                    height: _height * 0.15,
-                    width: _width * 0.4,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.black),
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.red,
-                      size: 50,
-                    ),
+            InkWell(
+              onTap: _showImageSourceDialog,
+              child: Container(
+                height: _height * 0.15,
+                width: _width * 0.4,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(8)),
+                child: _image == null
+                    ? const Center(child: Icon(Icons.image_outlined, size: 50,))
+                    : ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(
+                    _image!,
+                    fit: BoxFit.cover,
                   ),
-                )
-              ],
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
             ),
             SizedBox(
               height: 10,
@@ -378,7 +387,8 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
               height: _height / 16,
               width: _width / 0.3, // Set the height
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5))),
                 onPressed: () {
                   post_SaveVisit();
                   CircularIndicator.showLoader(context);
@@ -394,13 +404,54 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
       ),
     );
   }
-  setComplainData(){
-    _itemController.text = widget.getComplainModel.item.toString().trim() ?? '0';
+
+  void _showImageSourceDialog() {
+    var _height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    var _width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choose an option'),
+          actions: <Widget>[
+            InkWell(
+              onTap: () {
+                _takePicture(ImageSource.camera);
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: _height * 0.04,
+                child: Image.asset('assets/camera.png'),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            InkWell(
+              onTap: () {
+                _takePicture(ImageSource.gallery);
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: _height * 0.04,
+                child: Image.asset('assets/gallery.png'),
+              ),
+            )
+          ],
+        );
+      },
+    );
   }
 
-  void _takePicture() async {
+  void _takePicture(ImageSource source) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: source);
 
     if (pickedFile != null) {
       setState(() {
@@ -408,6 +459,13 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
       });
     }
   }
+
+
+  setComplainData() {
+    _itemController.text =
+        widget.getComplainModel.item.toString().trim() ?? '0';
+  }
+
 
   // Future<void> _intSelectDate(
   //     BuildContext context, StateSetter setState) async {
@@ -420,23 +478,28 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
   //   );
   //   if (picked != null && picked != cdate) {
   //     setState(() {
-  //       // cdate = picked;
+  //       cdate = picked;
   //     });
   //   }
   // }
-  Future<void> post_SaveVisit() async {
-    print(cdate);
-    var response = await http.post(Uri.parse(SaveVisit),
-        body: {
-          "FTrnNum": widget.getComplainModel.comp.toString(),
-          "FCmpSts": status.toString(),
-          "FItmSer": _serialController.text,
-          "FVstRem": _remarkController.text,
-          "FVstDat": cdate.toString(),
-        });
-    var result = jsonDecode(response.body);
-    print(response.body);
-    if(result['error'] == 200) {
+
+  Future post_SaveVisit() async {
+    var request = http.MultipartRequest('POST',
+        Uri.parse(SaveVisit));
+    request.fields['FTrnNum'] = widget.getComplainModel.comp.toString();
+    request.fields['FCmpSts'] = status.toString();
+    request.fields['FItmSer'] = _serialController.text;
+    request.fields['FVstRem'] = _remarkController.text;
+    request.fields['FVstDat'] = cdate.toString();
+
+    if (_image != null) {
+      var picture = await http.MultipartFile.fromPath('VstImg', _image!.path);
+      request.files.add(picture);
+    }
+    final response = await http.Response.fromStream(await request.send());
+    var result = jsonDecode(response.body.toString());
+    if (result["error"] == 200) {
+      print(result["message"]);
       Snackbar.showSnackBar(context, result['message'], Colors.teal);
       Navigator.pop(context);
       Navigator.pop(context);
