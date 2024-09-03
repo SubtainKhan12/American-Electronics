@@ -304,7 +304,7 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
                                         child: Flexible(
                                           child: _translatetext == false
                                               ? Text(getComplainList[index]
-                                              .address1
+                                              .address2
                                               .toString()
                                               .trim())
                                               : FutureBuilder<String>(
@@ -365,10 +365,42 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
                                     Container(
                                       // width: _width * 0.25,
                                         child: Flexible(
-                                          child: Text(getComplainList[index]
+                                          child: _translatetext == false
+                                              ? Text(getComplainList[index]
                                               .city
                                               .toString()
-                                              .trim()),
+                                              .trim())
+                                              : FutureBuilder<String>(
+                                            future: translateTextToUrdu(
+                                                getComplainList[index]
+                                                    .city
+                                                    .toString()
+                                                    .trim()),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                return Text('isLoading....'); // Show a spinner while translating
+                                              } else if (snapshot.hasError) {
+                                                return Text(
+                                                  getComplainList[index]
+                                                      .city
+                                                      .toString()
+                                                      .trim(),
+                                                  style: TextStyle(
+                                                    fontSize: 15,),
+                                                );
+                                              } else {
+                                                return Text(
+                                                  snapshot.data ??
+                                                      getComplainList[index]
+                                                          .city
+                                                          .toString()
+                                                          .trim(),
+                                                  style: TextStyle(
+                                                    fontSize: 15,),
+                                                );
+                                              }
+                                            },
+                                          ),
                                         )),
                                   ],
                                 ),
@@ -528,10 +560,42 @@ class _InstalledCustomerDetailState extends State<InstalledCustomerDetail> {
                                     Container(
                                       // width: _width * 0.25,
                                         child: Flexible(
-                                          child: Text(getComplainList[index]
+                                          child: _translatetext == false
+                                              ? Text(getComplainList[index]
                                               .installar
                                               .toString()
-                                              .trim()),
+                                              .trim())
+                                              : FutureBuilder<String>(
+                                            future: translateTextToUrdu(
+                                                getComplainList[index]
+                                                    .installar
+                                                    .toString()
+                                                    .trim()),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                return Text('isLoading....'); // Show a spinner while translating
+                                              } else if (snapshot.hasError) {
+                                                return Text(
+                                                  getComplainList[index]
+                                                      .installar
+                                                      .toString()
+                                                      .trim(),
+                                                  style: TextStyle(
+                                                    fontSize: 15,),
+                                                );
+                                              } else {
+                                                return Text(
+                                                  snapshot.data ??
+                                                      getComplainList[index]
+                                                          .installar
+                                                          .toString()
+                                                          .trim(),
+                                                  style: TextStyle(
+                                                    fontSize: 15,),
+                                                );
+                                              }
+                                            },
+                                          ),
                                         )),
                                   ],
                                 ),

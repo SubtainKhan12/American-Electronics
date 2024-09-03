@@ -34,8 +34,14 @@ class _LoginUIState extends State<LoginUI> {
 
   @override
   Widget build(BuildContext context) {
-    var _height = MediaQuery.of(context).size.height;
-    var _width = MediaQuery.of(context).size.width;
+    var _height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    var _width = MediaQuery
+        .of(context)
+        .size
+        .width;
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -92,7 +98,7 @@ class _LoginUIState extends State<LoginUI> {
             //   ),
             // ),
             Padding(
-              padding: const EdgeInsets.only(top: 250.0,left: 30),
+              padding: const EdgeInsets.only(top: 250.0, left: 30),
               child: Container(
                 width: _width * 0.85,
                 height: _height * 0.4,
@@ -148,7 +154,8 @@ class _LoginUIState extends State<LoginUI> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 200.0),
-                      child: TextButton(onPressed: (){}, child: Text('Register')),
+                      child: TextButton(
+                          onPressed: () {}, child: Text('Register')),
                     ),
                     SizedBox(height: 10,),
                     InkWell(
@@ -184,14 +191,14 @@ class _LoginUIState extends State<LoginUI> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 610,left: 25,right: 25),
+              padding: EdgeInsets.only(top: 610, left: 25, right: 25),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           // Navigator.push(context, MaterialPageRoute(builder: (context)=>CustomersUI()));
                         },
                         child: Material(
@@ -224,7 +231,8 @@ class _LoginUIState extends State<LoginUI> {
                                 Text(
                                   'AC Installation',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w500, fontSize: 12),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12),
                                 ),
                               ],
                             ),
@@ -232,7 +240,7 @@ class _LoginUIState extends State<LoginUI> {
                         ),
                       ),
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           // Navigator.push(context, MaterialPageRoute(builder: (context)=> ExpenseUI()));
                         },
                         child: Material(
@@ -264,7 +272,8 @@ class _LoginUIState extends State<LoginUI> {
                                 // SizedBox(width: 20,),
                                 Text(
                                   'Ac Service',
-                                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+                                  style: TextStyle(fontWeight: FontWeight.w500,
+                                      fontSize: 12),
                                 ),
                               ],
                             ),
@@ -344,7 +353,8 @@ class _LoginUIState extends State<LoginUI> {
                               // SizedBox(width: 20,),
                               Text(
                                 'Complain Status',
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500, fontSize: 12),
                               ),
                             ],
                           ),
@@ -360,7 +370,7 @@ class _LoginUIState extends State<LoginUI> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/CrystalSolutions.png',height: 30,),
+                  Image.asset('assets/CrystalSolutions.png', height: 30,),
                   const SizedBox(
                     width: 5,
                   ),
@@ -369,25 +379,27 @@ class _LoginUIState extends State<LoginUI> {
                       RichText(
                           text: TextSpan(
                               children: [
-                            TextSpan(
-                                text: "Powered by ",
-                                style: TextStyle(color: ColorsUtils.blackColor)),
-                            TextSpan(
-                                text: "Crystal ",
-                                style: TextStyle(
-                                    color: ColorsUtils.blueCrystal,
-                                    fontWeight: FontWeight.bold)),
-                            TextSpan(
-                                text: "Solutions",
-                                style: TextStyle(
-                                    color: ColorsUtils.orangeCrystal,
-                                    fontWeight: FontWeight.bold)),
-                          ])),
+                                TextSpan(
+                                    text: "Powered by ",
+                                    style: TextStyle(
+                                        color: ColorsUtils.blackColor)),
+                                TextSpan(
+                                    text: "Crystal ",
+                                    style: TextStyle(
+                                        color: ColorsUtils.blueCrystal,
+                                        fontWeight: FontWeight.bold)),
+                                TextSpan(
+                                    text: "Solutions",
+                                    style: TextStyle(
+                                        color: ColorsUtils.orangeCrystal,
+                                        fontWeight: FontWeight.bold)),
+                              ])),
                       RichText(
                           text: TextSpan(children: [
                             TextSpan(
                                 text: "Contact us: ",
-                                style: TextStyle(color: ColorsUtils.blackColor)),
+                                style: TextStyle(
+                                    color: ColorsUtils.blackColor)),
                             TextSpan(
                                 text: "+92 304 4770075",
                                 style: TextStyle(

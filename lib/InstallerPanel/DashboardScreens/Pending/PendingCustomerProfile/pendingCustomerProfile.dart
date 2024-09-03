@@ -302,7 +302,7 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
                                             child: Flexible(
                                               child: _translatetext == false
                                                   ? Text(getComplainList[index]
-                                                  .address1
+                                                  .address2
                                                   .toString()
                                                   .trim())
                                                   : FutureBuilder<String>(
@@ -363,11 +363,43 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
                                         Container(
                                             // width: _width * 0.25,
                                             child: Flexible(
-                                          child: Text(getComplainList[index]
-                                              .city
-                                              .toString()
-                                              .trim()),
-                                        )),
+                                              child: _translatetext == false
+                                                  ? Text(getComplainList[index]
+                                                  .city
+                                                  .toString()
+                                                  .trim())
+                                                  : FutureBuilder<String>(
+                                                future: translateTextToUrdu(
+                                                    getComplainList[index]
+                                                        .city
+                                                        .toString()
+                                                        .trim()),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                                    return Text('isLoading....'); // Show a spinner while translating
+                                                  } else if (snapshot.hasError) {
+                                                    return Text(
+                                                      getComplainList[index]
+                                                          .city
+                                                          .toString()
+                                                          .trim(),
+                                                      style: TextStyle(
+                                                        fontSize: 15,),
+                                                    );
+                                                  } else {
+                                                    return Text(
+                                                      snapshot.data ??
+                                                          getComplainList[index]
+                                                              .city
+                                                              .toString()
+                                                              .trim(),
+                                                      style: TextStyle(
+                                                        fontSize: 15,),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            )),
                                       ],
                                     ),
                                   ),
@@ -526,11 +558,43 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
                                         Container(
                                             // width: _width * 0.25,
                                             child: Flexible(
-                                          child: Text(getComplainList[index]
-                                              .installar
-                                              .toString()
-                                              .trim()),
-                                        )),
+                                              child: _translatetext == false
+                                                  ? Text(getComplainList[index]
+                                                  .installar
+                                                  .toString()
+                                                  .trim())
+                                                  : FutureBuilder<String>(
+                                                future: translateTextToUrdu(
+                                                    getComplainList[index]
+                                                        .installar
+                                                        .toString()
+                                                        .trim()),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                                    return Text('isLoading....'); // Show a spinner while translating
+                                                  } else if (snapshot.hasError) {
+                                                    return Text(
+                                                      getComplainList[index]
+                                                          .installar
+                                                          .toString()
+                                                          .trim(),
+                                                      style: TextStyle(
+                                                        fontSize: 15,),
+                                                    );
+                                                  } else {
+                                                    return Text(
+                                                      snapshot.data ??
+                                                          getComplainList[index]
+                                                              .installar
+                                                              .toString()
+                                                              .trim(),
+                                                      style: TextStyle(
+                                                        fontSize: 15,),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            )),
                                       ],
                                     ),
                                   ),
