@@ -8,4 +8,6 @@ class ColorsUtils {
   static var redColor = Colors.red;
   static var greyColor = Colors.grey;
   static var lightblueColor = Color(0xff5B99C2);
+  static var blueCrystal = Color(0xff2D2F42);
+  static var orangeCrystal = Color(0xffD2925E);
 }
