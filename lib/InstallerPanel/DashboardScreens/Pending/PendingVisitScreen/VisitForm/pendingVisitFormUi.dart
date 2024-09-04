@@ -288,7 +288,6 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                   .height / 16,
               child: TextField(
                 controller: _serialController,
-                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: "Serial No",
                   border: OutlineInputBorder(

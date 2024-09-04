@@ -21,8 +21,6 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
   final translator = GoogleTranslator();
   bool _translatetext = false;
 
-
-
   @override
   void initState() {
     // TODO: implement initState
@@ -36,23 +34,60 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Detail',
-          style: TextStyle(color: ColorsUtils.whiteColor),
-        ),
-        backgroundColor: ColorsUtils.appcolor,
-        iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
-        actions: [
-        Switch(
-        value: _translatetext,
-        onChanged: (value) {
-          setState(() {
-            _translatetext = value;
-          });
-        },
-      ),
-      ]
-      ),
+          title: Text(
+            'Detail',
+            style: TextStyle(color: ColorsUtils.whiteColor),
+          ),
+          backgroundColor: ColorsUtils.appcolor,
+          iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _translatetext = false;
+                      });
+                    },
+                    child: Text(
+                      'Eng',
+                      style: TextStyle(fontSize: 16,
+                        color: !_translatetext ? Colors.yellow : Colors.white,
+                        fontWeight: !_translatetext
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Text("|",
+                      style: TextStyle(fontSize: 16,
+                          color: ColorsUtils.whiteColor,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(width: 5),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _translatetext = true;
+                      });
+                    },
+                    child: Text(
+                      'اردو',
+                      style: TextStyle(fontSize: 16,
+                        color: _translatetext ? Colors.yellow : Colors.white,
+                        fontWeight: _translatetext
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]),
       body: getComplainList.isEmpty
           ? const Center(
               child: CircularProgressIndicator(),
@@ -178,38 +213,48 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
                                                   .toString()
                                                   .trim())
                                               : FutureBuilder<String>(
-                                            future: translateTextToUrdu(
-                                                getComplainList[index]
-                                                    .customer
-                                                    .toString()
-                                                    .trim()),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                                return Text('isLoading....'); // Show a spinner while translating
-                                              } else if (snapshot.hasError) {
-                                                return Text(
-                                                  getComplainList[index]
-                                                      .customer
-                                                      .toString()
-                                                      .trim(),
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.bold),
-                                                );
-                                              } else {
-                                                return Text(
-                                                  snapshot.data ??
+                                                  future: translateTextToUrdu(
                                                       getComplainList[index]
                                                           .customer
                                                           .toString()
-                                                          .trim(),
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.bold),
-                                                );
-                                              }
-                                            },
-                                          ),
+                                                          .trim()),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return Text(
+                                                          'isLoading....'); // Show a spinner while translating
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Text(
+                                                        getComplainList[index]
+                                                            .customer
+                                                            .toString()
+                                                            .trim(),
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      );
+                                                    } else {
+                                                      return Text(
+                                                        snapshot.data ??
+                                                            getComplainList[
+                                                                    index]
+                                                                .customer
+                                                                .toString()
+                                                                .trim(),
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      );
+                                                    }
+                                                  },
+                                                ),
                                         ))
                                       ],
                                     ),
@@ -237,43 +282,51 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
                                         Container(
                                             // width: _width * 0.25,
                                             child: Flexible(
-                                              child: _translatetext == false
-                                                  ? Text(getComplainList[index]
+                                          child: _translatetext == false
+                                              ? Text(getComplainList[index]
                                                   .address1
                                                   .toString()
                                                   .trim())
-                                                  : FutureBuilder<String>(
-                                                future: translateTextToUrdu(
-                                                    getComplainList[index]
-                                                        .address1
-                                                        .toString()
-                                                        .trim()),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                                    return Text('isLoading....'); // Show a spinner while translating
-                                                  } else if (snapshot.hasError) {
-                                                    return Text(
+                                              : FutureBuilder<String>(
+                                                  future: translateTextToUrdu(
                                                       getComplainList[index]
                                                           .address1
                                                           .toString()
-                                                          .trim(),
-                                                      style: TextStyle(
-                                                          fontSize: 15,),
-                                                    );
-                                                  } else {
-                                                    return Text(
-                                                      snapshot.data ??
-                                                          getComplainList[index]
-                                                              .address1
-                                                              .toString()
-                                                              .trim(),
-                                                      style: TextStyle(
-                                                          fontSize: 15,),
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            ))
+                                                          .trim()),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return Text(
+                                                          'isLoading....'); // Show a spinner while translating
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Text(
+                                                        getComplainList[index]
+                                                            .address1
+                                                            .toString()
+                                                            .trim(),
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      return Text(
+                                                        snapshot.data ??
+                                                            getComplainList[
+                                                                    index]
+                                                                .address1
+                                                                .toString()
+                                                                .trim(),
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                        ))
                                       ],
                                     ),
                                   ),
@@ -300,43 +353,51 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
                                         Container(
                                             // width: _width * 0.25,
                                             child: Flexible(
-                                              child: _translatetext == false
-                                                  ? Text(getComplainList[index]
+                                          child: _translatetext == false
+                                              ? Text(getComplainList[index]
                                                   .address2
                                                   .toString()
                                                   .trim())
-                                                  : FutureBuilder<String>(
-                                                future: translateTextToUrdu(
-                                                    getComplainList[index]
-                                                        .address2
-                                                        .toString()
-                                                        .trim()),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                                    return Text('isLoading....'); // Show a spinner while translating
-                                                  } else if (snapshot.hasError) {
-                                                    return Text(
+                                              : FutureBuilder<String>(
+                                                  future: translateTextToUrdu(
                                                       getComplainList[index]
                                                           .address2
                                                           .toString()
-                                                          .trim(),
-                                                      style: TextStyle(
-                                                        fontSize: 15,),
-                                                    );
-                                                  } else {
-                                                    return Text(
-                                                      snapshot.data ??
-                                                          getComplainList[index]
-                                                              .address2
-                                                              .toString()
-                                                              .trim(),
-                                                      style: TextStyle(
-                                                        fontSize: 15,),
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            ))
+                                                          .trim()),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return Text(
+                                                          'isLoading....'); // Show a spinner while translating
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Text(
+                                                        getComplainList[index]
+                                                            .address2
+                                                            .toString()
+                                                            .trim(),
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      return Text(
+                                                        snapshot.data ??
+                                                            getComplainList[
+                                                                    index]
+                                                                .address2
+                                                                .toString()
+                                                                .trim(),
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                        ))
                                       ],
                                     ),
                                   ),
@@ -363,43 +424,51 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
                                         Container(
                                             // width: _width * 0.25,
                                             child: Flexible(
-                                              child: _translatetext == false
-                                                  ? Text(getComplainList[index]
+                                          child: _translatetext == false
+                                              ? Text(getComplainList[index]
                                                   .city
                                                   .toString()
                                                   .trim())
-                                                  : FutureBuilder<String>(
-                                                future: translateTextToUrdu(
-                                                    getComplainList[index]
-                                                        .city
-                                                        .toString()
-                                                        .trim()),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                                    return Text('isLoading....'); // Show a spinner while translating
-                                                  } else if (snapshot.hasError) {
-                                                    return Text(
+                                              : FutureBuilder<String>(
+                                                  future: translateTextToUrdu(
                                                       getComplainList[index]
                                                           .city
                                                           .toString()
-                                                          .trim(),
-                                                      style: TextStyle(
-                                                        fontSize: 15,),
-                                                    );
-                                                  } else {
-                                                    return Text(
-                                                      snapshot.data ??
-                                                          getComplainList[index]
-                                                              .city
-                                                              .toString()
-                                                              .trim(),
-                                                      style: TextStyle(
-                                                        fontSize: 15,),
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            )),
+                                                          .trim()),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return Text(
+                                                          'isLoading....'); // Show a spinner while translating
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Text(
+                                                        getComplainList[index]
+                                                            .city
+                                                            .toString()
+                                                            .trim(),
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      return Text(
+                                                        snapshot.data ??
+                                                            getComplainList[
+                                                                    index]
+                                                                .city
+                                                                .toString()
+                                                                .trim(),
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                        )),
                                       ],
                                     ),
                                   ),
@@ -558,43 +627,51 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
                                         Container(
                                             // width: _width * 0.25,
                                             child: Flexible(
-                                              child: _translatetext == false
-                                                  ? Text(getComplainList[index]
+                                          child: _translatetext == false
+                                              ? Text(getComplainList[index]
                                                   .installar
                                                   .toString()
                                                   .trim())
-                                                  : FutureBuilder<String>(
-                                                future: translateTextToUrdu(
-                                                    getComplainList[index]
-                                                        .installar
-                                                        .toString()
-                                                        .trim()),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                                    return Text('isLoading....'); // Show a spinner while translating
-                                                  } else if (snapshot.hasError) {
-                                                    return Text(
+                                              : FutureBuilder<String>(
+                                                  future: translateTextToUrdu(
                                                       getComplainList[index]
                                                           .installar
                                                           .toString()
-                                                          .trim(),
-                                                      style: TextStyle(
-                                                        fontSize: 15,),
-                                                    );
-                                                  } else {
-                                                    return Text(
-                                                      snapshot.data ??
-                                                          getComplainList[index]
-                                                              .installar
-                                                              .toString()
-                                                              .trim(),
-                                                      style: TextStyle(
-                                                        fontSize: 15,),
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            )),
+                                                          .trim()),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return Text(
+                                                          'isLoading....'); // Show a spinner while translating
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Text(
+                                                        getComplainList[index]
+                                                            .installar
+                                                            .toString()
+                                                            .trim(),
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      return Text(
+                                                        snapshot.data ??
+                                                            getComplainList[
+                                                                    index]
+                                                                .installar
+                                                                .toString()
+                                                                .trim(),
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                        )),
                                       ],
                                     ),
                                   ),
@@ -1066,6 +1143,7 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
       // });
     }
   }
+
   Future<String> translateTextToUrdu(String text) async {
     try {
       final translation = await translator.translate(text, to: 'ur');
@@ -1074,5 +1152,5 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
       print('Translation error: $e');
       return text; // Fallback to original text if translation fails
     }
-    }
+  }
 }

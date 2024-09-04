@@ -44,13 +44,61 @@ class _AssignedCustomerDetailState extends State<AssignedCustomerDetail> {
           backgroundColor: ColorsUtils.appcolor,
           iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
           actions: [
-            Switch(
-              value: _translatetext,
-              onChanged: (value) {
-                setState(() {
-                  _translatetext = value;
-                });
-              },
+            // Switch(
+            //   value: _translatetext,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       _translatetext = value;
+            //     });
+            //   },
+            // ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _translatetext = false;
+                      });
+                    },
+                    child: Text(
+                      'Eng',
+                      style: TextStyle(fontSize: 16,
+                        color: !_translatetext ? Colors.yellow : Colors.white,
+                        fontWeight: !_translatetext
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Text("|",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: ColorsUtils.whiteColor,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(width: 5),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _translatetext = true;
+                      });
+                    },
+                    child: Text(
+                      'اردو',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: _translatetext ? Colors.yellow : Colors.white,
+                        fontWeight: _translatetext
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ]
       ),

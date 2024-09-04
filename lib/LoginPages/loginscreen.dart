@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../APIs/apis.dart';
+import '../AdminPanel/DashboardScreens/Dashboard/adminDashboard.dart';
 import '../SharedPreferences/sharedPreferences.dart';
 import '../Utilities/Snackbar/snackbar.dart';
 
@@ -28,7 +29,7 @@ class _LoginUIState extends State<LoginUI> {
 
   void _toggleObscureText() {
     setState(() {
-      _obscureText = !_obscureText; // Toggle the obscuring state
+      _obscureText = !_obscureText;
     });
   }
 
@@ -427,27 +428,37 @@ class _LoginUIState extends State<LoginUI> {
 
     var result = jsonDecode(response.body);
 
-    print('Response: $result');
-
     if (result['error'] == 200) {
-      Navigator.pop(context);
       loginModelList = LoginModel.fromJson(result);
 
-      if (loginModelList?.user?.tusrtyp == 'Installar' &&
-          loginModelList?.user?.tusrid == _usernameController.text.trim() &&
-          loginModelList?.user?.tusrpwd == _passwordController.text) {
+      if (loginModelList?.user?.tusrid == _usernameController.text.trim() &&
+          loginModelList?.user?.tusrpwd == _passwordController.text.trim()) {
+
         Shared_pref.saveuser(loginModelList!.user!);
-        // var sharedPref = await SharedPreferences.getInstance();
-        // sharedPref.setBool(SplashScreenState.KEYLOGIN, true);
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const DashboardUI()));
-        Snackbar.showSnackBar(context, 'Login Successful', Colors.teal);
+
+        if (loginModelList?.user?.tusrtyp == 'Installar') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DashboardUI()),
+          );
+          Snackbar.showSnackBar(context, 'Login Successful', Colors.teal);
+        } else if (loginModelList?.user?.tusrtyp == 'Admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const AdminDashboardUI()),
+          );
+          Snackbar.showSnackBar(context, 'Login Successful', Colors.teal);
+        }
+      } else {
+        _usernameController.clear();
+        _passwordController.clear();
+        Snackbar.showSnackBar(context, 'Wrong Credentials', Colors.red);
+        Navigator.pop(context);
       }
     } else {
-      _usernameController.clear();
-      _passwordController.clear();
-      Snackbar.showSnackBar(context, 'Wrong Credentials', Colors.red);
+      Snackbar.showSnackBar(context, 'Login Failed', Colors.red);
       Navigator.pop(context);
     }
   }
+
 }
