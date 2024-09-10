@@ -7,7 +7,6 @@ import 'package:american_electronics/Utilities/Loader/loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../APIs/apis.dart';
 import '../AdminPanel/DashboardScreens/Dashboard/adminDashboard.dart';
@@ -437,15 +436,17 @@ class _LoginUIState extends State<LoginUI> {
         Shared_pref.saveuser(loginModelList!.user!);
 
         if (loginModelList?.user?.tusrtyp == 'Installar') {
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const DashboardUI()),
+                (Route<dynamic> route) => false,
           );
           Snackbar.showSnackBar(context, 'Login Successful', Colors.teal);
         } else if (loginModelList?.user?.tusrtyp == 'Admin') {
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const AdminDashboardUI()),
+                (Route<dynamic> route) => false,
           );
           Snackbar.showSnackBar(context, 'Login Successful', Colors.teal);
         }

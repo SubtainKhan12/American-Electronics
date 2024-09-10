@@ -20,7 +20,7 @@ class DashboardUI extends StatefulWidget {
 
 class _DashboardUIState extends State<DashboardUI> {
   InstallarStatusModel? installerStatusList;
-  String? colCode;
+  String? colCode,name;
 
   @override
   void initState() {
@@ -36,8 +36,8 @@ class _DashboardUIState extends State<DashboardUI> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Dashboard',
-          style: TextStyle(color: ColorsUtils.whiteColor),
+          'Hello ${name.toString().trim()}',
+          style: TextStyle(color: ColorsUtils.whiteColor, fontSize: 18),
         ),
         iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
         backgroundColor: ColorsUtils.appcolor,
@@ -105,7 +105,7 @@ class _DashboardUIState extends State<DashboardUI> {
                                         Border.all(color: ColorsUtils.greyColor)),
                                 child: Center(
                                     child: Text(
-                                  installerStatusList?.assigned.toString() ?? '0',
+                                  installerStatusList?.assigned.toString().trim() ?? '0',
                                   style: TextStyle(
                                       fontSize: 53,
                                       fontWeight: FontWeight.w500,
@@ -161,7 +161,7 @@ class _DashboardUIState extends State<DashboardUI> {
                                         Border.all(color: ColorsUtils.greyColor)),
                                 child: Center(
                                     child: Text(
-                                  installerStatusList?.installed.toString() ?? '0',
+                                  installerStatusList?.installed.toString().trim() ?? '0',
                                   style: TextStyle(
                                       fontSize: 53,
                                       fontWeight: FontWeight.w500,
@@ -217,7 +217,7 @@ class _DashboardUIState extends State<DashboardUI> {
                                         Border.all(color: ColorsUtils.greyColor)),
                                 child: Center(
                                     child: Text(
-                                  installerStatusList?.pending.toString() ?? '0',
+                                  installerStatusList?.pending.toString().trim() ?? '0',
                                   style: TextStyle(
                                       fontSize: 53,
                                       fontWeight: FontWeight.w500,
@@ -252,6 +252,7 @@ class _DashboardUIState extends State<DashboardUI> {
   getLoginInfo() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     colCode = sp.getString('colCode');
+    name = sp.getString('userName');
     setState(() {});
     post_InstallarStatus();
   }
