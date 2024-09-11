@@ -584,14 +584,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
-  sidebar_bigeagle:
-    dependency: "direct main"
-    description:
-      name: sidebar_bigeagle
-      sha256: e55861e8116de074328424b9cb0943fb79fc7c79a4f6af3fdb7c321241a4f70b
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.2+1"
   sky_engine:
     dependency: transitive
     description: flutter

@@ -42,7 +42,7 @@ dependencies:
   url_launcher: ^6.3.0
   translator: ^1.0.0
   google_translator: ^1.0.0
-  sidebar_bigeagle: ^0.2.2+1
+#  sidebar_bigeagle: ^0.2.2+1
 
 dev_dependencies:
   flutter_test:

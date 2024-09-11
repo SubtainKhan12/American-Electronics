@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:american_electronics/InstallerPanel/DashboardScreens/Installed/installed.dart';
 import 'package:american_electronics/LoginPages/loginscreen.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,7 @@ class DashboardUI extends StatefulWidget {
 
 class _DashboardUIState extends State<DashboardUI> {
   InstallarStatusModel? installerStatusList;
-  String? colCode,name;
+  String? colCode, name;
 
   @override
   void initState() {
@@ -63,8 +62,10 @@ class _DashboardUIState extends State<DashboardUI> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => AssignedUI()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AssignedUI()));
                       },
                       child: Material(
                         elevation: 5,
@@ -83,8 +84,8 @@ class _DashboardUIState extends State<DashboardUI> {
                                     borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(5),
                                         topRight: Radius.circular(5)),
-                                    border:
-                                        Border.all(color: ColorsUtils.greyColor)),
+                                    border: Border.all(
+                                        color: ColorsUtils.greyColor)),
                                 child: Center(
                                   child: Text(
                                     'Assigned',
@@ -101,11 +102,14 @@ class _DashboardUIState extends State<DashboardUI> {
                                     borderRadius: const BorderRadius.only(
                                         bottomRight: Radius.circular(5),
                                         bottomLeft: Radius.circular(5)),
-                                    border:
-                                        Border.all(color: ColorsUtils.greyColor)),
+                                    border: Border.all(
+                                        color: ColorsUtils.greyColor)),
                                 child: Center(
                                     child: Text(
-                                  installerStatusList?.assigned.toString().trim() ?? '0',
+                                  installerStatusList?.assigned
+                                          .toString()
+                                          .trim() ??
+                                      '0',
                                   style: TextStyle(
                                       fontSize: 53,
                                       fontWeight: FontWeight.w500,
@@ -119,8 +123,10 @@ class _DashboardUIState extends State<DashboardUI> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => InstalledUI()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => InstalledUI()));
                       },
                       child: Material(
                         elevation: 5,
@@ -139,8 +145,8 @@ class _DashboardUIState extends State<DashboardUI> {
                                     borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(5),
                                         topRight: Radius.circular(5)),
-                                    border:
-                                        Border.all(color: ColorsUtils.greyColor)),
+                                    border: Border.all(
+                                        color: ColorsUtils.greyColor)),
                                 child: Center(
                                   child: Text(
                                     'Installed',
@@ -157,11 +163,14 @@ class _DashboardUIState extends State<DashboardUI> {
                                     borderRadius: const BorderRadius.only(
                                         bottomRight: Radius.circular(5),
                                         bottomLeft: Radius.circular(5)),
-                                    border:
-                                        Border.all(color: ColorsUtils.greyColor)),
+                                    border: Border.all(
+                                        color: ColorsUtils.greyColor)),
                                 child: Center(
                                     child: Text(
-                                  installerStatusList?.installed.toString().trim() ?? '0',
+                                  installerStatusList?.installed
+                                          .toString()
+                                          .trim() ??
+                                      '0',
                                   style: TextStyle(
                                       fontSize: 53,
                                       fontWeight: FontWeight.w500,
@@ -175,8 +184,10 @@ class _DashboardUIState extends State<DashboardUI> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => PendingUI()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PendingUI()));
                       },
                       child: Material(
                         elevation: 5,
@@ -195,8 +206,8 @@ class _DashboardUIState extends State<DashboardUI> {
                                     borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(5),
                                         topRight: Radius.circular(5)),
-                                    border:
-                                        Border.all(color: ColorsUtils.greyColor)),
+                                    border: Border.all(
+                                        color: ColorsUtils.greyColor)),
                                 child: Center(
                                   child: Text(
                                     'Pending',
@@ -213,11 +224,14 @@ class _DashboardUIState extends State<DashboardUI> {
                                     borderRadius: const BorderRadius.only(
                                         bottomRight: Radius.circular(5),
                                         bottomLeft: Radius.circular(5)),
-                                    border:
-                                        Border.all(color: ColorsUtils.greyColor)),
+                                    border: Border.all(
+                                        color: ColorsUtils.greyColor)),
                                 child: Center(
                                     child: Text(
-                                  installerStatusList?.pending.toString().trim() ?? '0',
+                                  installerStatusList?.pending
+                                          .toString()
+                                          .trim() ??
+                                      '0',
                                   style: TextStyle(
                                       fontSize: 53,
                                       fontWeight: FontWeight.w500,

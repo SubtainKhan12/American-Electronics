@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import '../APIs/apis.dart';
 import '../AdminPanel/DashboardScreens/Dashboard/adminDashboard.dart';
 import '../SharedPreferences/sharedPreferences.dart';
+import '../UserPanel/CompalinSheet/complainSheet.dart';
 import '../Utilities/Snackbar/snackbar.dart';
 
 class LoginUI extends StatefulWidget {
@@ -292,35 +293,40 @@ class _LoginUIState extends State<LoginUI> {
                         borderRadius: BorderRadius.circular(5),
                         elevation: 10,
                         shadowColor: Color(0xffC4E4FF),
-                        child: Container(
-                          height: _height * 0.06,
-                          width: _width * 0.4,
-                          decoration: BoxDecoration(
-                            color: Color(0xffC4E4FF),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: _width * 0.03,
-                              ),
-                              Image.asset(
-                                'assets/complaint.png',
-                                color: Colors.red,
-                                height: 30,
-                              ),
-                              VerticalDivider(
-                                color: Colors.black,
-                                thickness: 1,
-                              ),
-                              // SizedBox(width: 20,),
-                              Text(
-                                'New Complain',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 12),
-                              ),
-                            ],
+                        child: InkWell(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> CompalinSheetUI()));
+                          },
+                          child: Container(
+                            height: _height * 0.06,
+                            width: _width * 0.4,
+                            decoration: BoxDecoration(
+                              color: Color(0xffC4E4FF),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: _width * 0.03,
+                                ),
+                                Image.asset(
+                                  'assets/complaint.png',
+                                  color: Colors.red,
+                                  height: 30,
+                                ),
+                                VerticalDivider(
+                                  color: Colors.black,
+                                  thickness: 1,
+                                ),
+                                // SizedBox(width: 20,),
+                                Text(
+                                  'New Complain',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500, fontSize: 12),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
