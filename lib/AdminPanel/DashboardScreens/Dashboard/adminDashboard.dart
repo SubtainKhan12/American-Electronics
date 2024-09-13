@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:american_electronics/AdminPanel/DrawerUi/Drawer.dart';
-import 'package:american_electronics/Models/AdminInstallationStatus/AdminInstallationStatusModel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../APIs/apis.dart';
 import '../../../LoginPages/loginscreen.dart';
+import '../../../Models/UserInstallationStatus/UserInstallationStatusModel.dart';
 import '../../../Utilities/Colors/colors.dart';
 import '../CanceledInstallation/canceledInstallation.dart';
 import '../ClosedInstallation/closedInstallation.dart';
@@ -20,7 +20,7 @@ class AdminDashboardUI extends StatefulWidget {
 }
 
 class _AdminDashboardUIState extends State<AdminDashboardUI> {
-  List<AdminInstallationStatusModel> adminInstallationStatusList = [];
+  List<UserInstallationStatusModel> adminInstallationStatusList = [];
   String? name;
 
   @override
@@ -28,6 +28,7 @@ class _AdminDashboardUIState extends State<AdminDashboardUI> {
     // TODO: implement initState
     super.initState();
     get_InstallationStatus();
+    getLoginInfo();
   }
 
   @override
@@ -546,7 +547,7 @@ class _AdminDashboardUIState extends State<AdminDashboardUI> {
                           fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      adminInstallationStatusList[index].twoDays.toString() ?? '0',
+                      adminInstallationStatusList[index].instalaltionOne.toString() ?? '0',
                       style: TextStyle(
                           fontSize: 14,
                           color: ColorsUtils.whiteColor,
@@ -583,7 +584,7 @@ class _AdminDashboardUIState extends State<AdminDashboardUI> {
                           fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      adminInstallationStatusList[index].fiveDays.toString() ?? '0',
+                      adminInstallationStatusList[index].instalaltionTwo.toString() ?? '0',
                       style: TextStyle(
                           fontSize: 14,
                           color: ColorsUtils.whiteColor,
@@ -620,7 +621,7 @@ class _AdminDashboardUIState extends State<AdminDashboardUI> {
                           fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      adminInstallationStatusList[index].sevenDays.toString() ?? '0',
+                      adminInstallationStatusList[index].instalaltionThree.toString() ?? '0',
                       style: TextStyle(
                           fontSize: 14,
                           color: ColorsUtils.whiteColor,
@@ -657,7 +658,7 @@ class _AdminDashboardUIState extends State<AdminDashboardUI> {
                           fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      adminInstallationStatusList[index].sevenDaysPlus.toString() ??
+                      adminInstallationStatusList[index].instalaltionFour.toString() ??
                           '0',
                       style: TextStyle(
                           fontSize: 14,
@@ -689,7 +690,7 @@ class _AdminDashboardUIState extends State<AdminDashboardUI> {
 
       for (Map i in result) {
         adminInstallationStatusList
-            .add(AdminInstallationStatusModel.fromJson(i));
+            .add(UserInstallationStatusModel.fromJson(i));
       }
       setState(() {});
     } else {}

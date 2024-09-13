@@ -12,6 +12,7 @@ import '../APIs/apis.dart';
 import '../AdminPanel/DashboardScreens/Dashboard/adminDashboard.dart';
 import '../SharedPreferences/sharedPreferences.dart';
 import '../UserPanel/CompalinSheet/complainSheet.dart';
+import '../UserPanel/UserDashboard/DasboardScreen/userDashboardUi.dart';
 import '../Utilities/Snackbar/snackbar.dart';
 
 class LoginUI extends StatefulWidget {
@@ -448,10 +449,10 @@ class _LoginUIState extends State<LoginUI> {
                 (Route<dynamic> route) => false,
           );
           Snackbar.showSnackBar(context, 'Login Successful', Colors.teal);
-        } else if (loginModelList?.user?.tusrtyp == 'Admin') {
+        } else if (loginModelList?.user?.tusrtyp == 'User') {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const AdminDashboardUI()),
+            MaterialPageRoute(builder: (context) => const UserDashboardUI()),
                 (Route<dynamic> route) => false,
           );
           Snackbar.showSnackBar(context, 'Login Successful', Colors.teal);

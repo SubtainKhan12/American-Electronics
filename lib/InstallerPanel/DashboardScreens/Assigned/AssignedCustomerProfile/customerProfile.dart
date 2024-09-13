@@ -28,7 +28,7 @@ class _AssignedCustomerDetailState extends State<AssignedCustomerDetail> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Post_Complain();
+    Post_GetComplain();
   }
 
   @override
@@ -1095,7 +1095,7 @@ class _AssignedCustomerDetailState extends State<AssignedCustomerDetail> {
     );
   }
 
-  Future Post_Complain() async {
+  Future Post_GetComplain() async {
     var response = await http.post(Uri.parse(GetComplain), body: {
       'FCmpNum': widget.assignedModel.cmp.toString(),
     });
