@@ -1,21 +1,25 @@
 import 'dart:convert';
-/// Unassigned : "2"
-/// Pending : "1"
+/// Unassigned : "1"
+/// Pending : "3"
 /// Installed : "0"
 /// Cancelled : "336"
 /// Closed : "6243"
-/// Instalaltion-One : "9"
-/// Instalaltion-Two : "22"
-/// Instalaltion-Three : "0"
-/// Instalaltion-Four : "2"
-/// Name-One : "Fri"
-/// Name-Two : "Thu"
-/// Name-Three : "Wed"
-/// Name-Four : "Tue"
-/// Day-One : "13"
-/// Day-Two : "12"
-/// DAy-Three : "11"
-/// Day-Four : "10"
+/// Instalaltion-One : "10"
+/// Instalaltion-Two : "9"
+/// Instalaltion-Three : "15"
+/// Instalaltion-Four : "22"
+/// close-One : "9"
+/// close-Two : "13"
+/// close-Three : "15"
+/// close-Four : "19"
+/// Name-One : "Sat"
+/// Name-Two : "Fri"
+/// Name-Three : "Thu"
+/// Name-Four : "Wed"
+/// Day-One : "14"
+/// Day-Two : "13"
+/// DAy-Three : "12"
+/// Day-Four : "11"
 
 UserInstallationStatusModel userInstallationStatusModelFromJson(String str) => UserInstallationStatusModel.fromJson(json.decode(str));
 String userInstallationStatusModelToJson(UserInstallationStatusModel data) => json.encode(data.toJson());
@@ -30,6 +34,10 @@ class UserInstallationStatusModel {
       String? instalaltionTwo, 
       String? instalaltionThree, 
       String? instalaltionFour, 
+      String? closeOne, 
+      String? closeTwo, 
+      String? closeThree, 
+      String? closeFour, 
       String? nameOne, 
       String? nameTwo, 
       String? nameThree, 
@@ -47,6 +55,10 @@ class UserInstallationStatusModel {
     _instalaltionTwo = instalaltionTwo;
     _instalaltionThree = instalaltionThree;
     _instalaltionFour = instalaltionFour;
+    _closeOne = closeOne;
+    _closeTwo = closeTwo;
+    _closeThree = closeThree;
+    _closeFour = closeFour;
     _nameOne = nameOne;
     _nameTwo = nameTwo;
     _nameThree = nameThree;
@@ -67,6 +79,10 @@ class UserInstallationStatusModel {
     _instalaltionTwo = json['Instalaltion-Two'];
     _instalaltionThree = json['Instalaltion-Three'];
     _instalaltionFour = json['Instalaltion-Four'];
+    _closeOne = json['close-One'];
+    _closeTwo = json['close-Two'];
+    _closeThree = json['close-Three'];
+    _closeFour = json['close-Four'];
     _nameOne = json['Name-One'];
     _nameTwo = json['Name-Two'];
     _nameThree = json['Name-Three'];
@@ -85,6 +101,10 @@ class UserInstallationStatusModel {
   String? _instalaltionTwo;
   String? _instalaltionThree;
   String? _instalaltionFour;
+  String? _closeOne;
+  String? _closeTwo;
+  String? _closeThree;
+  String? _closeFour;
   String? _nameOne;
   String? _nameTwo;
   String? _nameThree;
@@ -102,6 +122,10 @@ UserInstallationStatusModel copyWith({  String? unassigned,
   String? instalaltionTwo,
   String? instalaltionThree,
   String? instalaltionFour,
+  String? closeOne,
+  String? closeTwo,
+  String? closeThree,
+  String? closeFour,
   String? nameOne,
   String? nameTwo,
   String? nameThree,
@@ -119,6 +143,10 @@ UserInstallationStatusModel copyWith({  String? unassigned,
   instalaltionTwo: instalaltionTwo ?? _instalaltionTwo,
   instalaltionThree: instalaltionThree ?? _instalaltionThree,
   instalaltionFour: instalaltionFour ?? _instalaltionFour,
+  closeOne: closeOne ?? _closeOne,
+  closeTwo: closeTwo ?? _closeTwo,
+  closeThree: closeThree ?? _closeThree,
+  closeFour: closeFour ?? _closeFour,
   nameOne: nameOne ?? _nameOne,
   nameTwo: nameTwo ?? _nameTwo,
   nameThree: nameThree ?? _nameThree,
@@ -137,6 +165,10 @@ UserInstallationStatusModel copyWith({  String? unassigned,
   String? get instalaltionTwo => _instalaltionTwo;
   String? get instalaltionThree => _instalaltionThree;
   String? get instalaltionFour => _instalaltionFour;
+  String? get closeOne => _closeOne;
+  String? get closeTwo => _closeTwo;
+  String? get closeThree => _closeThree;
+  String? get closeFour => _closeFour;
   String? get nameOne => _nameOne;
   String? get nameTwo => _nameTwo;
   String? get nameThree => _nameThree;
@@ -157,6 +189,10 @@ UserInstallationStatusModel copyWith({  String? unassigned,
     map['Instalaltion-Two'] = _instalaltionTwo;
     map['Instalaltion-Three'] = _instalaltionThree;
     map['Instalaltion-Four'] = _instalaltionFour;
+    map['close-One'] = _closeOne;
+    map['close-Two'] = _closeTwo;
+    map['close-Three'] = _closeThree;
+    map['close-Four'] = _closeFour;
     map['Name-One'] = _nameOne;
     map['Name-Two'] = _nameTwo;
     map['Name-Three'] = _nameThree;

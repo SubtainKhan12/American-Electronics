@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:translator/translator.dart';
 import 'package:http/http.dart' as http;
 import '../../../../APIs/apis.dart';
-import '../../../../Models/ActiveTechnicians/ActiveInstallar.dart';
+import '../../../../Models/ActiveInstallar/ActiveInstallar.dart';
 import '../../../../Models/UnassignedInstallation/UnassignedInstallationModel.dart';
+import '../../../../Utilities/Snackbar/snackbar.dart';
 
 class UserTechnicianAssignmentUI extends StatefulWidget {
   UnassignedInstallationModel unassignedInstallationList;
@@ -27,6 +28,7 @@ class _UserTechnicianAssignmentUIState
   List<ActiveInstallar> _filterActiveInstallarList = []; // Store filtered data
   bool _isDropdownOpen = false; // Control dropdown visibility
   TextEditingController _searchcontroller = TextEditingController();
+  TextEditingController _phonecontroller = TextEditingController();
 
   @override
   void initState() {
@@ -44,10 +46,13 @@ class _UserTechnicianAssignmentUIState
     });
   }
 
-  void _onItemTapped(String item) {
+  void _onItemTapped(ActiveInstallar selectedInstallar) {
     setState(() {
-      _searchcontroller.text = item; // Set selected item to TextField
-      _isDropdownOpen = false; // Close the dropdown
+      _searchcontroller.text = selectedInstallar.tintdsc.toString().trim();
+      _phonecontroller.text = selectedInstallar.tmobnum
+          .toString()
+          .trim(); // Assuming phoneNumber is the field name
+      _isDropdownOpen = false;
     });
   }
 
@@ -74,19 +79,108 @@ class _UserTechnicianAssignmentUIState
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Technician Assignment',
-            style: TextStyle(color: ColorsUtils.whiteColor),
-          ),
-          backgroundColor: ColorsUtils.appcolor,
-          centerTitle: true,
-          iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
-        ),
+            title: Text(
+              'Technician Assignment',
+              style: TextStyle(color: ColorsUtils.whiteColor),
+            ),
+            backgroundColor: ColorsUtils.appcolor,
+            centerTitle: true,
+            iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _translatetext = false;
+                        });
+                      },
+                      child: Text(
+                        'Eng',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: !_translatetext ? Colors.yellow : Colors.white,
+                          fontWeight: !_translatetext
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Text("|",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: ColorsUtils.whiteColor,
+                            fontWeight: FontWeight.bold)),
+                    SizedBox(width: 5),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _translatetext = true;
+                        });
+                      },
+                      child: Text(
+                        'اردو',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: _translatetext ? Colors.yellow : Colors.white,
+                          fontWeight: _translatetext
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ]),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
             child: Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                        text: TextSpan(children: [
+                      TextSpan(
+                          text: 'Complain # : ',
+                          style: TextStyle(
+                              color: ColorsUtils.blackColor,
+                              fontWeight: FontWeight.bold)),
+                      TextSpan(
+                          text: widget.unassignedInstallationList.ttrnnum
+                              .toString()
+                              .trim(),
+                          style: TextStyle(
+                              color: ColorsUtils.blackColor,
+                              fontWeight: FontWeight.bold)),
+                    ])),
+                    RichText(
+                        text: TextSpan(children: [
+                      TextSpan(
+                          text: 'Date : ',
+                          style: TextStyle(
+                              color: ColorsUtils.blackColor,
+                              fontWeight: FontWeight.bold)),
+                      TextSpan(
+                          text: widget.unassignedInstallationList.ttrndat
+                              .toString()
+                              .trim(),
+                          style: TextStyle(color: ColorsUtils.blackColor)),
+                    ]))
+                  ],
+                ),
+                const Divider(
+                  color: Colors.grey,
+                ),
+                SizedBox(
+                  height: _height * 0.01,
+                ),
                 Container(
                   child: InputDecorator(
                       decoration: InputDecoration(
@@ -199,11 +293,12 @@ class _UserTechnicianAssignmentUIState
                           ),
                           Container(
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
                                     width: _width * 0.2,
                                     child: const Text(
-                                      'Complain#',
+                                      'Address 1',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
                                     )),
@@ -217,10 +312,244 @@ class _UserTechnicianAssignmentUIState
                                 ),
                                 Container(
                                     // width: _width * 0.25,
-                                    child: Text(widget
-                                        .unassignedInstallationList.ttrnnum
-                                        .toString()
-                                        .trim()))
+                                    child: Flexible(
+                                  child: _translatetext == false
+                                      ? Text(widget
+                                          .unassignedInstallationList.tadd001
+                                          .toString()
+                                          .trim())
+                                      : FutureBuilder<String>(
+                                          future: translateTextToUrdu(widget
+                                              .unassignedInstallationList
+                                              .tadd001
+                                              .toString()
+                                              .trim()),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return Text(
+                                                  'isLoading....'); // Show a spinner while translating
+                                            } else if (snapshot.hasError) {
+                                              return Text(
+                                                widget
+                                                    .unassignedInstallationList
+                                                    .tadd001
+                                                    .toString()
+                                                    .trim(),
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              );
+                                            } else {
+                                              return Text(
+                                                snapshot.data ??
+                                                    widget
+                                                        .unassignedInstallationList
+                                                        .tadd001
+                                                        .toString()
+                                                        .trim(),
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                ))
+                              ],
+                            ),
+                          ),
+                          Container(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    width: _width * 0.2,
+                                    child: const Text(
+                                      'Address 2',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                Container(
+                                  width: _width * 0.02,
+                                  child: const Text(
+                                    ':',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Container(
+                                    // width: _width * 0.25,
+                                    child: Flexible(
+                                  child: _translatetext == false
+                                      ? Text(widget
+                                          .unassignedInstallationList.tadd002
+                                          .toString()
+                                          .trim())
+                                      : FutureBuilder<String>(
+                                          future: translateTextToUrdu(widget
+                                              .unassignedInstallationList
+                                              .tadd002
+                                              .toString()
+                                              .trim()),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return Text(
+                                                  'isLoading....'); // Show a spinner while translating
+                                            } else if (snapshot.hasError) {
+                                              return Text(
+                                                widget
+                                                    .unassignedInstallationList
+                                                    .tadd002
+                                                    .toString()
+                                                    .trim(),
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              );
+                                            } else {
+                                              return Text(
+                                                snapshot.data ??
+                                                    widget
+                                                        .unassignedInstallationList
+                                                        .tadd002
+                                                        .toString()
+                                                        .trim(),
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                ))
+                              ],
+                            ),
+                          ),
+                          Container(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    width: _width * 0.2,
+                                    child: const Text(
+                                      'City',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                Container(
+                                  width: _width * 0.02,
+                                  child: const Text(
+                                    ':',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Container(
+                                    // width: _width * 0.25,
+                                    child: Flexible(
+                                  child: _translatetext == false
+                                      ? Text(widget
+                                          .unassignedInstallationList.city
+                                          .toString()
+                                          .trim())
+                                      : FutureBuilder<String>(
+                                          future: translateTextToUrdu(widget
+                                              .unassignedInstallationList.city
+                                              .toString()
+                                              .trim()),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return Text(
+                                                  'isLoading....'); // Show a spinner while translating
+                                            } else if (snapshot.hasError) {
+                                              return Text(
+                                                widget
+                                                    .unassignedInstallationList
+                                                    .city
+                                                    .toString()
+                                                    .trim(),
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              );
+                                            } else {
+                                              return Text(
+                                                snapshot.data ??
+                                                    widget
+                                                        .unassignedInstallationList
+                                                        .city
+                                                        .toString()
+                                                        .trim(),
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                ))
+                              ],
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  child: InputDecorator(
+                      decoration: InputDecoration(
+                          labelText: 'Item Information',
+                          labelStyle: TextStyle(
+                              color: ColorsUtils.appcolor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0),
+                          )),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: Row(
+                              children: [
+                                Container(
+                                    width: _width * 0.2,
+                                    child: const Text(
+                                      'Dealer',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                Container(
+                                  width: _width * 0.02,
+                                  child: const Text(
+                                    ':',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Container(
+                                    // width: _width * 0.25,
+                                    child: Flexible(
+                                  child: Text(widget
+                                              .unassignedInstallationList.dealer
+                                              .toString()
+                                              .trim() ==
+                                          'null'
+                                      ? ''
+                                      : widget.unassignedInstallationList.dealer
+                                          .toString()
+                                          .trim()),
+                                ))
                               ],
                             ),
                           ),
@@ -230,7 +559,42 @@ class _UserTechnicianAssignmentUIState
                                 Container(
                                     width: _width * 0.2,
                                     child: const Text(
-                                      'Date',
+                                      'item',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                Container(
+                                  width: _width * 0.02,
+                                  child: const Text(
+                                    ':',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Container(
+                                    // width: _width * 0.25,
+                                    child: Flexible(
+                                  child: Text(widget.unassignedInstallationList
+                                              .ttrndsc
+                                              .toString()
+                                              .trim() ==
+                                          'null'
+                                      ? ''
+                                      : widget
+                                          .unassignedInstallationList.ttrndsc
+                                          .toString()
+                                          .trim()),
+                                ))
+                              ],
+                            ),
+                          ),
+                          Container(
+                            child: Row(
+                              children: [
+                                Container(
+                                    width: _width * 0.2,
+                                    child: const Text(
+                                      'Serial#',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
                                     )),
@@ -245,17 +609,24 @@ class _UserTechnicianAssignmentUIState
                                 Container(
                                     // width: _width * 0.25,
                                     child: Text(widget
-                                        .unassignedInstallationList.ttrndat
-                                        .toString()
-                                        .trim()))
+                                                .unassignedInstallationList
+                                                .titmser
+                                                .toString()
+                                                .trim() ==
+                                            'null'
+                                        ? ''
+                                        : widget
+                                            .unassignedInstallationList.titmser
+                                            .toString()
+                                            .trim()))
                               ],
                             ),
                           ),
                         ],
                       )),
                 ),
-                const SizedBox(
-                  height: 10,
+                SizedBox(
+                  height: _height * 0.01,
                 ),
                 TextField(
                   controller: _searchcontroller,
@@ -303,17 +674,43 @@ class _UserTechnicianAssignmentUIState
                             return ListTile(
                               title: Text(_filterActiveInstallarList[index]
                                   .tintdsc
-                                  .toString()),
+                                  .toString()
+                                  .trim()),
                               onTap: () {
-                                _onItemTapped(_filterActiveInstallarList[index]
-                                    .tintdsc
-                                    .toString()); // Select item
+                                _onItemTapped(_filterActiveInstallarList[
+                                    index]); // Select item
                               },
                             );
                           },
                         ),
                       )
                     : Container(),
+                SizedBox(
+                  height: _height * 0.01,
+                ),
+                TextField(
+                  controller: _phonecontroller,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Technician Phone No',
+                    suffixIcon: Icon(Icons.phone_android),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(
+                  height: _height * 0.01,
+                ),
+                Container(
+                    width: _width * 1,
+                    height: _height * 0.07,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7))),
+                        onPressed: () {
+                          post_SaveInstallarAssignment();
+                        },
+                        child: Text('Assign')))
               ],
             ),
           ),
@@ -347,6 +744,20 @@ class _UserTechnicianAssignmentUIState
       });
     } else {
       throw Exception('Failed to load data');
+    }
+  }
+
+  Future post_SaveInstallarAssignment() async {
+    var response = await http.post(Uri.parse(SaveInstallarAssignment), body: {
+      'FIntCod': '',
+      'FTrnNum': widget.unassignedInstallationList.ttrnnum.toString(),
+    });
+    var result = jsonDecode(response.body);
+    if (result['error'] == 200) {
+      Snackbar.showSnackBar(context, result['message'], Colors.teal);
+      Navigator.pop(context);
+    } else {
+      Snackbar.showSnackBar(context, result['message'], Colors.red);
     }
   }
 }

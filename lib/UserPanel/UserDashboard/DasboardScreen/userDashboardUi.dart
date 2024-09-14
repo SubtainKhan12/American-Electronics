@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:math';
 import 'package:american_electronics/UserPanel/UserDashboard/UnassignedInstallation/unassignedInsatllation.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../../APIs/apis.dart';
 import '../../../LoginPages/loginscreen.dart';
+import '../../../Models/InstallarComperison/InstallarComparisonModel.dart';
+import '../../../Models/MonthlyInstallationStatus/MonthlyInstallationStatusModel.dart';
 import '../../../Models/UserInstallationStatus/UserInstallationStatusModel.dart';
 import '../../../Utilities/Colors/colors.dart';
+import '../InstallarComparison/installarComperison.dart';
 
 class UserDashboardUI extends StatefulWidget {
   const UserDashboardUI({super.key});
@@ -19,33 +23,34 @@ class UserDashboardUI extends StatefulWidget {
 
 class _UserDashboardUIState extends State<UserDashboardUI> {
   List<UserInstallationStatusModel> userInstallationStatusList = [];
+  List<InstallarComparisonModel> installarComperisonList = [];
+  List<MonthlyInstallationStatusModel> monthlyInstallationStatusList = [];
+  Map<String, String> monthlyData = {};
   String? name;
+  double tableFontSize = 14;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     get_InstallationStatus();
+    get_MonthlyInstallationStatus();
+    get_InstallarComperison();
     getLoginInfo();
   }
 
   @override
   Widget build(BuildContext context) {
     // Get the current date
-    DateTime currentDate = DateTime.now();
+    // DateTime currentDate = DateTime.now();
+    //
+    // // Subtract 2 days from the current date
+    // DateTime dateMinusTwo = currentDate.subtract(Duration(days: 2));
+    //
+    // // Format the date and day name
+    // String formattedDate = DateFormat('dd').format(dateMinusTwo);
+    // String dayName = DateFormat('EE').format(dateMinusTwo);
 
-    // Subtract 2 days from the current date
-    DateTime dateMinusTwo = currentDate.subtract(Duration(days: 2));
-
-    // Format the date and day name
-    String formattedDate = DateFormat('dd').format(dateMinusTwo);
-    String dayName = DateFormat('EE').format(dateMinusTwo);
-
-    //   return Text(
-    //     '$formattedDate ($dayName)',
-    //     style: TextStyle(fontSize: 24),
-    //   );
-    // }
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -66,7 +71,11 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
           ],
         ),
         body: RefreshIndicator(
-          onRefresh: get_InstallationStatus,
+          onRefresh: () async{
+            await get_InstallationStatus();
+            await get_MonthlyInstallationStatus();
+            await get_InstallarComperison();
+          },
           child: ListView.builder(
               itemCount: userInstallationStatusList.length,
               itemBuilder: (context, index) {
@@ -92,48 +101,70 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                                 UserUnassignedInstallationUI()));
                                   },
                                   child: Material(
-                                    borderRadius: BorderRadius.circular(5),
                                     elevation: 10,
-                                    shadowColor: Color(0xffC4E4FF),
+                                    color: ColorsUtils.whiteColor,
+                                    borderRadius: BorderRadius.circular(15),
                                     child: Container(
-                                      height: _height * 0.06,
-                                      width: _width * 0.43,
+                                      height: _height * 0.05,
+                                      width: _width * 0.45,
                                       decoration: BoxDecoration(
-                                        // color: Color(0xffC4E4FF),
-                                        gradient: LinearGradient(colors: [
-                                          ColorsUtils.whiteColor,
-                                          ColorsUtils.lightblueColor
-                                        ]),
-                                        borderRadius: BorderRadius.circular(5),
                                       ),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
                                         children: [
-                                          SizedBox(
-                                            width: _width * 0.03,
-                                          ),
+                                          // First container with all borders
                                           Container(
-                                            width: _width * 0.22,
-                                            child: Text(
-                                              'UnAssigned',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14),
+                                            // height: _height * 0.08,
+                                            width: _width * 0.29,
+                                            decoration: BoxDecoration(
+                                              color: ColorsUtils.appcolor,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(15),
+                                                  bottomRight:
+                                                      Radius.circular(15),
+                                                  bottomLeft:
+                                                      Radius.circular(15),
+                                                  topLeft: Radius.circular(15)),
+                                              // border: Border.all(color: Colors.deepPurple),
                                             ),
+                                            child: Center(
+                                                child: Text(
+                                              'Unassigned',
+                                              style: TextStyle(
+                                                  color: ColorsUtils.whiteColor,
+                                                  fontSize: 16),
+                                            )),
                                           ),
-                                          VerticalDivider(
-                                            color: Colors.black,
-                                            thickness: 1,
-                                          ),
-                                          Text(
-                                            userInstallationStatusList[index]
-                                                    .unassigned
-                                                    .toString() ??
-                                                '0',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14),
+                                          // Second container with no left border
+                                          Container(
+                                            height: _height * 0.1,
+                                            width: _width * 0.15,
+                                            decoration: BoxDecoration(
+                                              color: ColorsUtils.whiteColor,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                bottomRight:
+                                                    Radius.circular(10),
+                                              ),
+                                              border: Border(
+                                                // top: BorderSide(color: ColorsUtils.blackColor),
+                                                // right: BorderSide(color: ColorsUtils.blackColor),
+                                                // bottom: BorderSide(color: ColorsUtils.blackColor),
+                                                // No left border
+                                                left: BorderSide.none,
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                userInstallationStatusList[
+                                                            index]
+                                                        .unassigned
+                                                        .toString() ??
+                                                    '0',
+                                                style: TextStyle(fontSize: 24,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -142,61 +173,81 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context)=> ExpenseUI()));
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) => CanceledInstallationUI()));
                                   },
                                   child: Material(
-                                    borderRadius: BorderRadius.circular(5),
                                     elevation: 10,
-                                    shadowColor: Color(0xffC4E4FF),
+                                    color: ColorsUtils.whiteColor,
+                                    borderRadius: BorderRadius.circular(15),
                                     child: Container(
-                                      height: _height * 0.06,
-                                      width: _width * 0.43,
-                                      decoration: BoxDecoration(
-                                        // color: Color(0xffC4E4FF),
-                                        gradient: LinearGradient(colors: [
-                                          ColorsUtils.whiteColor,
-                                          ColorsUtils.lightblueColor
-                                        ]),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
+                                      height: _height * 0.05,
+                                      width: _width * 0.45,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
                                         children: [
-                                          SizedBox(
-                                            width: _width * 0.03,
-                                          ),
+                                          // First container with all borders
                                           Container(
-                                            width: _width * 0.22,
-                                            child: Text(
-                                              'Pending',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14),
+                                            height: _height * 0.08,
+                                            width: _width * 0.23,
+                                            decoration: BoxDecoration(
+                                              color: ColorsUtils.appcolor,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(15),
+                                                  bottomRight:
+                                                  Radius.circular(15),
+                                                  bottomLeft: Radius.circular(15),
+                                                  topLeft: Radius.circular(15)),
+                                              // border: Border.all(color: ColorsUtils.blackColor),
                                             ),
+                                            child: Center(
+                                                child: Text(
+                                                  'Cancelled',
+                                                  style: TextStyle(
+                                                      color: ColorsUtils.whiteColor,
+                                                      fontSize: 16),
+                                                )),
                                           ),
-                                          VerticalDivider(
-                                            color: Colors.black,
-                                            thickness: 1,
-                                          ),
-                                          Text(
-                                            userInstallationStatusList[index]
-                                                    .pending
+                                          // Second container with no left border
+                                          Container(
+                                            height: _height * 0.1,
+                                            width: _width * 0.15,
+                                            decoration: BoxDecoration(
+                                              color: ColorsUtils.whiteColor,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                bottomRight: Radius.circular(10),
+                                              ),
+                                              border: Border(
+                                                // top: BorderSide(color: ColorsUtils.blackColor),
+                                                // right: BorderSide(color: ColorsUtils.blackColor),
+                                                // bottom: BorderSide(color: ColorsUtils.blackColor),
+                                                // No left border
+                                                left: BorderSide.none,
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                userInstallationStatusList[index]
+                                                    .cancelled
                                                     .toString() ??
-                                                '0',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14),
+                                                    '0',
+                                                style: TextStyle(fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                ),
+                                )
                               ],
                             ),
                             SizedBox(
-                              height: _height * 0.02,
+                              height: _height * 0.01,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -206,48 +257,69 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                     // Navigator.push(context, MaterialPageRoute(builder: (context)=> ExpenseUI()));
                                   },
                                   child: Material(
-                                    borderRadius: BorderRadius.circular(5),
                                     elevation: 10,
-                                    shadowColor: Color(0xffC4E4FF),
+                                    color: ColorsUtils.whiteColor,
+                                    borderRadius: BorderRadius.circular(15),
                                     child: Container(
-                                      height: _height * 0.06,
-                                      width: _width * 0.43,
-                                      decoration: BoxDecoration(
-                                        // color: Color(0xffC4E4FF),
-                                        gradient: LinearGradient(colors: [
-                                          ColorsUtils.whiteColor,
-                                          ColorsUtils.lightblueColor
-                                        ]),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
+                                      height: _height * 0.05,
+                                      width: _width * 0.45,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
                                         children: [
-                                          SizedBox(
-                                            width: _width * 0.03,
-                                          ),
+                                          // First container with all borders
                                           Container(
-                                            width: _width * 0.22,
-                                            child: Text(
-                                              'Installed',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14),
+                                            height: _height * 0.08,
+                                            width: _width * 0.29,
+                                            decoration: BoxDecoration(
+                                              color: ColorsUtils.appcolor,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(15),
+                                                  bottomRight:
+                                                  Radius.circular(15),
+                                                  bottomLeft:
+                                                  Radius.circular(15),
+                                                  topLeft: Radius.circular(15)),
+                                              // border: Border.all(color: ColorsUtils.blackColor),
                                             ),
+                                            child: Center(
+                                                child: Text(
+                                                  'Pending',
+                                                  style: TextStyle(
+                                                      color: ColorsUtils.whiteColor,
+                                                      fontSize: 16),
+                                                )),
                                           ),
-                                          VerticalDivider(
-                                            color: Colors.black,
-                                            thickness: 1,
-                                          ),
-                                          Text(
-                                            userInstallationStatusList[index]
-                                                    .installed
+                                          // Second container with no left border
+                                          Container(
+                                            height: _height * 0.1,
+                                            width: _width * 0.15,
+                                            decoration: BoxDecoration(
+                                              color: ColorsUtils.whiteColor,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                bottomRight:
+                                                Radius.circular(10),
+                                              ),
+                                              border: Border(
+                                                // top: BorderSide(color: ColorsUtils.blackColor),
+                                                // right: BorderSide(color: ColorsUtils.blackColor),
+                                                // bottom: BorderSide(color: ColorsUtils.blackColor),
+                                                // No left border
+                                                left: BorderSide.none,
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                userInstallationStatusList[
+                                                index]
+                                                    .pending
                                                     .toString() ??
-                                                '0',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14),
+                                                    '0',
+                                                style: TextStyle(fontSize: 24,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -259,48 +331,68 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                     // Navigator.push(context, MaterialPageRoute(builder: (context)=> ClosedInstallationUI()));
                                   },
                                   child: Material(
-                                    borderRadius: BorderRadius.circular(5),
                                     elevation: 10,
-                                    shadowColor: Color(0xffC4E4FF),
+                                    color: ColorsUtils.whiteColor,
+                                    borderRadius: BorderRadius.circular(15),
                                     child: Container(
-                                      height: _height * 0.06,
-                                      width: _width * 0.43,
-                                      decoration: BoxDecoration(
-                                        // color: Color(0xffC4E4FF),
-                                        gradient: LinearGradient(colors: [
-                                          ColorsUtils.whiteColor,
-                                          ColorsUtils.lightblueColor
-                                        ]),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
+                                      height: _height * 0.05,
+                                      width: _width * 0.45,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
                                         children: [
-                                          SizedBox(
-                                            width: _width * 0.03,
-                                          ),
+                                          // First container with all borders
                                           Container(
-                                            width: _width * 0.22,
-                                            child: Text(
-                                              'Closed',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14),
+                                            height: _height * 0.08,
+                                            width: _width * 0.23,
+                                            decoration: BoxDecoration(
+                                              color: ColorsUtils.appcolor,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(15),
+                                                  bottomRight:
+                                                      Radius.circular(15),
+                                                  bottomLeft:
+                                                      Radius.circular(15),
+                                                  topLeft: Radius.circular(15)),
+                                              // border: Border.all(color: ColorsUtils.blackColor),
                                             ),
+                                            child: Center(
+                                                child: Text(
+                                              'Closed',
+                                                  style: TextStyle(
+                                                      color: ColorsUtils.whiteColor,
+                                                      fontSize: 16),
+                                            )),
                                           ),
-                                          VerticalDivider(
-                                            color: Colors.black,
-                                            thickness: 1,
-                                          ),
-                                          Text(
-                                            userInstallationStatusList[index]
-                                                    .closed
-                                                    .toString() ??
-                                                '0',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14),
+                                          // Second container with no left border
+                                          Container(
+                                            height: _height * 0.1,
+                                            width: _width * 0.15,
+                                            decoration: BoxDecoration(
+                                              color: ColorsUtils.whiteColor,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                bottomRight:
+                                                    Radius.circular(10),
+                                              ),
+                                              border: Border(
+                                                // top: BorderSide(color: ColorsUtils.blackColor),
+                                                // right: BorderSide(color: ColorsUtils.blackColor),
+                                                // bottom: BorderSide(color: ColorsUtils.blackColor),
+                                                // No left border
+                                                left: BorderSide.none,
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                userInstallationStatusList[
+                                                            index]
+                                                        .closed
+                                                        .toString() ??
+                                                    '0',
+                                                style: TextStyle(fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -310,61 +402,78 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                               ],
                             ),
                             SizedBox(
-                              height: _height * 0.02,
+                              height: _height * 0.01,
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 7.0),
+                                  const EdgeInsets.symmetric(horizontal: 2.0),
                               child: InkWell(
                                 onTap: () {
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => CanceledInstallationUI()));
+                                  // Navigator.push(context, MaterialPageRoute(builder: (context)=> ExpenseUI()));
                                 },
                                 child: Material(
-                                  borderRadius: BorderRadius.circular(5),
                                   elevation: 10,
-                                  shadowColor: Color(0xffC4E4FF),
+                                  color: ColorsUtils.whiteColor,
+                                  borderRadius: BorderRadius.circular(15),
                                   child: Container(
-                                    height: _height * 0.06,
-                                    width: _width * 0.43,
-                                    decoration: BoxDecoration(
-                                      // color: Color(0xffC4E4FF),
-                                      gradient: LinearGradient(colors: [
-                                        ColorsUtils.whiteColor,
-                                        ColorsUtils.lightblueColor
-                                      ]),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
+                                    height: _height * 0.05,
+                                    width: _width * 0.45,
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
                                       children: [
-                                        SizedBox(
-                                          width: _width * 0.03,
-                                        ),
+                                        // First container with all borders
                                         Container(
-                                          width: _width * 0.22,
-                                          child: Text(
-                                            'Canceled',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14),
+                                          height: _height * 0.08,
+                                          width: _width * 0.29,
+                                          decoration: BoxDecoration(
+                                            color: ColorsUtils.appcolor,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(15),
+                                                bottomRight:
+                                                Radius.circular(15),
+                                                bottomLeft:
+                                                Radius.circular(15),
+                                                topLeft: Radius.circular(15)),
+                                            // border: Border.all(color: ColorsUtils.blackColor),
                                           ),
+                                          child: Center(
+                                              child: Text(
+                                                'Installed',
+                                                style: TextStyle(
+                                                    color: ColorsUtils.whiteColor,
+                                                    fontSize: 16),
+                                              )),
                                         ),
-                                        VerticalDivider(
-                                          color: Colors.black,
-                                          thickness: 1,
-                                        ),
-                                        Text(
-                                          userInstallationStatusList[index]
-                                                  .cancelled
+                                        // Second container with no left border
+                                        Container(
+                                          height: _height * 0.1,
+                                          width: _width * 0.15,
+                                          decoration: BoxDecoration(
+                                            color: ColorsUtils.whiteColor,
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              bottomRight:
+                                              Radius.circular(10),
+                                            ),
+                                            border: Border(
+                                              // top: BorderSide(color: ColorsUtils.blackColor),
+                                              // right: BorderSide(color: ColorsUtils.blackColor),
+                                              // bottom: BorderSide(color: ColorsUtils.blackColor),
+                                              // No left border
+                                              left: BorderSide.none,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              userInstallationStatusList[
+                                              index]
+                                                  .installed
                                                   .toString() ??
-                                              '0',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 14),
+                                                  '0',
+                                              style: TextStyle(fontSize: 24,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -375,20 +484,6 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                             SizedBox(
                               height: _height * 0.02,
                             ),
-                            // Padding(
-                            //   padding:
-                            //       const EdgeInsets.symmetric(horizontal: 10.0),
-                            //   child: Text(
-                            //     'Pending Complains',
-                            //     style: TextStyle(
-                            //         fontSize: 16,
-                            //         fontWeight: FontWeight.bold,
-                            //         fontStyle: FontStyle.italic),
-                            //   ),
-                            // ),
-                            // SizedBox(
-                            //   height: _height * 0.02,
-                            // ),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
@@ -661,83 +756,97 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    height: _height * 0.04,
-                                    width: _width * 0.17,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7),
-                                        color: Color(0xff6EACDA)
-
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        userInstallationStatusList[index]
-                                                .instalaltionOne
-                                                .toString() ??
-                                            '0',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
+                                  Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(7),
+                                    child: Container(
+                                      height: _height * 0.04,
+                                      width: _width * 0.17,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          color: Colors.white),
+                                      child: Center(
+                                        child: Text(
+                                          userInstallationStatusList[index]
+                                                  .instalaltionOne
+                                                  .toString() ??
+                                              '0',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    height: _height * 0.04,
-                                    width: _width * 0.17,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7),
-                                        color: Color(0xff6EACDA)
-
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        userInstallationStatusList[index]
-                                                .instalaltionTwo
-                                                .toString() ??
-                                            '0',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
+                                  Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(7),
+                                    child: Container(
+                                      height: _height * 0.04,
+                                      width: _width * 0.17,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          color: Colors.white),
+                                      child: Center(
+                                        child: Text(
+                                          userInstallationStatusList[index]
+                                                  .instalaltionTwo
+                                                  .toString() ??
+                                              '0',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    height: _height * 0.04,
-                                    width: _width * 0.17,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7),
-                                        color: Color(0xff6EACDA)
-
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        userInstallationStatusList[index]
-                                                .instalaltionThree
-                                                .toString() ??
-                                            '0',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
+                                  Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(7),
+                                    child: Container(
+                                      height: _height * 0.04,
+                                      width: _width * 0.17,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          color: Colors.white),
+                                      child: Center(
+                                        child: Text(
+                                          userInstallationStatusList[index]
+                                                  .instalaltionThree
+                                                  .toString() ??
+                                              '0',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    height: _height * 0.04,
-                                    width: _width * 0.17,
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff6EACDA),
+                                  Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(7),
+                                    child: Container(
+                                      height: _height * 0.04,
+                                      width: _width * 0.17,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        // color: Color(0xff6EACDA),
                                         borderRadius: BorderRadius.circular(7),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        userInstallationStatusList[index]
-                                                .instalaltionFour
-                                                .toString() ??
-                                            '0',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          userInstallationStatusList[index]
+                                                  .instalaltionFour
+                                                  .toString() ??
+                                              '0',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -754,85 +863,288 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    height: _height * 0.04,
-                                    width: _width * 0.17,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7),
-                                        color: Color(0xff6EACDA)
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        userInstallationStatusList[index]
-                                                .instalaltionOne
-                                                .toString() ??
-                                            '0',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: _height * 0.04,
-                                    width: _width * 0.17,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7),
-                                      color: Color(0xff6EACDA)
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        userInstallationStatusList[index]
-                                                .instalaltionTwo
-                                                .toString() ??
-                                            '0',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: _height * 0.04,
-                                    width: _width * 0.17,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7),
-                                        color: Color(0xff6EACDA)
-
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        userInstallationStatusList[index]
-                                                .instalaltionThree
-                                                .toString() ??
-                                            '0',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: _height * 0.04,
-                                    width: _width * 0.17,
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff6EACDA),
-                                      borderRadius: BorderRadius.circular(7),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        userInstallationStatusList[index]
-                                                .instalaltionFour
-                                                .toString() ??
-                                            '0',
-                                        style: TextStyle(
+                                  Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(7),
+                                    child: Container(
+                                      height: _height * 0.04,
+                                      width: _width * 0.17,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          color: Colors.white),
+                                      child: Center(
+                                        child: Text(
+                                          userInstallationStatusList[index]
+                                                  .closeOne
+                                                  .toString() ??
+                                              '0',
+                                          style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.black),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(7),
+                                    child: Container(
+                                      height: _height * 0.04,
+                                      width: _width * 0.17,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          color: Colors.white),
+                                      child: Center(
+                                        child: Text(
+                                          userInstallationStatusList[index]
+                                                  .closeTwo
+                                                  .toString() ??
+                                              '0',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(7),
+                                    child: Container(
+                                      height: _height * 0.04,
+                                      width: _width * 0.17,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          color: Colors.white),
+                                      child: Center(
+                                        child: Text(
+                                          userInstallationStatusList[index]
+                                                  .closeThree
+                                                  .toString() ??
+                                              '0',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(7),
+                                    child: Container(
+                                      height: _height * 0.04,
+                                      width: _width * 0.17,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        // color: Color(0xff6EACDA),
+                                        borderRadius: BorderRadius.circular(7),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          userInstallationStatusList[index]
+                                                  .closeFour
+                                                  .toString() ??
+                                              '0',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: _height * 0.01,
+                            ),
+                            installarComperisonList.length > 5
+                                ? Material(
+                                    elevation: 5,
+                                    child: Column(children: [
+                                      Table(
+                                        border: TableBorder(
+                                          verticalInside: BorderSide(
+                                              width: 1, color: Colors.grey),
+                                        ),
+                                        columnWidths: const {
+                                          0: FlexColumnWidth(0.85),
+                                          1: FlexColumnWidth(0.15),
+                                        },
+                                        children: [
+                                          // TableRow(
+                                          //   // Header row
+                                          //   decoration: BoxDecoration(
+                                          //       color: Colors.indigo, border: Border.all(width: 0.5)),
+                                          //   children: [
+                                          //     TableCell(
+                                          //       child: Center(
+                                          //         child: Text('',
+                                          //             textAlign: TextAlign.left,
+                                          //             style: TextStyle(
+                                          //                 fontSize: tableFontSize,
+                                          //                 color: Colors.white,
+                                          //                 fontWeight: FontWeight.bold)),
+                                          //       ),
+                                          //     ),TableCell(
+                                          //       child: Center(
+                                          //         child: Text('',
+                                          //             textAlign: TextAlign.left,
+                                          //             style: TextStyle(
+                                          //                 fontSize: tableFontSize,
+                                          //                 color: Colors.white,
+                                          //                 fontWeight: FontWeight.bold)),
+                                          //       ),
+                                          //     ),
+                                          //   ],
+                                          // ),
+                                          for (var i = 0;
+                                              i <
+                                                  min(
+                                                      5,
+                                                      installarComperisonList
+                                                              ?.length ??
+                                                          0);
+                                              i++)
+                                            TableRow(
+                                              // Header row
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      width: 0.5,
+                                                      color: Colors.grey)),
+                                              children: [
+                                                TableCell(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 3.0, left: 5),
+                                                    child: Text(
+                                                        installarComperisonList![
+                                                                i]
+                                                            .instalalr
+                                                            .toString(),
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          fontSize:
+                                                              tableFontSize,
+                                                        )),
+                                                  ),
+                                                ),
+                                                TableCell(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 3.0, right: 5),
+                                                    child: Text(
+                                                        installarComperisonList![
+                                                                i]
+                                                            .installations
+                                                            .toString(),
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                        style: TextStyle(
+                                                          fontSize:
+                                                              tableFontSize,
+                                                        )),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                        ],
+                                      ),
+                                    ]),
+                                  )
+                                : Container(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 3, left: 300.0),
+                              child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                InstallarComperisonUI(
+                                                  installarComparison:
+                                                      installarComperisonList,
+                                                )));
+                                  },
+                                  child: Text(
+                                    'More...',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: ColorsUtils.appcolor),
+                                  )),
+                            ),
+                            Material(
+                              elevation: 5,
+                              child: Container(
+                                height: _height * 0.25,
+                                width: double.infinity,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: BarChart(
+                                    BarChartData(
+                                      alignment: BarChartAlignment.spaceBetween,
+                                      maxY: 3000,
+                                      // Adjust this based on your data range
+                                      barTouchData: BarTouchData(enabled: true),
+                                      titlesData: FlTitlesData(
+                                          show: true,
+                                          bottomTitles: AxisTitles(
+                                            sideTitles: SideTitles(
+                                              showTitles: true,
+                                              getTitlesWidget: (double value,
+                                                  TitleMeta meta) {
+                                                const months = [
+                                                  'Jan',
+                                                  'Feb',
+                                                  'Mar',
+                                                  'Apr',
+                                                  'May',
+                                                  'Jun',
+                                                  'Jul',
+                                                  'Aug',
+                                                  'Sep',
+                                                  'Oct',
+                                                  'Nov',
+                                                  'Dec'
+                                                ];
+                                                return Text(
+                                                    months[value.toInt()]);
+                                              },
+                                            ),
+                                          ),
+                                          leftTitles: AxisTitles(
+                                            sideTitles: SideTitles(
+                                              showTitles: false,
+                                              // Adjust interval as needed
+                                              // getTitlesWidget: (double value, TitleMeta meta) {
+                                              //   return Text(value.toInt().toString());
+                                              // },
+                                            ),
+                                          ),
+                                          rightTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                            showTitles: false,
+                                          )),
+                                          topTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                            showTitles: false,
+                                          ))),
+                                      borderData: FlBorderData(show: false),
+                                      barGroups: _buildBarGroups(),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -840,6 +1152,42 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                       );
               }),
         ));
+  }
+
+  List<BarChartGroupData> _buildBarGroups() {
+    if (monthlyInstallationStatusList.isEmpty) return [];
+
+    Map<String, dynamic> monthlyData =
+        monthlyInstallationStatusList[0].toJson();
+    List<String> months = monthlyData.keys.toList();
+    List<int> values = monthlyData.values.map((e) => int.parse(e)).toList();
+
+    return List.generate(months.length, (index) {
+      return BarChartGroupData(
+        x: index,
+        barRods: [
+          BarChartRodData(
+            toY: values[index].toDouble(),
+            color: ColorsUtils.appcolor,
+            width: 18,
+          ),
+        ],
+      );
+    });
+  }
+
+  Future get_MonthlyInstallationStatus() async {
+    var response = await http.get(Uri.parse(MonthlyInstallationStatus));
+    var result = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      monthlyInstallationStatusList.clear();
+
+      for (Map i in result) {
+        monthlyInstallationStatusList
+            .add(MonthlyInstallationStatusModel.fromJson(i));
+      }
+      setState(() {});
+    } else {}
   }
 
   Future get_InstallationStatus() async {
@@ -850,6 +1198,19 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
 
       for (Map i in result) {
         userInstallationStatusList.add(UserInstallationStatusModel.fromJson(i));
+      }
+      setState(() {});
+    } else {}
+  }
+
+  Future get_InstallarComperison() async {
+    var response = await http.get(Uri.parse(InstallarComparison));
+    var result = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      installarComperisonList.clear();
+
+      for (Map i in result) {
+        installarComperisonList.add(InstallarComparisonModel.fromJson(i));
       }
       setState(() {});
     } else {}

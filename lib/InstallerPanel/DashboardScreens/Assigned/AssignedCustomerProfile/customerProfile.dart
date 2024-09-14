@@ -44,14 +44,6 @@ class _AssignedCustomerDetailState extends State<AssignedCustomerDetail> {
           backgroundColor: ColorsUtils.appcolor,
           iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
           actions: [
-            // Switch(
-            //   value: _translatetext,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       _translatetext = value;
-            //     });
-            //   },
-            // ),
             Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: Row(
