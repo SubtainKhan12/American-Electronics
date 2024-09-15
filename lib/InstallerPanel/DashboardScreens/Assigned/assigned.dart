@@ -42,156 +42,159 @@ class _AssignedUIState extends State<AssignedUI> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-        child: Column(
-          children: [
-            TextField(
-              onChanged: (value) {
-                search(value);
-              },
-              decoration: InputDecoration(
-                hintText: "Search...",
-                suffixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: const BorderSide(
-                    color: Colors.black,
+        child: RefreshIndicator(
+          onRefresh: Post_Assigned,
+          child: Column(
+            children: [
+              TextField(
+                onChanged: (value) {
+                  search(value);
+                },
+                decoration: InputDecoration(
+                  hintText: "Search...",
+                  suffixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: const BorderSide(
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: loading
-                  ? const Center(child: CircularProgressIndicator())
-                  : searchAssignedList.isEmpty
-                      ? const Center(
-                          child: Text(
-                          "No applications is Assigned",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                        ))
-                      : ListView.builder(
-                          itemCount: searchAssignedList.length,
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) => _buildBottomSheet(
-                                      context, searchAssignedList[index]),
-                                );
-                              },
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 5),
-                                  child: Row(
-                                    children: [
-                                      // CircleAvatar(
-                                      //   backgroundColor:
-                                      //       searchAssignedList[index]
-                                      //                   .status
-                                      //                   .toString() ==
-                                      //               'Pending'
-                                      //           ? Colors.red
-                                      //           : Colors.green,
-                                      //   child: Text(
-                                      //     '1',
-                                      //     style: TextStyle(
-                                      //         color: searchAssignedList[index]
-                                      //                     .status
-                                      //                     .toString() ==
-                                      //                 'Pending'
-                                      //             ? Colors.greenAccent
-                                      //             : Colors.white),
-                                      //   ),
-                                      // ),
-                                      // const SizedBox(
-                                      //   width: 10,
-                                      // ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                searchAssignedList[index]
-                                                    .cmp
-                                                    .toString(),
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Color(0xffF58634),
-                                                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: loading
+                    ? const Center(child: CircularProgressIndicator())
+                    : searchAssignedList.isEmpty
+                        ? const Center(
+                            child: Text(
+                            "No applications is Assigned",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                          ))
+                        : ListView.builder(
+                            itemCount: searchAssignedList.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) => _buildBottomSheet(
+                                        context, searchAssignedList[index]),
+                                  );
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 5),
+                                    child: Row(
+                                      children: [
+                                        // CircleAvatar(
+                                        //   backgroundColor:
+                                        //       searchAssignedList[index]
+                                        //                   .status
+                                        //                   .toString() ==
+                                        //               'Pending'
+                                        //           ? Colors.red
+                                        //           : Colors.green,
+                                        //   child: Text(
+                                        //     '1',
+                                        //     style: TextStyle(
+                                        //         color: searchAssignedList[index]
+                                        //                     .status
+                                        //                     .toString() ==
+                                        //                 'Pending'
+                                        //             ? Colors.greenAccent
+                                        //             : Colors.white),
+                                        //   ),
+                                        // ),
+                                        // const SizedBox(
+                                        //   width: 10,
+                                        // ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  searchAssignedList[index]
+                                                      .cmp
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    color: Color(0xffF58634),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ),
-                                              const Text(
-                                                '  -  ',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(
-                                                searchAssignedList[index]
-                                                    .date
-                                                    .toString(),
-                                                style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                          Text(
-                                            searchAssignedList[index]
-                                                .customer
-                                                .toString(),
-                                            style: const TextStyle(
-                                              fontSize: 12,
+                                                const Text(
+                                                  '  -  ',
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  searchAssignedList[index]
+                                                      .date
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                searchAssignedList[index]
-                                                    .mobile
-                                                    .toString(),
-                                                style: const TextStyle(
-                                                  fontSize: 12,
+                                            Text(
+                                              searchAssignedList[index]
+                                                  .customer
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  searchAssignedList[index]
+                                                      .mobile
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                '(${searchAssignedList[index].status.toString()})',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color:
-                                                      searchAssignedList[index]
-                                                                  .status
-                                                                  .toString() ==
-                                                              'Installed'
-                                                          ? Colors.green
-                                                          : Colors.red,
+                                                SizedBox(
+                                                  width: 10,
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                                Text(
+                                                  '(${searchAssignedList[index].status.toString()})',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color:
+                                                        searchAssignedList[index]
+                                                                    .status
+                                                                    .toString() ==
+                                                                'Installed'
+                                                            ? Colors.green
+                                                            : Colors.red,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }),
-            ),
-          ],
+                              );
+                            }),
+              ),
+            ],
+          ),
         ),
       ),
     );

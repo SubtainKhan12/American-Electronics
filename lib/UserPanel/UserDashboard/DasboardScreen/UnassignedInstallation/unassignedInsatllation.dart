@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-import '../../../APIs/apis.dart';
 
-import '../../../Models/UnassignedInstallation/UnassignedInstallationModel.dart';
-import '../../../Utilities/Colors/colors.dart';
-import '../DasboardScreen/TechnicianAssignment/technicianAssignment.dart';
+import '../../../../APIs/apis.dart';
+import '../../../../Models/UnassignedInstallation/UnassignedInstallationModel.dart';
+import '../../../../Utilities/Colors/colors.dart';
+import '../TechnicianAssignment/technicianAssignment.dart';
+
 
 class UserUnassignedInstallationUI extends StatefulWidget {
   const UserUnassignedInstallationUI({super.key});
@@ -244,10 +245,13 @@ class _UserUnassignedInstallationUIState
                         InkWell(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        UserTechnicianAssignmentUI(unassignedInstallationList: model,)));
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            UserTechnicianAssignmentUI(
+                                              unassignedInstallationList: model,
+                                            )))
+                                .then((value) => get_UnassignedInstallation());
                           },
                           child: const ListTile(
                             leading: Icon(Icons.location_on),
@@ -334,14 +338,14 @@ class _UserUnassignedInstallationUIState
     var response = await http.get(Uri.parse(UnassignedInstallations));
     var result = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      unassignedInstallationList.clear();
-
-      for (Map i in result) {
-        unassignedInstallationList.add(UnassignedInstallationModel.fromJson(i));
-        // print(result);
-      }
       setState(() {
         loading = false;
+      });
+      unassignedInstallationList.clear();
+      for (Map i in result) {
+        unassignedInstallationList.add(UnassignedInstallationModel.fromJson(i));
+      }
+      setState(() {
         searchunassignedInstallation = List.from(unassignedInstallationList);
       });
     } else {

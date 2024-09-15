@@ -42,108 +42,111 @@ class _InstalledUIState extends State<InstalledUI> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-        child: Column(
-          children: [
-            TextField(
-              onChanged: (value) {
-                search(value);
-              },
-              decoration: InputDecoration(
-                hintText: "Search...",
-                suffixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: const BorderSide(
-                    color: Colors.black,
+        child: RefreshIndicator(
+          onRefresh: Post_Installed,
+          child: Column(
+            children: [
+              TextField(
+                onChanged: (value) {
+                  search(value);
+                },
+                decoration: InputDecoration(
+                  hintText: "Search...",
+                  suffixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: const BorderSide(
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: loading // Show loader if loading is true
-                  ? Center(child: CircularProgressIndicator())
-                  : searchInstalledList
-                          .isEmpty // Show message if no data is available
-                      ? Center(
-                          child: Text(
-                          "No Application is Installed",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                        ))
-                      : ListView.builder(
-                          itemCount: searchInstalledList.length,
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) => _buildBottomSheet(
-                                      context, searchInstalledList[index]),
-                                );
-                              },
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            searchInstalledList[index]
-                                                .cmp
-                                                .toString(),
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Color(0xffF58634),
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          const Text(
-                                            '  -  ',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          Text(
-                                            searchInstalledList[index]
-                                                .date
-                                                .toString(),
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        searchInstalledList[index]
-                                            .customer
-                                            .toString(),
-                                        style: const TextStyle(
-                                          fontSize: 12,
+              Expanded(
+                child: loading // Show loader if loading is true
+                    ? Center(child: CircularProgressIndicator())
+                    : searchInstalledList
+                            .isEmpty // Show message if no data is available
+                        ? Center(
+                            child: Text(
+                            "No Application is Installed",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                          ))
+                        : ListView.builder(
+                            itemCount: searchInstalledList.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) => _buildBottomSheet(
+                                        context, searchInstalledList[index]),
+                                  );
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 5),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              searchInstalledList[index]
+                                                  .cmp
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: Color(0xffF58634),
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            const Text(
+                                              '  -  ',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            Text(
+                                              searchInstalledList[index]
+                                                  .date
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      Text(
-                                        searchInstalledList[index]
-                                            .mobile
-                                            .toString(),
-                                        style: const TextStyle(
-                                          fontSize: 12,
+                                        Text(
+                                          searchInstalledList[index]
+                                              .customer
+                                              .toString(),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                        Text(
+                                          searchInstalledList[index]
+                                              .mobile
+                                              .toString(),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }),
-            ),
-          ],
+                              );
+                            }),
+              ),
+            ],
+          ),
         ),
       ),
     );

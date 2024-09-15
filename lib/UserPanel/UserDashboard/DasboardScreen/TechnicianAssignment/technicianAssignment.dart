@@ -4,9 +4,11 @@ import 'package:american_electronics/Utilities/Colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:translator/translator.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../APIs/apis.dart';
 import '../../../../Models/ActiveInstallar/ActiveInstallar.dart';
 import '../../../../Models/UnassignedInstallation/UnassignedInstallationModel.dart';
+import '../../../../Utilities/Loader/loader.dart';
 import '../../../../Utilities/Snackbar/snackbar.dart';
 
 class UserTechnicianAssignmentUI extends StatefulWidget {
@@ -30,6 +32,8 @@ class _UserTechnicianAssignmentUIState
   TextEditingController _searchcontroller = TextEditingController();
   TextEditingController _phonecontroller = TextEditingController();
 
+  String? _selectedInstallarId;
+
   @override
   void initState() {
     super.initState();
@@ -51,10 +55,14 @@ class _UserTechnicianAssignmentUIState
       _searchcontroller.text = selectedInstallar.tintdsc.toString().trim();
       _phonecontroller.text = selectedInstallar.tmobnum
           .toString()
-          .trim(); // Assuming phoneNumber is the field name
+          .trim();
+
+      _selectedInstallarId = selectedInstallar.tintcod.toString(); // Store technician ID
       _isDropdownOpen = false;
+      print(_selectedInstallarId);
     });
   }
+
 
   @override
   void dispose() {
@@ -688,13 +696,18 @@ class _UserTechnicianAssignmentUIState
                 SizedBox(
                   height: _height * 0.01,
                 ),
-                TextField(
-                  controller: _phonecontroller,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: 'Technician Phone No',
-                    suffixIcon: Icon(Icons.phone_android),
-                    border: OutlineInputBorder(),
+                InkWell(
+                  onTap: (){
+                    _showPhoneDialog(_phonecontroller.text);
+                  },
+                  child: TextField(
+                    controller: _phonecontroller,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      labelText: 'Technician Phone No',
+                      suffixIcon: Icon(Icons.phone_android),
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -709,6 +722,7 @@ class _UserTechnicianAssignmentUIState
                                 borderRadius: BorderRadius.circular(7))),
                         onPressed: () {
                           post_SaveInstallarAssignment();
+                          CircularIndicator.showLoader(context);
                         },
                         child: Text('Assign')))
               ],
@@ -749,15 +763,80 @@ class _UserTechnicianAssignmentUIState
 
   Future post_SaveInstallarAssignment() async {
     var response = await http.post(Uri.parse(SaveInstallarAssignment), body: {
-      'FIntCod': '',
-      'FTrnNum': widget.unassignedInstallationList.ttrnnum.toString(),
+      'FIntCod': _selectedInstallarId.toString().trim(),
+      'FTrnNum': widget.unassignedInstallationList.ttrnnum.toString().trim(),
     });
     var result = jsonDecode(response.body);
     if (result['error'] == 200) {
       Snackbar.showSnackBar(context, result['message'], Colors.teal);
       Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
     } else {
-      Snackbar.showSnackBar(context, result['message'], Colors.red);
+      Snackbar.showSnackBar(context, 'Error you must select Installer', Colors.red);
+      Navigator.pop(context);
+    }
+  }
+  Future<void> _showPhoneDialog(String phoneNumber) async {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choose an option'),
+          content: Text('Would you like to call or message on WhatsApp?'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.phone,
+                  size: _height * 0.04, color: Color(0xff06D001)),
+              onPressed: () {
+                _makePhoneCall(phoneNumber);
+                Navigator.of(context).pop();
+              },
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            InkWell(
+              onTap: () {
+                _openWhatsApp(phoneNumber);
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: _height * 0.04,
+                child: Image.asset('assets/whatsapp.png'),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  ///-----------------------> Function to Navigate to phone dail <-----------------///
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
+
+  ///-------------------> Function to Navigate to whatsapp <------------------///
+  Future<void> _openWhatsApp(String phoneNumber) async {
+    final launchUri = Uri(
+      scheme: 'https',
+      path: 'wa.me/$phoneNumber',
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Could not launch WhatsApp for $phoneNumber';
     }
   }
 }

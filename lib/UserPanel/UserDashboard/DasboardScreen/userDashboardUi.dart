@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:math';
-import 'package:american_electronics/UserPanel/UserDashboard/UnassignedInstallation/unassignedInsatllation.dart';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +13,8 @@ import '../../../Models/MonthlyInstallationStatus/MonthlyInstallationStatusModel
 import '../../../Models/UserInstallationStatus/UserInstallationStatusModel.dart';
 import '../../../Utilities/Colors/colors.dart';
 import '../InstallarComparison/installarComperison.dart';
+import 'UnassignedInstallation/unassignedInsatllation.dart';
+import 'UserPendingInstallations/userPendingInstallation.dart';
 
 class UserDashboardUI extends StatefulWidget {
   const UserDashboardUI({super.key});
@@ -98,7 +100,11 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                UserUnassignedInstallationUI()));
+                                                UserUnassignedInstallationUI())).then((value){
+                                                  get_InstallationStatus();
+                                                  get_MonthlyInstallationStatus();
+                                                  get_InstallarComperison();
+                                    });
                                   },
                                   child: Material(
                                     elevation: 10,
@@ -254,7 +260,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context)=> ExpenseUI()));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> UserPendingInstallationUI()));
                                   },
                                   child: Material(
                                     elevation: 10,

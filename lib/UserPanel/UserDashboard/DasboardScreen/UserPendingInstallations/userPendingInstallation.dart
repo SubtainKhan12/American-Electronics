@@ -1,31 +1,31 @@
 import 'dart:convert';
-import 'package:american_electronics/InstallerPanel/DashboardScreens/Pending/PendingCustomerProfile/pendingCustomerProfile.dart';
-import 'package:american_electronics/InstallerPanel/DashboardScreens/Pending/PendingVisitScreen/pendingVisitScreen.dart';
-import 'package:american_electronics/Models/Pending/PendingModel.dart';
-import 'package:american_electronics/Utilities/Colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../../APIs/apis.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
-class PendingUI extends StatefulWidget {
-  const PendingUI({super.key});
+import '../../../../APIs/apis.dart';
+import '../../../../Models/Pending/UserPendingInstallationsModel.dart';
+import '../../../../Utilities/Colors/colors.dart';
+
+class UserPendingInstallationUI extends StatefulWidget {
+  const UserPendingInstallationUI({super.key});
 
   @override
-  State<PendingUI> createState() => _PendingUIState();
+  State<UserPendingInstallationUI> createState() =>
+      _UserPendingInstallationUIState();
 }
 
-class _PendingUIState extends State<PendingUI> {
-  List<PendingModel> pendingList = [];
-  List<PendingModel> searchPendingList = [];
+class _UserPendingInstallationUIState extends State<UserPendingInstallationUI> {
+  List<UserPendingInstallationsModel> pendingInstallationList = [];
+  List<UserPendingInstallationsModel> searchPendingInstallationList = [];
   String? colCode;
   bool loading = true; // State variable to control the loading state
 
   @override
   void initState() {
     super.initState();
-    getLoginInfo();
+    get_PendingInstallations();
   }
 
   @override
@@ -33,7 +33,7 @@ class _PendingUIState extends State<PendingUI> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Pending Applications',
+          'Pending Installation',
           style: TextStyle(color: ColorsUtils.whiteColor),
         ),
         backgroundColor: ColorsUtils.appcolor,
@@ -42,7 +42,7 @@ class _PendingUIState extends State<PendingUI> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
         child: RefreshIndicator(
-          onRefresh: Post_Pending,
+          onRefresh: get_PendingInstallations,
           child: Column(
             children: [
               TextField(
@@ -63,7 +63,7 @@ class _PendingUIState extends State<PendingUI> {
               Expanded(
                 child: loading // Show loader if loading is true
                     ? Center(child: CircularProgressIndicator())
-                    : searchPendingList
+                    : searchPendingInstallationList
                             .isEmpty // Show message if no data is available
                         ? Center(
                             child: Text(
@@ -74,7 +74,7 @@ class _PendingUIState extends State<PendingUI> {
                                 color: Colors.grey),
                           ))
                         : ListView.builder(
-                            itemCount: searchPendingList.length,
+                            itemCount: searchPendingInstallationList.length,
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
@@ -83,7 +83,8 @@ class _PendingUIState extends State<PendingUI> {
                                     isScrollControlled: true,
                                     backgroundColor: Colors.transparent,
                                     builder: (context) => _buildBottomSheet(
-                                        context, searchPendingList[index]),
+                                        context,
+                                        searchPendingInstallationList[index]),
                                   );
                                 },
                                 child: Card(
@@ -97,7 +98,7 @@ class _PendingUIState extends State<PendingUI> {
                                         Row(
                                           children: [
                                             Text(
-                                              searchPendingList[index]
+                                              searchPendingInstallationList[index]
                                                   .cmp
                                                   .toString(),
                                               style: const TextStyle(
@@ -112,7 +113,7 @@ class _PendingUIState extends State<PendingUI> {
                                                   fontWeight: FontWeight.w500),
                                             ),
                                             Text(
-                                              searchPendingList[index]
+                                              searchPendingInstallationList[index]
                                                   .date
                                                   .toString(),
                                               style: const TextStyle(
@@ -122,7 +123,7 @@ class _PendingUIState extends State<PendingUI> {
                                           ],
                                         ),
                                         Text(
-                                          searchPendingList[index]
+                                          searchPendingInstallationList[index]
                                               .customer
                                               .toString(),
                                           style: const TextStyle(
@@ -130,7 +131,7 @@ class _PendingUIState extends State<PendingUI> {
                                           ),
                                         ),
                                         Text(
-                                          searchPendingList[index]
+                                          searchPendingInstallationList[index]
                                               .mobile
                                               .toString(),
                                           style: const TextStyle(
@@ -151,7 +152,10 @@ class _PendingUIState extends State<PendingUI> {
     );
   }
 
-  Widget _buildBottomSheet(BuildContext context, PendingModel model) {
+  Widget _buildBottomSheet(
+      BuildContext context, UserPendingInstallationsModel model) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(),
       child: Container(
@@ -210,35 +214,164 @@ class _PendingUIState extends State<PendingUI> {
                           ),
                         ),
                         const Divider(),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PendingCustomerDetail(
-                                        pendingModel: model)));
-                          },
-                          child: const ListTile(
-                            leading: Icon(Icons.info),
-                            title: Text("Complain Detail"),
-                            // subtitle: Text("Customer CMP: ${model.cmp}"),
-                          ),
+                        Container(
+                          child: InputDecorator(
+                              decoration: InputDecoration(
+                                  labelText: 'Installer Information',
+                                  labelStyle: TextStyle(
+                                      color: ColorsUtils.appcolor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(0),
+                                  )),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                            width: _width * 0.2,
+                                            child: const Text(
+                                              'Installer',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                        Container(
+                                          width: _width * 0.02,
+                                          child: const Text(
+                                            ':',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Container(
+                                            // width: _width * 0.25,
+                                            child: Flexible(
+                                          child: Text(model.installar
+                                                      .toString()
+                                                      .trim() ==
+                                                  'null'
+                                              ? ''
+                                              : model.installar
+                                                  .toString()
+                                                  .trim()),
+                                        ))
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                            width: _width * 0.2,
+                                            child: const Text(
+                                              'Mobile#',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                        Container(
+                                          width: _width * 0.02,
+                                          child: const Text(
+                                            ':',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            _showPhoneDialog(model
+                                                .installarMobile
+                                                .toString());
+                                          },
+                                          child: Container(
+                                              // width: _width * 0.25,
+                                              child: Text(
+                                            model.installarMobile
+                                                        .toString()
+                                                        .trim() ==
+                                                    'null'
+                                                ? ''
+                                                : model.installarMobile
+                                                    .toString()
+                                                    .trim(),
+                                            style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationColor:
+                                                  ColorsUtils.appcolor,
+                                              decorationThickness: 2,
+                                              fontSize: 16,
+                                              color: ColorsUtils.appcolor,
+                                            ),
+                                          )),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                            width: _width * 0.2,
+                                            child: const Text(
+                                              'item',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                        Container(
+                                          width: _width * 0.02,
+                                          child: const Text(
+                                            ':',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Container(
+                                            // width: _width * 0.25,
+                                            child: Flexible(
+                                          child: Text(model.item
+                                                      .toString()
+                                                      .trim() ==
+                                                  'null'
+                                              ? ''
+                                              : model.item.toString().trim()),
+                                        ))
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )),
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PendingVisitScreen(
-                                          pendingModel: model,
-                                        )));
-                          },
-                          child: const ListTile(
-                            leading: Icon(Icons.location_on),
-                            title: Text("Technician Visit"),
-                            // subtitle: Text("Visit Date: ${model.date}"),
-                          ),
-                        ),
+                        // InkWell(
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) =>
+                        //                 PendingCustomerDetail(
+                        //                     pendingModel: model)));
+                        //   },
+                        //   child: const ListTile(
+                        //     leading: Icon(Icons.info),
+                        //     title: Text("Complain Detail"),
+                        //     // subtitle: Text("Customer CMP: ${model.cmp}"),
+                        //   ),
+                        // ),
+                        // InkWell(
+                        //   onTap: (){
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) =>
+                        //                 PendingVisitScreen(pendingModel: model,)));
+                        //   },
+                        //   child: const ListTile(
+                        //     leading: Icon(Icons.location_on),
+                        //     title: Text("Technician Visit"),
+                        //     // subtitle: Text("Visit Date: ${model.date}"),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -251,22 +384,20 @@ class _PendingUIState extends State<PendingUI> {
     );
   }
 
-  Future Post_Pending() async {
-    var response = await http.post(Uri.parse(Pending), body: {
-      'FIntCod': colCode.toString(),
-    });
+  Future get_PendingInstallations() async {
+    var response = await http.get(Uri.parse(PendingInstallations));
     var result = jsonDecode(response.body);
     if (response.statusCode == 200) {
       setState(() {
         loading = false;
       });
-      pendingList.clear();
+      pendingInstallationList.clear();
       for (Map i in result) {
-        pendingList.add(PendingModel.fromJson(i));
+        pendingInstallationList.add(UserPendingInstallationsModel.fromJson(i));
       }
       setState(() {
         // Update loading state once data is fetched
-        searchPendingList = List.from(pendingList);
+        searchPendingInstallationList = List.from(pendingInstallationList);
       });
     } else {
       setState(() {
@@ -275,16 +406,9 @@ class _PendingUIState extends State<PendingUI> {
     }
   }
 
-  getLoginInfo() async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    colCode = sp.getString('colCode');
-    setState(() {});
-    Post_Pending();
-  }
-
   void search(String query) {
     setState(() {
-      searchPendingList = pendingList.where((category) {
+      searchPendingInstallationList = pendingInstallationList.where((category) {
         final customerNameMatches =
             category.customer?.toLowerCase().contains(query.toLowerCase()) ??
                 false;
