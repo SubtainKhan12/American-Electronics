@@ -1,6 +1,8 @@
 import 'package:american_electronics/LoginPages/loginscreen.dart';
 import 'package:flutter/material.dart';
 
+import 'SplashScreen/splashScreen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const LoginUI(),
+      home: const SplashScreen(),
     );
   }
 }

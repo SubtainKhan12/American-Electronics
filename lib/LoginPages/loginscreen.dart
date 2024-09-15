@@ -7,10 +7,11 @@ import 'package:american_electronics/Utilities/Loader/loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../APIs/apis.dart';
-import '../AdminPanel/DashboardScreens/Dashboard/adminDashboard.dart';
 import '../SharedPreferences/sharedPreferences.dart';
+import '../SplashScreen/splashScreen.dart';
 import '../UserPanel/CompalinSheet/complainSheet.dart';
 import '../UserPanel/UserDashboard/DasboardScreen/userDashboardUi.dart';
 import '../Utilities/Snackbar/snackbar.dart';
@@ -27,6 +28,7 @@ class _LoginUIState extends State<LoginUI> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true;
+  static String KEYNAME = "userId";
 
   void _toggleObscureText() {
     setState(() {
@@ -443,6 +445,9 @@ class _LoginUIState extends State<LoginUI> {
         Shared_pref.saveuser(loginModelList!.user!);
 
         if (loginModelList?.user?.tusrtyp == 'Installar') {
+          var sharedPref = await SharedPreferences.getInstance();
+          sharedPref.setBool(SplashScreenState.KEYLOGIN, true);
+          sharedPref.setString('userType', 'Installar');
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const DashboardUI()),
@@ -450,6 +455,9 @@ class _LoginUIState extends State<LoginUI> {
           );
           Snackbar.showSnackBar(context, 'Login Successful', Colors.teal);
         } else if (loginModelList?.user?.tusrtyp == 'User') {
+          var sharedPref = await SharedPreferences.getInstance();
+          sharedPref.setBool(SplashScreenState.KEYLOGIN, true);
+          sharedPref.setString('userType', 'User');
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const UserDashboardUI()),

@@ -11,7 +11,10 @@ import '../../../LoginPages/loginscreen.dart';
 import '../../../Models/InstallarComperison/InstallarComparisonModel.dart';
 import '../../../Models/MonthlyInstallationStatus/MonthlyInstallationStatusModel.dart';
 import '../../../Models/UserInstallationStatus/UserInstallationStatusModel.dart';
+import '../../../SplashScreen/splashScreen.dart';
 import '../../../Utilities/Colors/colors.dart';
+import '../../../Utilities/Loader/loader.dart';
+import '../../../Utilities/Snackbar/snackbar.dart';
 import '../InstallarComparison/installarComperison.dart';
 import 'UnassignedInstallation/unassignedInsatllation.dart';
 import 'UserPendingInstallations/userPendingInstallation.dart';
@@ -66,8 +69,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
           actions: [
             IconButton(
                 onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => const LoginUI()));
+                  logout();
                 },
                 icon: const Icon(Icons.logout))
           ],
@@ -1226,5 +1228,20 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
     SharedPreferences sp = await SharedPreferences.getInstance();
     name = sp.getString('userName');
     setState(() {});
+  }
+  Future<void> logout() async {
+    var sharedPref = await SharedPreferences.getInstance();
+    sharedPref.remove(SplashScreenState.KEYLOGIN);
+
+    sharedPref.remove('userType');
+
+    // Navigate to the Login screen
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginUI()),
+          (Route<dynamic> route) => false,
+    );
+    Snackbar.showSnackBar(context, 'Logout Successfully', Colors.teal);
+
   }
 }

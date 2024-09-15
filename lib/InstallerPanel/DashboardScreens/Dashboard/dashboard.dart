@@ -6,7 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../APIs/apis.dart';
 import '../../../Models/InstallerStatus/InstallarStatusModel.dart';
+import '../../../SplashScreen/splashScreen.dart';
 import '../../../Utilities/Colors/colors.dart';
+import '../../../Utilities/Snackbar/snackbar.dart';
 import '../Assigned/assigned.dart';
 import '../Pending/pending.dart';
 
@@ -43,8 +45,7 @@ class _DashboardUIState extends State<DashboardUI> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const LoginUI()));
+               logout();
               },
               icon: const Icon(Icons.logout))
         ],
@@ -269,5 +270,19 @@ class _DashboardUIState extends State<DashboardUI> {
     name = sp.getString('userName');
     setState(() {});
     post_InstallarStatus();
+  }
+  Future<void> logout() async {
+    var sharedPref = await SharedPreferences.getInstance();
+    sharedPref.remove(SplashScreenState.KEYLOGIN);
+
+    sharedPref.remove('userType');
+
+    // Navigate to the Login screen
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginUI()),
+          (Route<dynamic> route) => false,
+    );
+    Snackbar.showSnackBar(context, 'Logout Successfully', Colors.teal);
   }
 }
