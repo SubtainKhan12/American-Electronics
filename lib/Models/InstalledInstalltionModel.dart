@@ -1,23 +1,23 @@
 import 'dart:convert';
-/// Cmp # : "000001"
-/// Date : "2024-03-05"
-/// Customer : "RANA NAZIR AHMED                        "
-/// Address 1. : "H#27 GULSHAN WAHAB COLONY PHASE#1       "
-/// Address 2. : "ARIFWALA                                "
-/// Mobile : "03074715387"
-/// City : "ARIFWALA                      "
-/// Item : "@GENERAL MAGIC ES INVERTER AC 18K I/D   "
-/// Serial # : "000023027                "
+/// Cmp # : "005067"
+/// Date : "2024-07-27"
+/// Customer : "M ASIF                                  "
+/// Address 1. : "ZAHIR PEER                              "
+/// Address 2. : "KOT MITHAN                              "
+/// Mobile : "03009644864"
+/// City : "KOT MITHAN                    "
+/// Item : "@GENERAL STAR Q ES INVRTR AC 18ID       "
+/// Serial # : "000024516D               "
 /// Qnty : "1"
 /// Amount : "2000.00"
-/// Status : "Closed"
-/// Installar : "AKBAR ALI (ARIFWALA)                    "
-/// Installar Mobile : "03453041289"
+/// Status : "Installed"
+/// Installar : "SAJID IBRAHIM(ZEHAR PEER)               "
+/// Installar Mobile : "03017630034"
 
-ClosedInstallationsModel closedInstallationsModelFromJson(String str) => ClosedInstallationsModel.fromJson(json.decode(str));
-String closedInstallationsModelToJson(ClosedInstallationsModel data) => json.encode(data.toJson());
-class ClosedInstallationsModel {
-  ClosedInstallationsModel({
+InstalledInstalltionModel installedInstalltionModelFromJson(String str) => InstalledInstalltionModel.fromJson(json.decode(str));
+String installedInstalltionModelToJson(InstalledInstalltionModel data) => json.encode(data.toJson());
+class InstalledInstalltionModel {
+  InstalledInstalltionModel({
       String? cmp, 
       String? date, 
       String? customer, 
@@ -48,7 +48,7 @@ class ClosedInstallationsModel {
     _installarMobile = installarMobile;
 }
 
-  ClosedInstallationsModel.fromJson(dynamic json) {
+  InstalledInstalltionModel.fromJson(dynamic json) {
     _cmp = json['Cmp #'];
     _date = json['Date'];
     _customer = json['Customer'];
@@ -78,7 +78,7 @@ class ClosedInstallationsModel {
   String? _status;
   String? _installar;
   String? _installarMobile;
-ClosedInstallationsModel copyWith({  String? cmp,
+InstalledInstalltionModel copyWith({  String? cmp,
   String? date,
   String? customer,
   String? address1,
@@ -92,7 +92,7 @@ ClosedInstallationsModel copyWith({  String? cmp,
   String? status,
   String? installar,
   String? installarMobile,
-}) => ClosedInstallationsModel(  cmp: cmp ?? _cmp,
+}) => InstalledInstalltionModel(  cmp: cmp ?? _cmp,
   date: date ?? _date,
   customer: customer ?? _customer,
   address1: address1 ?? _address1,

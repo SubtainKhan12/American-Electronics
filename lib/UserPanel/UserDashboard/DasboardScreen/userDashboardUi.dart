@@ -16,6 +16,9 @@ import '../../../Utilities/Colors/colors.dart';
 import '../../../Utilities/Loader/loader.dart';
 import '../../../Utilities/Snackbar/snackbar.dart';
 import '../InstallarComparison/installarComperison.dart';
+import 'CanceledInstallation/canceledInstallation.dart';
+import 'ClosedInstallation/closedInstallation.dart';
+import 'InstalledInstallation/installedInstallation.dart';
 import 'UnassignedInstallation/unassignedInsatllation.dart';
 import 'UserPendingInstallations/userPendingInstallation.dart';
 
@@ -75,7 +78,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
           ],
         ),
         body: RefreshIndicator(
-          onRefresh: () async{
+          onRefresh: () async {
             await get_InstallationStatus();
             await get_MonthlyInstallationStatus();
             await get_InstallarComperison();
@@ -99,13 +102,14 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                 InkWell(
                                   onTap: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                UserUnassignedInstallationUI())).then((value){
-                                                  get_InstallationStatus();
-                                                  get_MonthlyInstallationStatus();
-                                                  get_InstallarComperison();
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserUnassignedInstallationUI()))
+                                        .then((value) {
+                                      get_InstallationStatus();
+                                      get_MonthlyInstallationStatus();
+                                      get_InstallarComperison();
                                     });
                                   },
                                   child: Material(
@@ -115,8 +119,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                     child: Container(
                                       height: _height * 0.05,
                                       width: _width * 0.45,
-                                      decoration: BoxDecoration(
-                                      ),
+                                      decoration: BoxDecoration(),
                                       child: Row(
                                         children: [
                                           // First container with all borders
@@ -168,7 +171,8 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                                         .unassigned
                                                         .toString() ??
                                                     '0',
-                                                style: TextStyle(fontSize: 24,
+                                                style: TextStyle(
+                                                  fontSize: 24,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -181,10 +185,11 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) => CanceledInstallationUI()));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CanceledInstallationUI()));
                                   },
                                   child: Material(
                                     elevation: 10,
@@ -204,18 +209,19 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                               borderRadius: BorderRadius.only(
                                                   topRight: Radius.circular(15),
                                                   bottomRight:
-                                                  Radius.circular(15),
-                                                  bottomLeft: Radius.circular(15),
+                                                      Radius.circular(15),
+                                                  bottomLeft:
+                                                      Radius.circular(15),
                                                   topLeft: Radius.circular(15)),
                                               // border: Border.all(color: ColorsUtils.blackColor),
                                             ),
                                             child: Center(
                                                 child: Text(
-                                                  'Cancelled',
-                                                  style: TextStyle(
-                                                      color: ColorsUtils.whiteColor,
-                                                      fontSize: 16),
-                                                )),
+                                              'Cancelled',
+                                              style: TextStyle(
+                                                  color: ColorsUtils.whiteColor,
+                                                  fontSize: 16),
+                                            )),
                                           ),
                                           // Second container with no left border
                                           Container(
@@ -225,7 +231,8 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                               color: ColorsUtils.whiteColor,
                                               borderRadius: BorderRadius.only(
                                                 topRight: Radius.circular(10),
-                                                bottomRight: Radius.circular(10),
+                                                bottomRight:
+                                                    Radius.circular(10),
                                               ),
                                               border: Border(
                                                 // top: BorderSide(color: ColorsUtils.blackColor),
@@ -237,11 +244,13 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                             ),
                                             child: Center(
                                               child: Text(
-                                                userInstallationStatusList[index]
-                                                    .cancelled
-                                                    .toString() ??
+                                                userInstallationStatusList[
+                                                            index]
+                                                        .cancelled
+                                                        .toString() ??
                                                     '0',
-                                                style: TextStyle(fontSize: 20,
+                                                style: TextStyle(
+                                                  fontSize: 20,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -262,7 +271,11 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> UserPendingInstallationUI()));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserPendingInstallationUI()));
                                   },
                                   child: Material(
                                     elevation: 10,
@@ -282,19 +295,19 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                               borderRadius: BorderRadius.only(
                                                   topRight: Radius.circular(15),
                                                   bottomRight:
-                                                  Radius.circular(15),
+                                                      Radius.circular(15),
                                                   bottomLeft:
-                                                  Radius.circular(15),
+                                                      Radius.circular(15),
                                                   topLeft: Radius.circular(15)),
                                               // border: Border.all(color: ColorsUtils.blackColor),
                                             ),
                                             child: Center(
                                                 child: Text(
-                                                  'Pending',
-                                                  style: TextStyle(
-                                                      color: ColorsUtils.whiteColor,
-                                                      fontSize: 16),
-                                                )),
+                                              'Pending',
+                                              style: TextStyle(
+                                                  color: ColorsUtils.whiteColor,
+                                                  fontSize: 16),
+                                            )),
                                           ),
                                           // Second container with no left border
                                           Container(
@@ -305,7 +318,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                               borderRadius: BorderRadius.only(
                                                 topRight: Radius.circular(10),
                                                 bottomRight:
-                                                Radius.circular(10),
+                                                    Radius.circular(10),
                                               ),
                                               border: Border(
                                                 // top: BorderSide(color: ColorsUtils.blackColor),
@@ -318,14 +331,14 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                             child: Center(
                                               child: Text(
                                                 userInstallationStatusList[
-                                                index]
-                                                    .pending
-                                                    .toString() ??
+                                                            index]
+                                                        .pending
+                                                        .toString() ??
                                                     '0',
-                                                style: TextStyle(fontSize: 24,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.red
-                                                ),
+                                                style: TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.red),
                                               ),
                                             ),
                                           ),
@@ -336,7 +349,11 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context)=> ClosedInstallationUI()));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ClosedInstallationUI()));
                                   },
                                   child: Material(
                                     elevation: 10,
@@ -365,9 +382,9 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                             child: Center(
                                                 child: Text(
                                               'Closed',
-                                                  style: TextStyle(
-                                                      color: ColorsUtils.whiteColor,
-                                                      fontSize: 16),
+                                              style: TextStyle(
+                                                  color: ColorsUtils.whiteColor,
+                                                  fontSize: 16),
                                             )),
                                           ),
                                           // Second container with no left border
@@ -396,7 +413,8 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                                         .closed
                                                         .toString() ??
                                                     '0',
-                                                style: TextStyle(fontSize: 20,
+                                                style: TextStyle(
+                                                  fontSize: 20,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -417,7 +435,11 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                   const EdgeInsets.symmetric(horizontal: 2.0),
                               child: InkWell(
                                 onTap: () {
-                                  // Navigator.push(context, MaterialPageRoute(builder: (context)=> ExpenseUI()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              InstalledInstallationUI()));
                                 },
                                 child: Material(
                                   elevation: 10,
@@ -437,19 +459,18 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                             borderRadius: BorderRadius.only(
                                                 topRight: Radius.circular(15),
                                                 bottomRight:
-                                                Radius.circular(15),
-                                                bottomLeft:
-                                                Radius.circular(15),
+                                                    Radius.circular(15),
+                                                bottomLeft: Radius.circular(15),
                                                 topLeft: Radius.circular(15)),
                                             // border: Border.all(color: ColorsUtils.blackColor),
                                           ),
                                           child: Center(
                                               child: Text(
-                                                'Installed',
-                                                style: TextStyle(
-                                                    color: ColorsUtils.whiteColor,
-                                                    fontSize: 16),
-                                              )),
+                                            'Installed',
+                                            style: TextStyle(
+                                                color: ColorsUtils.whiteColor,
+                                                fontSize: 16),
+                                          )),
                                         ),
                                         // Second container with no left border
                                         Container(
@@ -459,8 +480,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                             color: ColorsUtils.whiteColor,
                                             borderRadius: BorderRadius.only(
                                               topRight: Radius.circular(10),
-                                              bottomRight:
-                                              Radius.circular(10),
+                                              bottomRight: Radius.circular(10),
                                             ),
                                             border: Border(
                                               // top: BorderSide(color: ColorsUtils.blackColor),
@@ -472,12 +492,12 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              userInstallationStatusList[
-                                              index]
-                                                  .installed
-                                                  .toString() ??
+                                              userInstallationStatusList[index]
+                                                      .installed
+                                                      .toString() ??
                                                   '0',
-                                              style: TextStyle(fontSize: 24,
+                                              style: TextStyle(
+                                                fontSize: 24,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -1229,6 +1249,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
     name = sp.getString('userName');
     setState(() {});
   }
+
   Future<void> logout() async {
     var sharedPref = await SharedPreferences.getInstance();
     sharedPref.remove(SplashScreenState.KEYLOGIN);
@@ -1239,9 +1260,8 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginUI()),
-          (Route<dynamic> route) => false,
+      (Route<dynamic> route) => false,
     );
     Snackbar.showSnackBar(context, 'Logout Successfully', Colors.teal);
-
   }
 }

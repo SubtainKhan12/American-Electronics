@@ -1,6 +1,4 @@
-import 'package:american_electronics/LoginPages/loginscreen.dart';
 import 'package:flutter/material.dart';
-
 import 'SplashScreen/splashScreen.dart';
 
 void main() {

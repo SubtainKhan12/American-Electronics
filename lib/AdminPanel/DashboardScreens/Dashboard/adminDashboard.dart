@@ -8,8 +8,7 @@ import '../../../APIs/apis.dart';
 import '../../../LoginPages/loginscreen.dart';
 import '../../../Models/UserInstallationStatus/UserInstallationStatusModel.dart';
 import '../../../Utilities/Colors/colors.dart';
-import '../CanceledInstallation/canceledInstallation.dart';
-import '../ClosedInstallation/closedInstallation.dart';
+// import '../CanceledInstallation/canceledInstallation.dart';
 import '../UnassignedInstallation/unassignedInsatllation.dart';
 
 class AdminDashboardUI extends StatefulWidget {
@@ -410,7 +409,7 @@ class _AdminDashboardUIState extends State<AdminDashboardUI> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> ClosedInstallationUI()));
+                        // Navigator.push(context, MaterialPageRoute(builder: (context)=> ClosedInstallationUI()));
                       },
                       child: Material(
                         borderRadius: BorderRadius.circular(5),
@@ -465,10 +464,10 @@ class _AdminDashboardUIState extends State<AdminDashboardUI> {
                   padding: const EdgeInsets.symmetric(horizontal: 7.0),
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CanceledInstallationUI()));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => CanceledInstallationUI()));
                     },
                     child: Material(
                       borderRadius: BorderRadius.circular(5),
