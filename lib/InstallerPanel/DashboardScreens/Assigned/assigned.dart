@@ -92,28 +92,6 @@ class _AssignedUIState extends State<AssignedUI> {
                                         horizontal: 10.0, vertical: 5),
                                     child: Row(
                                       children: [
-                                        // CircleAvatar(
-                                        //   backgroundColor:
-                                        //       searchAssignedList[index]
-                                        //                   .status
-                                        //                   .toString() ==
-                                        //               'Pending'
-                                        //           ? Colors.red
-                                        //           : Colors.green,
-                                        //   child: Text(
-                                        //     '1',
-                                        //     style: TextStyle(
-                                        //         color: searchAssignedList[index]
-                                        //                     .status
-                                        //                     .toString() ==
-                                        //                 'Pending'
-                                        //             ? Colors.greenAccent
-                                        //             : Colors.white),
-                                        //   ),
-                                        // ),
-                                        // const SizedBox(
-                                        //   width: 10,
-                                        // ),
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,

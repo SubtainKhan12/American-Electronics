@@ -7,6 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../APIs/apis.dart';
 import '../../../../Models/Pending/UserPendingInstallationsModel.dart';
 import '../../../../Utilities/Colors/colors.dart';
+import 'PendingCustomerDetails/customerProfile.dart';
+import 'VisitScreen/pendingVisitScreen.dart';
 
 class UserPendingInstallationUI extends StatefulWidget {
   const UserPendingInstallationUI({super.key});
@@ -214,164 +216,164 @@ class _UserPendingInstallationUIState extends State<UserPendingInstallationUI> {
                           ),
                         ),
                         const Divider(),
-                        Container(
-                          child: InputDecorator(
-                              decoration: InputDecoration(
-                                  labelText: 'Installer Information',
-                                  labelStyle: TextStyle(
-                                      color: ColorsUtils.appcolor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(0),
-                                  )),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                            width: _width * 0.2,
-                                            child: const Text(
-                                              'Installer',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Container(
-                                            // width: _width * 0.25,
-                                            child: Flexible(
-                                          child: Text(model.installar
-                                                      .toString()
-                                                      .trim() ==
-                                                  'null'
-                                              ? ''
-                                              : model.installar
-                                                  .toString()
-                                                  .trim()),
-                                        ))
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                            width: _width * 0.2,
-                                            child: const Text(
-                                              'Mobile#',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            _showPhoneDialog(model
-                                                .installarMobile
-                                                .toString());
-                                          },
-                                          child: Container(
-                                              // width: _width * 0.25,
-                                              child: Text(
-                                            model.installarMobile
-                                                        .toString()
-                                                        .trim() ==
-                                                    'null'
-                                                ? ''
-                                                : model.installarMobile
-                                                    .toString()
-                                                    .trim(),
-                                            style: TextStyle(
-                                              decoration:
-                                                  TextDecoration.underline,
-                                              decorationColor:
-                                                  ColorsUtils.appcolor,
-                                              decorationThickness: 2,
-                                              fontSize: 16,
-                                              color: ColorsUtils.appcolor,
-                                            ),
-                                          )),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                            width: _width * 0.2,
-                                            child: const Text(
-                                              'item',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Container(
-                                            // width: _width * 0.25,
-                                            child: Flexible(
-                                          child: Text(model.item
-                                                      .toString()
-                                                      .trim() ==
-                                                  'null'
-                                              ? ''
-                                              : model.item.toString().trim()),
-                                        ))
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )),
+                        // Container(
+                        //   child: InputDecorator(
+                        //       decoration: InputDecoration(
+                        //           labelText: 'Installer Information',
+                        //           labelStyle: TextStyle(
+                        //               color: ColorsUtils.appcolor,
+                        //               fontWeight: FontWeight.bold,
+                        //               fontSize: 20),
+                        //           border: OutlineInputBorder(
+                        //             borderRadius: BorderRadius.circular(0),
+                        //           )),
+                        //       child: Column(
+                        //         children: [
+                        //           Container(
+                        //             child: Row(
+                        //               children: [
+                        //                 Container(
+                        //                     width: _width * 0.2,
+                        //                     child: const Text(
+                        //                       'Installer',
+                        //                       style: TextStyle(
+                        //                           fontWeight: FontWeight.bold),
+                        //                     )),
+                        //                 Container(
+                        //                   width: _width * 0.02,
+                        //                   child: const Text(
+                        //                     ':',
+                        //                     style: TextStyle(
+                        //                         fontWeight: FontWeight.bold),
+                        //                   ),
+                        //                 ),
+                        //                 Container(
+                        //                     // width: _width * 0.25,
+                        //                     child: Flexible(
+                        //                   child: Text(model.installar
+                        //                               .toString()
+                        //                               .trim() ==
+                        //                           'null'
+                        //                       ? ''
+                        //                       : model.installar
+                        //                           .toString()
+                        //                           .trim()),
+                        //                 ))
+                        //               ],
+                        //             ),
+                        //           ),
+                        //           Container(
+                        //             child: Row(
+                        //               children: [
+                        //                 Container(
+                        //                     width: _width * 0.2,
+                        //                     child: const Text(
+                        //                       'Mobile#',
+                        //                       style: TextStyle(
+                        //                           fontWeight: FontWeight.bold),
+                        //                     )),
+                        //                 Container(
+                        //                   width: _width * 0.02,
+                        //                   child: const Text(
+                        //                     ':',
+                        //                     style: TextStyle(
+                        //                         fontWeight: FontWeight.bold),
+                        //                   ),
+                        //                 ),
+                        //                 InkWell(
+                        //                   onTap: () {
+                        //                     _showPhoneDialog(model
+                        //                         .installarMobile
+                        //                         .toString());
+                        //                   },
+                        //                   child: Container(
+                        //                       // width: _width * 0.25,
+                        //                       child: Text(
+                        //                     model.installarMobile
+                        //                                 .toString()
+                        //                                 .trim() ==
+                        //                             'null'
+                        //                         ? ''
+                        //                         : model.installarMobile
+                        //                             .toString()
+                        //                             .trim(),
+                        //                     style: TextStyle(
+                        //                       decoration:
+                        //                           TextDecoration.underline,
+                        //                       decorationColor:
+                        //                           ColorsUtils.appcolor,
+                        //                       decorationThickness: 2,
+                        //                       fontSize: 16,
+                        //                       color: ColorsUtils.appcolor,
+                        //                     ),
+                        //                   )),
+                        //                 )
+                        //               ],
+                        //             ),
+                        //           ),
+                        //           Container(
+                        //             child: Row(
+                        //               children: [
+                        //                 Container(
+                        //                     width: _width * 0.2,
+                        //                     child: const Text(
+                        //                       'item',
+                        //                       style: TextStyle(
+                        //                           fontWeight: FontWeight.bold),
+                        //                     )),
+                        //                 Container(
+                        //                   width: _width * 0.02,
+                        //                   child: const Text(
+                        //                     ':',
+                        //                     style: TextStyle(
+                        //                         fontWeight: FontWeight.bold),
+                        //                   ),
+                        //                 ),
+                        //                 Container(
+                        //                     // width: _width * 0.25,
+                        //                     child: Flexible(
+                        //                   child: Text(model.item
+                        //                               .toString()
+                        //                               .trim() ==
+                        //                           'null'
+                        //                       ? ''
+                        //                       : model.item.toString().trim()),
+                        //                 ))
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       )),
+                        // ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PendingCustomerDetail(
+                                            pendingInstallationStatus: model)));
+                          },
+                          child: const ListTile(
+                            leading: Icon(Icons.info),
+                            title: Text("Complain Detail"),
+                            // subtitle: Text("Customer CMP: ${model.cmp}"),
+                          ),
                         ),
-                        // InkWell(
-                        //   onTap: () {
-                        //     Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (context) =>
-                        //                 PendingCustomerDetail(
-                        //                     pendingModel: model)));
-                        //   },
-                        //   child: const ListTile(
-                        //     leading: Icon(Icons.info),
-                        //     title: Text("Complain Detail"),
-                        //     // subtitle: Text("Customer CMP: ${model.cmp}"),
-                        //   ),
-                        // ),
-                        // InkWell(
-                        //   onTap: (){
-                        //     Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (context) =>
-                        //                 PendingVisitScreen(pendingModel: model,)));
-                        //   },
-                        //   child: const ListTile(
-                        //     leading: Icon(Icons.location_on),
-                        //     title: Text("Technician Visit"),
-                        //     // subtitle: Text("Visit Date: ${model.date}"),
-                        //   ),
-                        // ),
+                        InkWell(
+                          onTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PendingVisitScreen(pendingInstallationList: model,)));
+                          },
+                          child: const ListTile(
+                            leading: Icon(Icons.location_on),
+                            title: Text("Technician Visit"),
+                            // subtitle: Text("Visit Date: ${model.date}"),
+                          ),
+                        ),
                       ],
                     ),
                   ),

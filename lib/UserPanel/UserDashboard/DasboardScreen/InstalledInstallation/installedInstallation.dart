@@ -7,7 +7,7 @@ import '../../../../APIs/apis.dart';
 import '../../../../Models/ClosedInstallation/ClosedInstallationsModel.dart';
 import '../../../../Models/InstalledInstalltionModel.dart';
 import '../../../../Utilities/Colors/colors.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 
 import 'InstalledCustomerDetails.dart';
 
@@ -15,7 +15,8 @@ class InstalledInstallationUI extends StatefulWidget {
   const InstalledInstallationUI({super.key});
 
   @override
-  State<InstalledInstallationUI> createState() => _InstalledInstallationUIState();
+  State<InstalledInstallationUI> createState() =>
+      _InstalledInstallationUIState();
 }
 
 class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
@@ -68,97 +69,99 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
                 child: loading
                     ? const Center(child: CircularProgressIndicator())
                     : searchInstalledInstallation.isEmpty
-                    ? const Center(
-                    child: Text(
-                      "Data Not Found",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                    ))
-                    : ListView.builder(
-                    itemCount: searchInstalledInstallation.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => _buildBottomSheet(
-                                context,
-                                searchInstalledInstallation[index]),
-                          );
-                        },
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 5),
-                            child: Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
+                        ? const Center(
+                            child: Text(
+                            "Data Not Found",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                          ))
+                        : ListView.builder(
+                            itemCount: searchInstalledInstallation.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) => _buildBottomSheet(
+                                        context,
+                                        searchInstalledInstallation[index]),
+                                  );
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 5),
+                                    child: Row(
                                       children: [
-                                        Text(
-                                          searchInstalledInstallation[
-                                          index]
-                                              .cmp
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Color(0xffF58634),
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        Text(
-                                          '  -  ',
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight:
-                                              FontWeight.w500),
-                                        ),
-                                        Text(
-                                          searchInstalledInstallation[
-                                          index]
-                                              .date
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight:
-                                              FontWeight.w500),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  searchInstalledInstallation[
+                                                          index]
+                                                      .cmp
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: Color(0xffF58634),
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Text(
+                                                  '  -  ',
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Text(
+                                                  searchInstalledInstallation[
+                                                          index]
+                                                      .date
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              searchInstalledInstallation[index]
+                                                  .customer
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  searchInstalledInstallation[
+                                                          index]
+                                                      .mobile
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                    Text(
-                                      searchInstalledInstallation[index]
-                                          .customer
-                                          .toString(),
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          searchInstalledInstallation[index]
-                                              .mobile
-                                              .toString(),
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
+                              );
+                            }),
               ),
             ],
           ),
@@ -166,6 +169,7 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
       ),
     );
   }
+
   Widget _buildBottomSheet(
       BuildContext context, InstalledInstalltionModel model) {
     var _height = MediaQuery.of(context).size.height;
@@ -284,6 +288,7 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
       ),
     );
   }
+
   Future<void> _showPhoneDialog(String phoneNumber) async {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
@@ -351,14 +356,15 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
     var response = await http.get(Uri.parse(InstalledInstallations));
     var result = jsonDecode(response.body);
     if (response.statusCode == 200) {
+      setState(() {
+        loading = false;
+      });
       InstalledInstallationList.clear();
 
       for (Map i in result) {
         InstalledInstallationList.add(InstalledInstalltionModel.fromJson(i));
-        // print(result);
       }
       setState(() {
-        loading = false;
         searchInstalledInstallation = List.from(InstalledInstallationList);
       });
     } else {

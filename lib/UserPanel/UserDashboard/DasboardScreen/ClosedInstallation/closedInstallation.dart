@@ -120,6 +120,7 @@ class _ClosedInstallationUIState extends State<ClosedInstallationUI> {
                                               FontWeight.w500),
                                         ),
                                         Text(
+
                                           searchClosedInstallation[
                                           index]
                                               .date
