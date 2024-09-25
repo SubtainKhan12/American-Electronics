@@ -10,6 +10,7 @@ import '../../../../Utilities/Colors/colors.dart';
 import 'package:http/http.dart' as http;
 
 import 'InstalledCustomerDetails.dart';
+import 'closeInstalledInstallation.dart';
 
 class InstalledInstallationUI extends StatefulWidget {
   const InstalledInstallationUI({super.key});
@@ -244,39 +245,26 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
                           },
                           child: const ListTile(
                             leading: Icon(Icons.info),
-                            title: Text("Complain Detail"),
+                            title: Text("Installation Detail"),
                             // subtitle: Text("Customer CMP: ${model.cmp}"),
                           ),
                         ),
-                        // InkWell(
-                        //   onTap: () {
-                        //     Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (context) =>
-                        //                 PendingCustomerDetail(
-                        //                     pendingModel: model)));
-                        //   },
-                        //   child: const ListTile(
-                        //     leading: Icon(Icons.info),
-                        //     title: Text("Complain Detail"),
-                        //     // subtitle: Text("Customer CMP: ${model.cmp}"),
-                        //   ),
-                        // ),
-                        // InkWell(
-                        //   onTap: (){
-                        //     Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (context) =>
-                        //                 PendingVisitScreen(pendingModel: model,)));
-                        //   },
-                        //   child: const ListTile(
-                        //     leading: Icon(Icons.location_on),
-                        //     title: Text("Technician Visit"),
-                        //     // subtitle: Text("Visit Date: ${model.date}"),
-                        //   ),
-                        // ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CloseInstalledInstallationUI(
+                                          installedInstalltionList: model,
+                                        )));
+                          },
+                          child: const ListTile(
+                            leading: Icon(Icons.call_missed_outgoing_rounded),
+                            title: Text("Close Installation"),
+                            // subtitle: Text("Customer CMP: ${model.cmp}"),
+                          ),
+                        ),
                       ],
                     ),
                   ),

@@ -185,10 +185,12 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                             ),
                             Container(
                               // width: _width * 0.25,
-                                child: Text(widget.getComplainModel
-                                    .address1
-                                    .toString()
-                                    .trim())),
+                                child: Flexible(
+                                  child: Text(widget.getComplainModel
+                                      .address1
+                                      .toString()
+                                      .trim()),
+                                )),
                           ],
                         ),
                       ),
@@ -212,10 +214,12 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                             ),
                             Container(
                               // width: _width * 0.25,
-                                child: Text(widget.getComplainModel
-                                    .address2
-                                    .toString()
-                                    .trim()))
+                                child: Flexible(
+                                  child: Text(widget.getComplainModel
+                                      .address2
+                                      .toString()
+                                      .trim()),
+                                ))
                           ],
                         ),
                       ),
@@ -239,10 +243,12 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                             ),
                             Container(
                               // width: _width * 0.25,
-                                child: Text(widget.getComplainModel
-                                    .mobile
-                                    .toString()
-                                    .trim()))
+                                child: Flexible(
+                                  child: Text(widget.getComplainModel
+                                      .mobile
+                                      .toString()
+                                      .trim()),
+                                ))
                           ],
                         ),
                       ),
@@ -319,6 +325,7 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
                 items: <String>[
                   'Pending',
                   'Installed',
+                  'Cancel',
                 ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -460,12 +467,10 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
     }
   }
 
-
   setComplainData() {
     _itemController.text =
         widget.getComplainModel.item.toString().trim() ?? '0';
   }
-
 
   // Future<void> _intSelectDate(
   //     BuildContext context, StateSetter setState) async {
@@ -482,12 +487,13 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
   //     });
   //   }
   // }
+  //006679
 
   Future post_SaveVisit() async {
     var request = http.MultipartRequest('POST',
         Uri.parse(SaveVisit));
     request.fields['FTrnNum'] = widget.getComplainModel.comp.toString();
-    request.fields['FCmpSts'] = status.toString();
+    request.fields['FCmpSts'] = status.toString().substring(0,1);
     request.fields['FItmSer'] = _serialController.text;
     request.fields['FVstRem'] = _remarkController.text;
     request.fields['FVstDat'] = cdate.toString();
