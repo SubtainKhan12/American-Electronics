@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -23,6 +24,10 @@ class _UserPendingInstallationUIState extends State<UserPendingInstallationUI> {
   List<UserPendingInstallationsModel> searchPendingInstallationList = [];
   String? colCode;
   bool loading = true; // State variable to control the loading state
+  String formatDate(String dateString) {
+    DateTime parsedDate = DateTime.parse(dateString); // Parse the date string
+    return DateFormat('dd-MM-yyyy').format(parsedDate); // Format the date
+  }
 
   @override
   void initState() {
@@ -87,7 +92,7 @@ class _UserPendingInstallationUIState extends State<UserPendingInstallationUI> {
                                     builder: (context) => _buildBottomSheet(
                                         context,
                                         searchPendingInstallationList[index]),
-                                  );
+                                  ).then((value)=> get_PendingInstallations());
                                 },
                                 child: Card(
                                   child: Padding(
@@ -115,9 +120,9 @@ class _UserPendingInstallationUIState extends State<UserPendingInstallationUI> {
                                                   fontWeight: FontWeight.w500),
                                             ),
                                             Text(
-                                              searchPendingInstallationList[index]
+                                              formatDate(searchPendingInstallationList[index]
                                                   .date
-                                                  .toString(),
+                                                  .toString(),),
                                               style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
@@ -352,7 +357,7 @@ class _UserPendingInstallationUIState extends State<UserPendingInstallationUI> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         PendingCustomerDetail(
-                                            pendingInstallationStatus: model)));
+                                            pendingInstallationStatus: model))).then((value)=> get_PendingInstallations());
                           },
                           child: const ListTile(
                             leading: Icon(Icons.info),
@@ -366,7 +371,7 @@ class _UserPendingInstallationUIState extends State<UserPendingInstallationUI> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        PendingVisitScreen(pendingInstallationList: model,)));
+                                        PendingVisitScreen(pendingInstallationList: model,))).then((value)=> get_PendingInstallations());
                           },
                           child: const ListTile(
                             leading: Icon(Icons.location_on),

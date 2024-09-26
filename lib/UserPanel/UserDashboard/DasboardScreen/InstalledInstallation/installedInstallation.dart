@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../APIs/apis.dart';
@@ -24,6 +25,10 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
   List<InstalledInstalltionModel> InstalledInstallationList = [];
   List<InstalledInstalltionModel> searchInstalledInstallation = [];
   bool loading = true;
+  String formatDate(String dateString) {
+    DateTime parsedDate = DateTime.parse(dateString); // Parse the date string
+    return DateFormat('dd-MM-yyyy').format(parsedDate); // Format the date
+  }
 
   @override
   void initState() {
@@ -90,7 +95,7 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
                                     builder: (context) => _buildBottomSheet(
                                         context,
                                         searchInstalledInstallation[index]),
-                                  );
+                                  ).then((value)=>get_InstalledInstallation());
                                 },
                                 child: Card(
                                   child: Padding(
@@ -123,10 +128,11 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
                                                           FontWeight.w500),
                                                 ),
                                                 Text(
-                                                  searchInstalledInstallation[
-                                                          index]
+                                                  formatDate( searchInstalledInstallation[
+                                                  index]
                                                       .date
-                                                      .toString(),
+                                                      .toString(),),
+
                                                   style: const TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -135,9 +141,11 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
                                               ],
                                             ),
                                             Text(
+
                                               searchInstalledInstallation[index]
                                                   .customer
                                                   .toString(),
+
                                               style: const TextStyle(
                                                 fontSize: 12,
                                               ),
@@ -241,7 +249,7 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
                                     builder: (context) =>
                                         InstalledCustomerDetailsUI(
                                           installedInstalltionList: model,
-                                        )));
+                                        ))).then((value)=>get_InstalledInstallation());
                           },
                           child: const ListTile(
                             leading: Icon(Icons.info),
@@ -257,7 +265,7 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
                                     builder: (context) =>
                                         CloseInstalledInstallationUI(
                                           installedInstalltionList: model,
-                                        )));
+                                        ))).then((value)=>get_InstalledInstallation());
                           },
                           child: const ListTile(
                             leading: Icon(Icons.call_missed_outgoing_rounded),

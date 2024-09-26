@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../APIs/apis.dart';
@@ -22,7 +23,10 @@ class _UserUnassignedInstallationUIState
   List<UnassignedInstallationModel> unassignedInstallationList = [];
   List<UnassignedInstallationModel> searchunassignedInstallation = [];
   bool loading = true;
-
+  String formatDate(String dateString) {
+    DateTime parsedDate = DateTime.parse(dateString); // Parse the date string
+    return DateFormat('dd-MM-yyyy').format(parsedDate); // Format the date
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -119,10 +123,11 @@ class _UserUnassignedInstallationUIState
                                                           FontWeight.bold),
                                                 ),
                                                 Text(
-                                                  searchunassignedInstallation[
-                                                          index]
+                                                  formatDate(searchunassignedInstallation[
+                                                  index]
                                                       .ttrndat
-                                                      .toString(),
+                                                      .toString(),),
+
                                                   style: const TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:

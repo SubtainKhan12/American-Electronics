@@ -8,6 +8,8 @@ import '../../../../APIs/apis.dart';
 import '../../../../Models/GetComplain/GetComplainModel.dart';
 import '../../../../Models/InstalledInstalltionModel.dart';
 import '../../../../Utilities/Colors/colors.dart';
+import '../../../../Utilities/Loader/loader.dart';
+import '../../../../Utilities/Snackbar/snackbar.dart';
 
 class CloseInstalledInstallationUI extends StatefulWidget {
   InstalledInstalltionModel installedInstalltionList;
@@ -34,12 +36,37 @@ class _CloseInstalledInstallationUIState
         DateFormat('dd-MM-yyyy').format(DateTime.now()) ?? '0';
   }
 
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Post_GetComplain();
     setDate();
+  }
+
+  bool _CustomerExpanded = false;
+
+  void _expandOnChanged() {
+    setState(() {
+      _CustomerExpanded = !_CustomerExpanded;
+    });
+  }
+
+  bool _itemExpended = false;
+
+  void _itemexpandOnChanged() {
+    setState(() {
+      _itemExpended = !_itemExpended;
+    });
+  }
+
+  bool _engineerExpended = false;
+
+  void _engineerExpandOnChanged() {
+    setState(() {
+      _engineerExpended = !_engineerExpended;
+    });
   }
 
   @override
@@ -125,7 +152,7 @@ class _CloseInstalledInstallationUIState
                             RichText(
                                 text: TextSpan(children: [
                               TextSpan(
-                                  text: 'Complain # : ',
+                                  text: 'Complain#: ',
                                   style: TextStyle(
                                       color: ColorsUtils.blackColor,
                                       fontWeight: FontWeight.bold)),
@@ -163,45 +190,24 @@ class _CloseInstalledInstallationUIState
                         ),
                         Container(
                           child: InputDecorator(
-                              decoration: InputDecoration(
-                                  labelText: 'Customer Information',
-                                  labelStyle: TextStyle(
-                                      color: ColorsUtils.appcolor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(0),
-                                  )),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                            width: _width * 0.18,
-                                            child: const Text(
-                                              'Mobile#',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Container(
-                                            // width: _width * 0.25,
-                                            child: Text(getComplainList[index]
-                                                .mobile
-                                                .toString()
-                                                .trim()))
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
+                            decoration: InputDecoration(
+                              labelText: 'Customer Information',
+                              suffixIcon: IconButton(
+                                  onPressed: _expandOnChanged,
+                                  icon: _CustomerExpanded
+                                      ? Icon(Icons.arrow_drop_up)
+                                      : Icon(Icons.arrow_drop_down)),
+                              labelStyle: TextStyle(
+                                color: ColorsUtils.appcolor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
+                            child: !_CustomerExpanded
+                                ? Container(
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -275,240 +281,405 @@ class _CloseInstalledInstallationUIState
                                         ))
                                       ],
                                     ),
+                                  )
+                                : AnimatedSize(
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.fastOutSlowIn,
+                                    child: IntrinsicHeight(
+                                        child: _CustomerExpanded
+                                            ? Column(
+                                                children: [
+                                                  Container(
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              'Mobile#',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Text(
+                                                                getComplainList[
+                                                                        index]
+                                                                    .mobile
+                                                                    .toString()
+                                                                    .trim()))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              'Customer',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Flexible(
+                                                          child: _translatetext ==
+                                                                  false
+                                                              ? Text(
+                                                                  getComplainList[
+                                                                          index]
+                                                                      .customer
+                                                                      .toString()
+                                                                      .trim())
+                                                              : FutureBuilder<
+                                                                  String>(
+                                                                  future: translateTextToUrdu(getComplainList[
+                                                                          index]
+                                                                      .customer
+                                                                      .toString()
+                                                                      .trim()),
+                                                                  builder: (context,
+                                                                      snapshot) {
+                                                                    if (snapshot
+                                                                            .connectionState ==
+                                                                        ConnectionState
+                                                                            .waiting) {
+                                                                      return Text(
+                                                                          'isLoading....'); // Show a spinner while translating
+                                                                    } else if (snapshot
+                                                                        .hasError) {
+                                                                      return Text(
+                                                                        getComplainList[index]
+                                                                            .customer
+                                                                            .toString()
+                                                                            .trim(),
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                15,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      );
+                                                                    } else {
+                                                                      return Text(
+                                                                        snapshot.data ??
+                                                                            getComplainList[index].customer.toString().trim(),
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                15,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                ),
+                                                        ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              'Address',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Flexible(
+                                                          child: _translatetext ==
+                                                                  false
+                                                              ? Text(
+                                                                  getComplainList[
+                                                                          index]
+                                                                      .address1
+                                                                      .toString()
+                                                                      .trim())
+                                                              : FutureBuilder<
+                                                                  String>(
+                                                                  future: translateTextToUrdu(getComplainList[
+                                                                          index]
+                                                                      .address1
+                                                                      .toString()
+                                                                      .trim()),
+                                                                  builder: (context,
+                                                                      snapshot) {
+                                                                    if (snapshot
+                                                                            .connectionState ==
+                                                                        ConnectionState
+                                                                            .waiting) {
+                                                                      return Text(
+                                                                          'isLoading....'); // Show a spinner while translating
+                                                                    } else if (snapshot
+                                                                        .hasError) {
+                                                                      return Text(
+                                                                        getComplainList[index]
+                                                                            .address1
+                                                                            .toString()
+                                                                            .trim(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      );
+                                                                    } else {
+                                                                      return Text(
+                                                                        snapshot.data ??
+                                                                            getComplainList[index].address1.toString().trim(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                ),
+                                                        ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              '',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Flexible(
+                                                          child: _translatetext ==
+                                                                  false
+                                                              ? Text(
+                                                                  getComplainList[
+                                                                          index]
+                                                                      .address2
+                                                                      .toString()
+                                                                      .trim())
+                                                              : FutureBuilder<
+                                                                  String>(
+                                                                  future: translateTextToUrdu(getComplainList[
+                                                                          index]
+                                                                      .address2
+                                                                      .toString()
+                                                                      .trim()),
+                                                                  builder: (context,
+                                                                      snapshot) {
+                                                                    if (snapshot
+                                                                            .connectionState ==
+                                                                        ConnectionState
+                                                                            .waiting) {
+                                                                      return Text(
+                                                                          'isLoading....'); // Show a spinner while translating
+                                                                    } else if (snapshot
+                                                                        .hasError) {
+                                                                      return Text(
+                                                                        getComplainList[index]
+                                                                            .address2
+                                                                            .toString()
+                                                                            .trim(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      );
+                                                                    } else {
+                                                                      return Text(
+                                                                        snapshot.data ??
+                                                                            getComplainList[index].address2.toString().trim(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                ),
+                                                        ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              'City',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Flexible(
+                                                          child: _translatetext ==
+                                                                  false
+                                                              ? Text(
+                                                                  getComplainList[
+                                                                          index]
+                                                                      .city
+                                                                      .toString()
+                                                                      .trim())
+                                                              : FutureBuilder<
+                                                                  String>(
+                                                                  future: translateTextToUrdu(getComplainList[
+                                                                          index]
+                                                                      .city
+                                                                      .toString()
+                                                                      .trim()),
+                                                                  builder: (context,
+                                                                      snapshot) {
+                                                                    if (snapshot
+                                                                            .connectionState ==
+                                                                        ConnectionState
+                                                                            .waiting) {
+                                                                      return Text(
+                                                                          'isLoading....'); // Show a spinner while translating
+                                                                    } else if (snapshot
+                                                                        .hasError) {
+                                                                      return Text(
+                                                                        getComplainList[index]
+                                                                            .city
+                                                                            .toString()
+                                                                            .trim(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      );
+                                                                    } else {
+                                                                      return Text(
+                                                                        snapshot.data ??
+                                                                            getComplainList[index].city.toString().trim(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                ),
+                                                        )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Container()),
                                   ),
-                                  Container(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            width: _width * 0.18,
-                                            child: const Text(
-                                              'Address',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Container(
-                                            // width: _width * 0.25,
-                                            child: Flexible(
-                                          child: _translatetext == false
-                                              ? Text(getComplainList[index]
-                                                  .address1
-                                                  .toString()
-                                                  .trim())
-                                              : FutureBuilder<String>(
-                                                  future: translateTextToUrdu(
-                                                      getComplainList[index]
-                                                          .address1
-                                                          .toString()
-                                                          .trim()),
-                                                  builder: (context, snapshot) {
-                                                    if (snapshot
-                                                            .connectionState ==
-                                                        ConnectionState
-                                                            .waiting) {
-                                                      return Text(
-                                                          'isLoading....'); // Show a spinner while translating
-                                                    } else if (snapshot
-                                                        .hasError) {
-                                                      return Text(
-                                                        getComplainList[index]
-                                                            .address1
-                                                            .toString()
-                                                            .trim(),
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      return Text(
-                                                        snapshot.data ??
-                                                            getComplainList[
-                                                                    index]
-                                                                .address1
-                                                                .toString()
-                                                                .trim(),
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                                ),
-                                        ))
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            width: _width * 0.18,
-                                            child: const Text(
-                                              '',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Container(
-                                            // width: _width * 0.25,
-                                            child: Flexible(
-                                          child: _translatetext == false
-                                              ? Text(getComplainList[index]
-                                                  .address2
-                                                  .toString()
-                                                  .trim())
-                                              : FutureBuilder<String>(
-                                                  future: translateTextToUrdu(
-                                                      getComplainList[index]
-                                                          .address2
-                                                          .toString()
-                                                          .trim()),
-                                                  builder: (context, snapshot) {
-                                                    if (snapshot
-                                                            .connectionState ==
-                                                        ConnectionState
-                                                            .waiting) {
-                                                      return Text(
-                                                          'isLoading....'); // Show a spinner while translating
-                                                    } else if (snapshot
-                                                        .hasError) {
-                                                      return Text(
-                                                        getComplainList[index]
-                                                            .address2
-                                                            .toString()
-                                                            .trim(),
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      return Text(
-                                                        snapshot.data ??
-                                                            getComplainList[
-                                                                    index]
-                                                                .address2
-                                                                .toString()
-                                                                .trim(),
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                                ),
-                                        ))
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            width: _width * 0.18,
-                                            child: const Text(
-                                              'City',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Container(
-                                            // width: _width * 0.25,
-                                            child: Flexible(
-                                          child: _translatetext == false
-                                              ? Text(getComplainList[index]
-                                                  .city
-                                                  .toString()
-                                                  .trim())
-                                              : FutureBuilder<String>(
-                                                  future: translateTextToUrdu(
-                                                      getComplainList[index]
-                                                          .city
-                                                          .toString()
-                                                          .trim()),
-                                                  builder: (context, snapshot) {
-                                                    if (snapshot
-                                                            .connectionState ==
-                                                        ConnectionState
-                                                            .waiting) {
-                                                      return Text(
-                                                          'isLoading....'); // Show a spinner while translating
-                                                    } else if (snapshot
-                                                        .hasError) {
-                                                      return Text(
-                                                        getComplainList[index]
-                                                            .city
-                                                            .toString()
-                                                            .trim(),
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      return Text(
-                                                        snapshot.data ??
-                                                            getComplainList[
-                                                                    index]
-                                                                .city
-                                                                .toString()
-                                                                .trim(),
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                                ),
-                                        )),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )),
+                          ),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
                         Container(
                           child: InputDecorator(
-                              decoration: InputDecoration(
-                                  labelText: 'Item Information',
-                                  labelStyle: TextStyle(
-                                      color: ColorsUtils.appcolor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(0),
-                                  )),
-                              child: Column(
-                                children: [
-                                  Container(
+                            decoration: InputDecoration(
+                              labelText: 'Item Information',
+                              suffixIcon: IconButton(
+                                  onPressed: _itemexpandOnChanged,
+                                  icon: _CustomerExpanded
+                                      ? Icon(Icons.arrow_drop_up)
+                                      : Icon(Icons.arrow_drop_down)),
+                              labelStyle: TextStyle(
+                                color: ColorsUtils.appcolor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
+                            child: !_itemExpended
+                                ? Container(
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -531,97 +702,211 @@ class _CloseInstalledInstallationUIState
                                         Container(
                                             // width: _width * 0.25,
                                             child: Flexible(
-                                          child: Text(getComplainList[index]
-                                              .dealer
-                                              .toString()
-                                              .trim()),
+                                          child: _translatetext == false
+                                              ? Text(getComplainList[index]
+                                                  .dealer
+                                                  .toString()
+                                                  .trim())
+                                              : FutureBuilder<String>(
+                                                  future: translateTextToUrdu(
+                                                      getComplainList[index]
+                                                          .dealer
+                                                          .toString()
+                                                          .trim()),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return Text(
+                                                          'isLoading....'); // Show a spinner while translating
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Text(
+                                                        getComplainList[index]
+                                                            .dealer
+                                                            .toString()
+                                                            .trim(),
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      );
+                                                    } else {
+                                                      return Text(
+                                                        snapshot.data ??
+                                                            getComplainList[
+                                                                    index]
+                                                                .customer
+                                                                .toString()
+                                                                .trim(),
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      );
+                                                    }
+                                                  },
+                                                ),
                                         ))
                                       ],
                                     ),
+                                  )
+                                : AnimatedSize(
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.fastOutSlowIn,
+                                    child: IntrinsicHeight(
+                                        child: _itemExpended
+                                            ? Column(
+                                                children: [
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              'Dealer',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Flexible(
+                                                          child: Text(
+                                                              getComplainList[
+                                                                      index]
+                                                                  .dealer
+                                                                  .toString()
+                                                                  .trim()),
+                                                        ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              'Item',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Flexible(
+                                                          child: Text(
+                                                              getComplainList[
+                                                                      index]
+                                                                  .item
+                                                                  .toString()
+                                                                  .trim()),
+                                                        )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              'Serial No',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Flexible(
+                                                          child: Text(
+                                                              getComplainList[
+                                                                      index]
+                                                                  .serialNo
+                                                                  .toString()
+                                                                  .trim()),
+                                                        ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Container()),
                                   ),
-                                  Container(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            width: _width * 0.18,
-                                            child: const Text(
-                                              'Item',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Container(
-                                            // width: _width * 0.25,
-                                            child: Flexible(
-                                          child: Text(getComplainList[index]
-                                              .item
-                                              .toString()
-                                              .trim()),
-                                        )),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            width: _width * 0.18,
-                                            child: const Text(
-                                              'Serial No',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Container(
-                                            // width: _width * 0.25,
-                                            child: Flexible(
-                                          child: Text(getComplainList[index]
-                                              .serialNo
-                                              .toString()
-                                              .trim()),
-                                        ))
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )),
+                          ),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
                         Container(
-                          // height: _height * 0.14,
                           child: InputDecorator(
-                              decoration: InputDecoration(
-                                  labelText: 'Engineer Information',
-                                  labelStyle: TextStyle(
-                                      color: ColorsUtils.appcolor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(0),
-                                  )),
-                              child: Column(
-                                children: [
-                                  Container(
+                            decoration: InputDecoration(
+                              labelText: 'Engineer Information',
+                              suffixIcon: IconButton(
+                                  onPressed: _engineerExpandOnChanged,
+                                  icon: _engineerExpended
+                                      ? Icon(Icons.arrow_drop_up)
+                                      : Icon(Icons.arrow_drop_down)),
+                              labelStyle: TextStyle(
+                                color: ColorsUtils.appcolor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
+                            child: !_engineerExpended
+                                ? Container(
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -670,8 +955,10 @@ class _CloseInstalledInstallationUIState
                                                             .toString()
                                                             .trim(),
                                                         style: TextStyle(
-                                                          fontSize: 15,
-                                                        ),
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       );
                                                     } else {
                                                       return Text(
@@ -682,80 +969,188 @@ class _CloseInstalledInstallationUIState
                                                                 .toString()
                                                                 .trim(),
                                                         style: TextStyle(
-                                                          fontSize: 15,
-                                                        ),
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       );
                                                     }
                                                   },
                                                 ),
-                                        )),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            width: _width * 0.18,
-                                            child: const Text(
-                                              'Mobile No',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Container(
-                                            // width: _width * 0.25,
-                                            child: Flexible(
-                                                child: Text(
-                                                    getComplainList[index]
-                                                        .installarMobile
-                                                        .toString()
-                                                        .trim()))),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            width: _width * 0.18,
-                                            child: const Text(
-                                              'Assign On',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
-                                          width: _width * 0.02,
-                                          child: const Text(
-                                            ':',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Container(
-                                            // width: _width * 0.25,
-                                            child: Flexible(
-                                          child: Text(getComplainList[index]
-                                              .assignedOn
-                                              .toString()
-                                              .trim()),
                                         ))
                                       ],
                                     ),
+                                  )
+                                : AnimatedSize(
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.fastOutSlowIn,
+                                    child: IntrinsicHeight(
+                                        child: _engineerExpended
+                                            ? Column(
+                                                children: [
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              'Engineer',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Flexible(
+                                                          child: _translatetext ==
+                                                                  false
+                                                              ? Text(
+                                                                  getComplainList[
+                                                                          index]
+                                                                      .installar
+                                                                      .toString()
+                                                                      .trim())
+                                                              : FutureBuilder<
+                                                                  String>(
+                                                                  future: translateTextToUrdu(getComplainList[
+                                                                          index]
+                                                                      .installar
+                                                                      .toString()
+                                                                      .trim()),
+                                                                  builder: (context,
+                                                                      snapshot) {
+                                                                    if (snapshot
+                                                                            .connectionState ==
+                                                                        ConnectionState
+                                                                            .waiting) {
+                                                                      return Text(
+                                                                          'isLoading....'); // Show a spinner while translating
+                                                                    } else if (snapshot
+                                                                        .hasError) {
+                                                                      return Text(
+                                                                        getComplainList[index]
+                                                                            .installar
+                                                                            .toString()
+                                                                            .trim(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      );
+                                                                    } else {
+                                                                      return Text(
+                                                                        snapshot.data ??
+                                                                            getComplainList[index].installar.toString().trim(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                ),
+                                                        )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              'Mobile No',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Flexible(
+                                                                child: Text(getComplainList[
+                                                                        index]
+                                                                    .installarMobile
+                                                                    .toString()
+                                                                    .trim()))),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                            width:
+                                                                _width * 0.18,
+                                                            child: const Text(
+                                                              'Assign On',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                        Container(
+                                                          width: _width * 0.02,
+                                                          child: const Text(
+                                                            ':',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            // width: _width * 0.25,
+                                                            child: Flexible(
+                                                          child: Text(
+                                                              getComplainList[
+                                                                      index]
+                                                                  .assignedOn
+                                                                  .toString()
+                                                                  .trim()),
+                                                        ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Container()),
                                   ),
-                                ],
-                              )),
+                          ),
                         ),
                         const SizedBox(
                           height: 10,
@@ -1004,8 +1399,6 @@ class _CloseInstalledInstallationUIState
                           height: 10,
                         ),
                         Container(
-                          // height: _height * 0.14,
-                          // color: Color(0xff9DBDFF),
                           child: InputDecorator(
                               decoration: InputDecoration(
                                   labelText: 'Status',
@@ -1162,10 +1555,15 @@ class _CloseInstalledInstallationUIState
                               height: _height * 0.06,
                               width: _width * 0.4,
                               child: TextField(
-                                readOnly: true,
+                                readOnly: true, // Makes the field read-only
                                 controller: _dateController,
                                 decoration: InputDecoration(
-                                  suffixIcon: Icon(Icons.calendar_month),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.calendar_month),
+                                    onPressed: () {
+                                      _selectDate(context); // Open the date picker when icon is pressed
+                                    },
+                                  ),
                                   labelText: 'Date',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
@@ -1200,7 +1598,10 @@ class _CloseInstalledInstallationUIState
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(5))),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Post_SaveClosedInstallation();
+                                  CircularIndicator.showLoader(context);
+                                },
                                 child: Text(
                                   'Submit',
                                   style: TextStyle(fontSize: 20),
@@ -1211,6 +1612,38 @@ class _CloseInstalledInstallationUIState
                 );
               }),
     );
+  }
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000), // Set the earliest date you want
+      lastDate: DateTime(2101),  // Set the latest date you want
+    );
+
+    if (pickedDate != null) {
+      _dateController.text = DateFormat('dd-MM-yyyy').format(pickedDate);
+    }
+  }
+
+  Future Post_SaveClosedInstallation()async {
+    var response = await http.post(Uri.parse(SaveClosedInstallation),body: {
+      'FTrnNum': widget.installedInstalltionList.cmp.toString(),
+      'FClsDat': _dateController.text,
+      'FClsRem': _remarksController.text,
+      'FClsAmt': _amountController.text,
+    });
+    var result = jsonDecode(response.body);
+    print(_dateController.text);
+    if(result['error']== 200){
+      Snackbar.showSnackBar(context, result["message"], Colors.teal);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+    }else{
+      Snackbar.showSnackBar(context, result["message"], Colors.red);
+      Navigator.pop(context);
+    }
   }
 
   Future Post_GetComplain() async {

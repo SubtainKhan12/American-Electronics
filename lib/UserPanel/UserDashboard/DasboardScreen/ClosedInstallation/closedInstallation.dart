@@ -1,15 +1,14 @@
 import 'dart:convert';
 
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../APIs/apis.dart';
 import '../../../../Models/ClosedInstallation/ClosedInstallationsModel.dart';
 import '../../../../Utilities/Colors/colors.dart';
 import 'closeCustomerDetails.dart';
-
 
 class ClosedInstallationUI extends StatefulWidget {
   const ClosedInstallationUI({super.key});
@@ -22,6 +21,11 @@ class _ClosedInstallationUIState extends State<ClosedInstallationUI> {
   List<ClosedInstallationsModel> closedInstallationList = [];
   List<ClosedInstallationsModel> searchClosedInstallation = [];
   bool loading = true;
+
+  String formatDate(String dateString) {
+    DateTime parsedDate = DateTime.parse(dateString); // Parse the date string
+    return DateFormat('dd-MM-yyyy').format(parsedDate); // Format the date
+  }
 
   @override
   void initState() {
@@ -68,98 +72,101 @@ class _ClosedInstallationUIState extends State<ClosedInstallationUI> {
                 child: loading
                     ? const Center(child: CircularProgressIndicator())
                     : searchClosedInstallation.isEmpty
-                    ? const Center(
-                    child: Text(
-                      "Data Not Found",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                    ))
-                    : ListView.builder(
-                    itemCount: searchClosedInstallation.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => _buildBottomSheet(
-                                context,
-                                searchClosedInstallation[index]),
-                          );
-                        },
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 5),
-                            child: Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
+                        ? const Center(
+                            child: Text(
+                            "Data Not Found",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                          ))
+                        : ListView.builder(
+                            itemCount: searchClosedInstallation.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) => _buildBottomSheet(
+                                        context,
+                                        searchClosedInstallation[index]),
+                                  );
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 5),
+                                    child: Row(
                                       children: [
-                                        Text(
-                                          searchClosedInstallation[
-                                          index]
-                                              .cmp
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Color(0xffF58634),
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        Text(
-                                          '  -  ',
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight:
-                                              FontWeight.w500),
-                                        ),
-                                        Text(
-
-                                          searchClosedInstallation[
-                                          index]
-                                              .date
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight:
-                                              FontWeight.w500),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  searchClosedInstallation[
+                                                          index]
+                                                      .cmp
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: Color(0xffF58634),
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Text(
+                                                  '  -  ',
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Text(
+                                                  formatDate(
+                                                    searchClosedInstallation[
+                                                            index]
+                                                        .date
+                                                        .toString(),
+                                                  ),
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              searchClosedInstallation[index]
+                                                  .customer
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  searchClosedInstallation[
+                                                          index]
+                                                      .mobile
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                    Text(
-                                      searchClosedInstallation[index]
-                                          .customer
-                                          .toString(),
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          searchClosedInstallation[index]
-                                              .mobile
-                                              .toString(),
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
+                              );
+                            }),
               ),
             ],
           ),
@@ -167,6 +174,7 @@ class _ClosedInstallationUIState extends State<ClosedInstallationUI> {
       ),
     );
   }
+
   Widget _buildBottomSheet(
       BuildContext context, ClosedInstallationsModel model) {
     var _height = MediaQuery.of(context).size.height;
@@ -414,6 +422,7 @@ class _ClosedInstallationUIState extends State<ClosedInstallationUI> {
       ),
     );
   }
+
   Future<void> _showPhoneDialog(String phoneNumber) async {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;

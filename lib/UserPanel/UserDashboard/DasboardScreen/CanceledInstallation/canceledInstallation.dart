@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:american_electronics/Models/CancelledInstallations/CancledInstallationModel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../APIs/apis.dart';
@@ -20,6 +21,10 @@ class _CanceledInstallationUIState extends State<CanceledInstallationUI> {
   List<CancledInstallationModel> canceledInstallationList = [];
   List<CancledInstallationModel> searchCanceledInstallation = [];
   bool loading = true;
+  String formatDate(String dateString) {
+    DateTime parsedDate = DateTime.parse(dateString); // Parse the date string
+    return DateFormat('dd-MM-yyyy').format(parsedDate); // Format the date
+  }
 
   @override
   void initState() {
@@ -118,10 +123,11 @@ class _CanceledInstallationUIState extends State<CanceledInstallationUI> {
                                                           FontWeight.bold),
                                                 ),
                                                 Text(
-                                                  searchCanceledInstallation[
-                                                          index]
+                                                  formatDate(searchCanceledInstallation[
+                                                  index]
                                                       .date
-                                                      .toString(),
+                                                      .toString(),),
+
                                                   style: const TextStyle(
                                                       fontSize: 14,
                                                       fontWeight: FontWeight.w500),
