@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:american_electronics/AdminPanel/DrawerUi/Drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +6,6 @@ import '../../../APIs/apis.dart';
 import '../../../LoginPages/loginscreen.dart';
 import '../../../Models/UserInstallationStatus/UserInstallationStatusModel.dart';
 import '../../../Utilities/Colors/colors.dart';
-// import '../CanceledInstallation/canceledInstallation.dart';
 import '../UnassignedInstallation/unassignedInsatllation.dart';
 
 class AdminDashboardUI extends StatefulWidget {
@@ -51,7 +48,7 @@ class _AdminDashboardUIState extends State<AdminDashboardUI> {
               icon: const Icon(Icons.logout))
         ],
       ),
-      drawer: AdminDrawerUI(),
+
       body: RefreshIndicator(
         onRefresh: get_InstallationStatus,
         child: ListView.builder(

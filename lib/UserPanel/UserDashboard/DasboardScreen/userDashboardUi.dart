@@ -13,8 +13,8 @@ import '../../../Models/MonthlyInstallationStatus/MonthlyInstallationStatusModel
 import '../../../Models/UserInstallationStatus/UserInstallationStatusModel.dart';
 import '../../../SplashScreen/splashScreen.dart';
 import '../../../Utilities/Colors/colors.dart';
-import '../../../Utilities/Loader/loader.dart';
 import '../../../Utilities/Snackbar/snackbar.dart';
+import '../DrawerUi/Drawer.dart';
 import '../InstallarComparison/installarComperison.dart';
 import 'CanceledInstallation/canceledInstallation.dart';
 import 'ClosedInstallation/closedInstallation.dart';
@@ -77,6 +77,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                 icon: const Icon(Icons.logout))
           ],
         ),
+        drawer: AdminDrawerUI(),
         body: RefreshIndicator(
           onRefresh: () async {
             await get_InstallationStatus();
