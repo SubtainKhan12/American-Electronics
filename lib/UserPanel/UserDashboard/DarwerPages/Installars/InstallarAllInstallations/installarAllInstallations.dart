@@ -102,103 +102,110 @@ class _InstallarAllInstallationsUIState
                                       (value) =>
                                           post_InstallarAllInstallations());
                                 },
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 3.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: getStatusColor(
+                                          searchInstallarAllInstallationList[
+                                                  index]
+                                              .status
+                                              .toString()),
                                       borderRadius: BorderRadius.circular(5),
-                                      side: BorderSide(
-                                        color: getStatusColor(
-                                            searchInstallarAllInstallationList[
-                                                    index]
-                                                .status
-                                                .toString()),
-                                        // Dynamically set border color
-                                        width: 2,
-                                      )),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 5),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: _width * 0.02,
-                                          height: _height * 0.06,
-                                          color: getStatusColor(
-                                              searchInstallarAllInstallationList[
-                                                      index]
-                                                  .status
-                                                  .toString()),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 5.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
                                         ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: Column(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0, vertical: 5),
+                                          child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    searchInstallarAllInstallationList[
-                                                            index]
-                                                        .cmp
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      fontSize: _height * 0.017,
-                                                      color: Color(0xffF58634),
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          searchInstallarAllInstallationList[
+                                                                  index]
+                                                              .cmp
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                _height * 0.017,
+                                                            color: Color(
+                                                                0xffF58634),
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '  -  ',
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                _height * 0.017,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          formatDate(
+                                                            searchInstallarAllInstallationList[
+                                                                    index]
+                                                                .date
+                                                                .toString(),
+                                                          ),
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                _height * 0.017,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    '  -  ',
-                                                    style: TextStyle(
-                                                      fontSize: _height * 0.017,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    formatDate(
+                                                    Text(
                                                       searchInstallarAllInstallationList[
                                                               index]
-                                                          .date
+                                                          .customer
                                                           .toString(),
+                                                      style: TextStyle(
+                                                        fontSize:
+                                                            _height * 0.013,
+                                                      ),
                                                     ),
-                                                    style: TextStyle(
-                                                      fontSize: _height * 0.017,
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          searchInstallarAllInstallationList[
+                                                                  index]
+                                                              .mobile
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                _height * 0.013,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Text(
-                                                searchInstallarAllInstallationList[
-                                                        index]
-                                                    .customer
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  fontSize: _height * 0.013,
+                                                  ],
                                                 ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    searchInstallarAllInstallationList[
-                                                            index]
-                                                        .mobile
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      fontSize: _height * 0.013,
-                                                    ),
-                                                  ),
-                                                ],
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),

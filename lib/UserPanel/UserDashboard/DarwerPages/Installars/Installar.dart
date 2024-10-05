@@ -33,8 +33,9 @@ class _InstallarsUIState extends State<InstallarsUI> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Technicians',
-          style: TextStyle(color: ColorsUtils.whiteColor, fontSize: 18),
+          'All Installers',
+          style: TextStyle(
+              color: ColorsUtils.whiteColor, fontSize: _height * 0.023),
         ),
         backgroundColor: ColorsUtils.appcolor,
         iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
@@ -85,34 +86,34 @@ class _InstallarsUIState extends State<InstallarsUI> {
                                                 installarComparisonList:
                                                     searchInstallarComperisonList[
                                                         index],
-                                              ))).then((value)=> get_InstallarComperison());
+                                              ))).then(
+                                      (value) => get_InstallarComperison());
                                 },
                                 child: Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5)),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 5),
+                                        horizontal: 10.0, vertical: 10),
                                     child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              searchInstallarComperisonList[
-                                                      index]
-                                                  .instalalr
-                                                  .toString(),
-                                              style:  TextStyle(
-                                                fontSize: _height * 0.015,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Installation: ${searchInstallarComperisonList[index].installations.toString()}',
-                                              style:  TextStyle(
-                                                fontSize: _height * 0.015,
-                                              ),
-                                            ),
-                                          ],
+                                        Text(
+                                          searchInstallarComperisonList[index]
+                                              .instalalr
+                                              .toString(),
+                                          style: TextStyle(
+                                            fontSize: _height * 0.015,
+                                          ),
+                                        ),
+                                        Text(
+                                          searchInstallarComperisonList[index]
+                                              .installations
+                                              .toString(),
+                                          style: TextStyle(
+                                            fontSize: _height * 0.02,
+                                          ),
                                         ),
                                       ],
                                     ),
