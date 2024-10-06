@@ -37,6 +37,7 @@ class _PendingCustomerDetailState extends State<PendingCustomerDetail> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: ColorsUtils.lightblue,
       appBar: AppBar(
           title: Text(
             'Detail',

@@ -39,6 +39,7 @@ class _ClosedInstallationUIState extends State<ClosedInstallationUI> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: ColorsUtils.lightblue,
       appBar: AppBar(
         title: Text(
           'Closed Installation',
@@ -95,6 +96,7 @@ class _ClosedInstallationUIState extends State<ClosedInstallationUI> {
                                   );
                                 },
                                 child: Card(
+                                  color: ColorsUtils.whiteColor,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0, vertical: 5),

@@ -10,4 +10,5 @@ class ColorsUtils {
   static var lightblueColor = Color(0xff6EACDA);
   static var blueCrystal = Color(0xff2D2F42);
   static var orangeCrystal = Color(0xffD2925E);
+  static var lightblue = Color(0xffE3F6FF);
 }

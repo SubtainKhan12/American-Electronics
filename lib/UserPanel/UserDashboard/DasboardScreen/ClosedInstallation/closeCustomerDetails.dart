@@ -31,6 +31,7 @@ class _CloseCustomerDetailsUiState extends State<CloseCustomerDetailsUi> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: ColorsUtils.lightblue,
       appBar: AppBar(
           title: Text(
             'Detail',

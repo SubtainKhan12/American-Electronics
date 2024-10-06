@@ -42,6 +42,7 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: ColorsUtils.lightblue,
       appBar: AppBar(
         title: Text(
           'Installed Installation',
@@ -98,6 +99,7 @@ class _InstalledInstallationUIState extends State<InstalledInstallationUI> {
                                   ).then((value)=>get_InstalledInstallation());
                                 },
                                 child: Card(
+                                  color: ColorsUtils.whiteColor,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0, vertical: 5),

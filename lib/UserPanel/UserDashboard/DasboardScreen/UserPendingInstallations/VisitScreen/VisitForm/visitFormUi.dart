@@ -51,6 +51,7 @@ class _PendingVisitFormUIState extends State<PendingVisitFormUI> {
         .size
         .width;
     return Scaffold(
+      backgroundColor: ColorsUtils.lightblue,
       appBar: AppBar(
         title: Text(
           'Visit Form',

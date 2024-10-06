@@ -31,6 +31,7 @@ class _InstallarsUIState extends State<InstallarsUI> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: ColorsUtils.lightblue,
       appBar: AppBar(
         title: Text(
           'All Installers',
@@ -90,6 +91,7 @@ class _InstallarsUIState extends State<InstallarsUI> {
                                       (value) => get_InstallarComperison());
                                 },
                                 child: Card(
+                                  color: Colors.white,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5)),
                                   child: Padding(

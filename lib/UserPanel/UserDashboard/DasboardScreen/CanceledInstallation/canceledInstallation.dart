@@ -38,6 +38,7 @@ class _CanceledInstallationUIState extends State<CanceledInstallationUI> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: ColorsUtils.lightblue,
       appBar: AppBar(
         title: Text(
           'Canceled Installation',
@@ -94,6 +95,7 @@ class _CanceledInstallationUIState extends State<CanceledInstallationUI> {
                                   );
                                 },
                                 child: Card(
+                                  color: ColorsUtils.whiteColor,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0, vertical: 5),

@@ -86,9 +86,10 @@ class _UserTechnicianAssignmentUIState
         return true; // Allow the screen to pop if dropdown is not open
       },
       child: Scaffold(
+        backgroundColor: ColorsUtils.lightblue,
         appBar: AppBar(
             title: Text(
-              'Technician Assignment',
+              'Installer Assignment',
               style: TextStyle(color: ColorsUtils.whiteColor),
             ),
             backgroundColor: ColorsUtils.appcolor,

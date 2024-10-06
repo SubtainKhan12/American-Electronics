@@ -37,6 +37,7 @@ class _UserUnassignedInstallationUIState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorsUtils.lightblue,
       appBar: AppBar(
         title: Text(
           'Unassigned Installation',
@@ -93,6 +94,7 @@ class _UserUnassignedInstallationUIState
                                   );
                                 },
                                 child: Card(
+                                  color: ColorsUtils.whiteColor,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0, vertical: 5),
@@ -260,7 +262,7 @@ class _UserUnassignedInstallationUIState
                           },
                           child: const ListTile(
                             leading: Icon(Icons.location_on),
-                            title: Text("Technician Assignment"),
+                            title: Text("Installer Assignment"),
                             // subtitle: Text("Visit Date: ${model.date}"),
                           ),
                         ),

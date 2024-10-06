@@ -43,6 +43,7 @@ class _InstallarAllInstallationsUIState
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: ColorsUtils.lightblue,
       appBar: AppBar(
         title: Text(
           '${widget.installarComparisonList.instalalr.toString().trim()} Installation',

@@ -14,8 +14,8 @@ import '../../../Models/UserInstallationStatus/UserInstallationStatusModel.dart'
 import '../../../SplashScreen/splashScreen.dart';
 import '../../../Utilities/Colors/colors.dart';
 import '../../../Utilities/Snackbar/snackbar.dart';
+import '../DarwerPages/Installars/Installar.dart';
 import '../DrawerUi/Drawer.dart';
-import '../InstallarComparison/installarComperison.dart';
 import 'CanceledInstallation/canceledInstallation.dart';
 import 'ClosedInstallation/closedInstallation.dart';
 import 'InstalledInstallation/installedInstallation.dart';
@@ -62,6 +62,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
+        backgroundColor: ColorsUtils.lightblue,
         appBar: AppBar(
           title: Text(
             'Hello ${name.toString().trim()}',
@@ -77,7 +78,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                 icon: const Icon(Icons.logout))
           ],
         ),
-        drawer: AdminDrawerUI(),
+        // drawer: AdminDrawerUI(),
         body: RefreshIndicator(
           onRefresh: () async {
             await get_InstallationStatus();
@@ -1093,18 +1094,14 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                   )
                                 : Container(),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 3, left: 300.0),
+                              padding: EdgeInsets.only(top: 3, left: _width * 0.77),
                               child: InkWell(
                                   onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                InstallarComperisonUI(
-                                                  installarComparison:
-                                                      installarComperisonList,
-                                                )));
+                                                InstallarsUI()));
                                   },
                                   child: Text(
                                     'More...',
@@ -1121,6 +1118,7 @@ class _UserDashboardUIState extends State<UserDashboardUI> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: BarChart(
+
                                     BarChartData(
                                       alignment: BarChartAlignment.spaceBetween,
                                       maxY: 3000,

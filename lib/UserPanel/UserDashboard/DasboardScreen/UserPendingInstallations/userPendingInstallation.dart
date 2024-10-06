@@ -38,6 +38,7 @@ class _UserPendingInstallationUIState extends State<UserPendingInstallationUI> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorsUtils.lightblue,
       appBar: AppBar(
         title: Text(
           'Pending Installation',
@@ -95,6 +96,7 @@ class _UserPendingInstallationUIState extends State<UserPendingInstallationUI> {
                                   ).then((value)=> get_PendingInstallations());
                                 },
                                 child: Card(
+                                  color: ColorsUtils.whiteColor,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0, vertical: 5),

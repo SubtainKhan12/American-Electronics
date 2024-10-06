@@ -42,6 +42,7 @@ class _PendingVisitScreenState extends State<PendingVisitScreen> {
     return RefreshIndicator(
       onRefresh: Post_Complain,
       child: Scaffold(
+        backgroundColor: ColorsUtils.lightblue,
         appBar: AppBar(
           title: Text(
             'Visit',
