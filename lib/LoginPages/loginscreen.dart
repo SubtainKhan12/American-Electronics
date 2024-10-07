@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../APIs/apis.dart';
+import '../CustomerPanel/newInstallations.dart';
 import '../SharedPreferences/sharedPreferences.dart';
 import '../SplashScreen/splashScreen.dart';
 import '../UserPanel/CompalinSheet/complainSheet.dart';
@@ -67,42 +68,33 @@ class _LoginUIState extends State<LoginUI> {
             //   ),
             // ),
             Padding(
-              padding: const EdgeInsets.only(top: 50.0, left: 60),
+              padding:  EdgeInsets.only(top: _height * 0.055, left: _width * 0.15),
               child: Image.asset('assets/AELogo.png',
                   height: _height * 0.2, width: _width * 0.7),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 55.0, left: 95),
+              padding:  EdgeInsets.only(top: _height * 0.065, left: _width * 0.25),
               child: Image.asset(
                 'assets/blueStar.png',
                 height: _height * 0.05,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 170.0, left: 55),
+              padding:  EdgeInsets.only(top: _height * 0.195, left: _width * 0.14),
               child: Image.asset(
                 'assets/blackStar.png',
                 height: _height * 0.05,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 160.0, left: 290),
+              padding: EdgeInsets.only(top: _height * 0.18, left: _width * 0.75),
               child: Image.asset(
                 'assets/redStar.png',
                 height: _height * 0.04,
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(
-            //     top: 328,
-            //   ),
-            //   child: Image.asset(
-            //     'assets/Ellipse.png',
-            //     width: _width * 1,
-            //   ),
-            // ),
             Padding(
-              padding: const EdgeInsets.only(top: 250.0, left: 30),
+              padding:  EdgeInsets.only(top: _height * 0.29, left: _width * 0.075),
               child: Container(
                 width: _width * 0.85,
                 height: _height * 0.4,
@@ -133,8 +125,8 @@ class _LoginUIState extends State<LoginUI> {
                             )),
                       ),
                     ),
-                    const SizedBox(
-                      height: 12,
+                     SizedBox(
+                      height: _height * 0.01,
                     ),
                     Container(
                       width: _width * 0.67,
@@ -157,11 +149,11 @@ class _LoginUIState extends State<LoginUI> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 200.0),
+                      padding:  EdgeInsets.only(left: _width *0.52),
                       child: TextButton(
                           onPressed: () {}, child: Text('Register')),
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(height: _height * 0.01,),
                     InkWell(
                       onTap: () {
                         post_login();
@@ -194,194 +186,152 @@ class _LoginUIState extends State<LoginUI> {
                 ),
               ),
             ),
+            // Padding(
+            //   padding: EdgeInsets.only(top: 610, left: 25, right: 25),
+            //   child: Column(
+            //     children: [
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //         children: [
+            //           InkWell(
+            //             onTap: () {
+            //               Navigator.push(context, MaterialPageRoute(builder: (context)=>ACInstallationUI()));
+            //             },
+            //             child: Material(
+            //               borderRadius: BorderRadius.circular(20),
+            //               elevation: 10,
+            //               shadowColor: Color(0xffC4E4FF),
+            //               child: Container(
+            //                 height: _height * 0.06,
+            //                 width: _width * 0.4,
+            //                 decoration: BoxDecoration(
+            //                   color: Color(0xffC4E4FF),
+            //                   borderRadius: BorderRadius.circular(5),
+            //                 ),
+            //                 child: Row(
+            //                   mainAxisAlignment: MainAxisAlignment.start,
+            //                   children: [
+            //                     SizedBox(
+            //                       width: _width * 0.03,
+            //                     ),
+            //                     Image.asset(
+            //                       'assets/install.png',
+            //                       color: Colors.blueAccent,
+            //                       height: 30,
+            //                     ),
+            //                     VerticalDivider(
+            //                       color: Colors.black,
+            //                       thickness: 1,
+            //                     ),
+            //                     // SizedBox(width: 20,),
+            //                     Text(
+            //                       'AC Installation',
+            //                       style: TextStyle(
+            //                           fontWeight: FontWeight.w500,
+            //                           fontSize: 12),
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //           Material(
+            //             borderRadius: BorderRadius.circular(5),
+            //             elevation: 10,
+            //             shadowColor: Color(0xffC4E4FF),
+            //             child: InkWell(
+            //               onTap: (){
+            //                 Navigator.push(context, MaterialPageRoute(builder: (context)=> CompalinSheetUI()));
+            //               },
+            //               child: Container(
+            //                 height: _height * 0.06,
+            //                 width: _width * 0.4,
+            //                 decoration: BoxDecoration(
+            //                   color: Color(0xffC4E4FF),
+            //                   borderRadius: BorderRadius.circular(5),
+            //                 ),
+            //                 child: Row(
+            //                   mainAxisAlignment: MainAxisAlignment.start,
+            //                   children: [
+            //                     SizedBox(
+            //                       width: _width * 0.03,
+            //                     ),
+            //                     Image.asset(
+            //                       'assets/complaint.png',
+            //                       color: Colors.red,
+            //                       height: 30,
+            //                     ),
+            //                     VerticalDivider(
+            //                       color: Colors.black,
+            //                       thickness: 1,
+            //                     ),
+            //                     // SizedBox(width: 20,),
+            //                     Text(
+            //                       'New Complain',
+            //                       style: TextStyle(
+            //                           fontWeight: FontWeight.w500, fontSize: 12),
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Padding(
-              padding: EdgeInsets.only(top: 610, left: 25, right: 25),
-              child: Column(
+              padding: EdgeInsets.only(top: _height * 0.72),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(context, MaterialPageRoute(builder: (context)=>CustomersUI()));
-                        },
-                        child: Material(
-                          borderRadius: BorderRadius.circular(20),
-                          elevation: 10,
-                          shadowColor: Color(0xffC4E4FF),
-                          child: Container(
-                            height: _height * 0.06,
-                            width: _width * 0.4,
-                            decoration: BoxDecoration(
-                              color: Color(0xffC4E4FF),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: _width * 0.03,
-                                ),
-                                Image.asset(
-                                  'assets/install.png',
-                                  color: Colors.blueAccent,
-                                  height: 30,
-                                ),
-                                VerticalDivider(
-                                  color: Colors.black,
-                                  thickness: 1,
-                                ),
-                                // SizedBox(width: 20,),
-                                Text(
-                                  'AC Installation',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(context, MaterialPageRoute(builder: (context)=> ExpenseUI()));
-                        },
-                        child: Material(
-                          borderRadius: BorderRadius.circular(5),
-                          elevation: 10,
-                          shadowColor: Color(0xffC4E4FF),
-                          child: Container(
-                            height: _height * 0.06,
-                            width: _width * 0.4,
-                            decoration: BoxDecoration(
-                              color: Color(0xffC4E4FF),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: _width * 0.03,
-                                ),
-                                Image.asset(
-                                  'assets/clean.png',
-                                  color: Colors.blueAccent,
-                                  height: 30,
-                                ),
-                                VerticalDivider(
-                                  color: Colors.black,
-                                  thickness: 1,
-                                ),
-                                // SizedBox(width: 20,),
-                                Text(
-                                  'Ac Service',
-                                  style: TextStyle(fontWeight: FontWeight.w500,
-                                      fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Material(
-                        borderRadius: BorderRadius.circular(5),
-                        elevation: 10,
-                        shadowColor: Color(0xffC4E4FF),
-                        child: InkWell(
-                          onTap: (){
+                Column(
+                  children: [
+                    Container(
+                      height: _height * 0.09,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100))),
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ACInstallationUI()));
+                        }, child: Image.asset(
+                        'assets/install.png',
+                        color: Colors.blue,
+                        height: 30,
+                      ),),
+                    ),
+                    Text('Ac Installation')
+                  ],
+                ),
+                SizedBox(width: _width * 0.05,),
+                Column(
+                  children: [
+                    Container(
+                      height: _height * 0.09,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100))),
+                        onPressed: (){
                             Navigator.push(context, MaterialPageRoute(builder: (context)=> CompalinSheetUI()));
-                          },
-                          child: Container(
-                            height: _height * 0.06,
-                            width: _width * 0.4,
-                            decoration: BoxDecoration(
-                              color: Color(0xffC4E4FF),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: _width * 0.03,
-                                ),
-                                Image.asset(
-                                  'assets/complaint.png',
-                                  color: Colors.red,
-                                  height: 30,
-                                ),
-                                VerticalDivider(
-                                  color: Colors.black,
-                                  thickness: 1,
-                                ),
-                                // SizedBox(width: 20,),
-                                Text(
-                                  'New Complain',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500, fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Material(
-                        borderRadius: BorderRadius.circular(5),
-                        elevation: 10,
-                        shadowColor: Color(0xffC4E4FF),
-                        child: Container(
-                          height: _height * 0.06,
-                          width: _width * 0.4,
-                          decoration: BoxDecoration(
-                            color: Color(0xffC4E4FF),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: _width * 0.03,
-                              ),
-                              Image.asset(
-                                'assets/customer-ratings.png',
-                                color: Colors.red,
-                                height: 30,
-                              ),
-                              VerticalDivider(
-                                color: Colors.black,
-                                thickness: 1,
-                              ),
-                              // SizedBox(width: 20,),
-                              Text(
-                                'Complain Status',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                        }, child: Image.asset(
+                        'assets/complaint.png',
+                        color: Colors.red,
+                        height: 30,
+                      ),),
+                    ),
+                    Text('New Complain'),
+                  ],
+                ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 780.0),
+              padding: EdgeInsets.only(top: _height* 0.91),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/CrystalSolutions.png', height: 30,),
-                  const SizedBox(
-                    width: 5,
+                  Image.asset('assets/CrystalSolutions.png', height: _height * 0.05,),
+                   SizedBox(
+                    width: _width * 0.01,
                   ),
                   Column(
                     children: [
@@ -419,7 +369,7 @@ class _LoginUIState extends State<LoginUI> {
                   ),
                 ],
               ),
-            )
+            ),
 
           ],
         ),

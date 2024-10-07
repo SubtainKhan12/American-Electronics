@@ -1,26 +1,25 @@
 import 'dart:convert';
 
-import 'package:american_electronics/Utilities/Colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart'as http;
+import '../Utilities/Colors/colors.dart';
 
-class CompalinSheetUI extends StatefulWidget {
-  const CompalinSheetUI({super.key});
+class ACInstallationUI extends StatefulWidget {
+  const ACInstallationUI({super.key});
 
   @override
-  State<CompalinSheetUI> createState() => _CompalinSheetUIState();
+  State<ACInstallationUI> createState() => _ACInstallationUIState();
 }
 
-class _CompalinSheetUIState extends State<CompalinSheetUI> {
+class _ACInstallationUIState extends State<ACInstallationUI> {
   TextEditingController _dateController = TextEditingController();
   TextEditingController _mobileNoController = TextEditingController();
-  TextEditingController _nameController = TextEditingController();
+  TextEditingController _itemController = TextEditingController();
   TextEditingController _Address1Controller = TextEditingController();
   TextEditingController _address2Controller = TextEditingController();
   TextEditingController _serialNoController = TextEditingController();
-  TextEditingController _itemController = TextEditingController();
-  TextEditingController _complainController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
   DateTime dateTime = DateTime.now();
 
   @override
@@ -37,7 +36,7 @@ class _CompalinSheetUIState extends State<CompalinSheetUI> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'New Complain',
+          'AC Installation',
           style: TextStyle(color: ColorsUtils.whiteColor),
         ),
         iconTheme: IconThemeData(color: ColorsUtils.whiteColor),
@@ -88,9 +87,9 @@ class _CompalinSheetUIState extends State<CompalinSheetUI> {
                 height: _height * 0.005,
               ),
               TextField(
-                controller: _nameController,
+                controller: _itemController,
                 decoration: InputDecoration(
-                  labelText: "Name",
+                  labelText: "Item",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(3),
                   ),
@@ -99,27 +98,25 @@ class _CompalinSheetUIState extends State<CompalinSheetUI> {
               SizedBox(
                 height: _height * 0.005,
               ),
-              TextField(
-                controller: _Address1Controller,
-                decoration: InputDecoration(
-                  labelText: "Address 1",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: _height * 0.005,
-              ),
-              TextField(
-                controller: _address2Controller,
-                decoration: InputDecoration(
-                  labelText: "Address 2",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-              ),
+              // TextField(
+              //   decoration: InputDecoration(
+              //     labelText: "Address 1",
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(3),
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: _height * 0.005,
+              // ),
+              // TextField(
+              //   decoration: InputDecoration(
+              //     labelText: "Address 2",
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(3),
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: _height * 0.005,
               ),
@@ -136,22 +133,10 @@ class _CompalinSheetUIState extends State<CompalinSheetUI> {
                 height: _height * 0.005,
               ),
               TextField(
-                controller: _itemController,
-                decoration: InputDecoration(
-                  labelText: "Item",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: _height * 0.005,
-              ),
-              TextField(
-                controller: _complainController,
                 maxLines: 3,
+                controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: "Complain",
+                  labelText: "Descriptions",
                   alignLabelWithHint: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(3),
